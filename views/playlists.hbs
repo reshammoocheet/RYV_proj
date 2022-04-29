@@ -1,0 +1,89 @@
+<!-- Forms -->
+<div>
+    {{#if displayAddForm}}
+
+    <div class="form">
+    <form action="/playlist" method="post" role ="form" >
+        <legend class="formLegend" style="padding: 10px;"><u>Add new playlist</u></legend>
+        <label for="title">Enter playlist title:</label><br>
+        <input type="text" name="title" id="title">
+        <br>
+        <label for="year">Enter playlist release year:</label><br>
+        <input type="text" name="year" id="year">
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+    {{/if}}
+
+
+    {{#if displayEditForm}}
+    </div>
+    <div class="form">
+        <form action="/playlist/edit" method="post" role ="form" >
+            <legend class="formLegend" style="padding: 10px;"><u>Edit playlist</u></legend>
+            <label for="currentTitle">Enter current playlist title:</label><br>
+            <input type="text" name="currentTitle" id="currentTitle">
+            <br>
+            <label for="newTitle">Enter new playlist title:</label><br>
+            <input type="text" name="newTitle" id="newTitle">
+            <br>
+            <label for="newYear">Enter new playlist release year:</label><br>
+            <input type="text" name="newYear" id="newYear">
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+    </div>
+    {{/if}}
+
+    {{#if displayDeleteForm}}
+    <div class="form">
+        <form action="/playlist/delete" method="post" role ="form" >
+            <legend class="formLegend" style="padding: 10px;"><u>Delete playlist</u></legend>
+            <label for="title">Enter playlist title to be deleted:</label><br>
+            <input type="text" name="title" id="title">
+            <br>
+            <label for="title">Enter playlist year to be deleted:</label><br>
+            <input type="text" name="year" id="year">
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+    </div>
+    {{/if}}
+
+    {{#if displayChoices}}
+    <form action="/playlistForms" method="post" role ="form" enctype="application/x-www-form-urlencoded">
+    <legend>What would you like to do?</legend>
+      <button name="choice" type="submit" class="btn btn-primary" value="add" >Add Playlist</button>    
+      <button name="choice" type="submit" class="btn btn-primary" value="list" >List All Playlists</button>  
+      <button name="choice" type="submit" class="btn btn-primary" value="edit" >Edit Playlist</button>  
+      <button name="choice" type="submit" class="btn btn-primary" value="delete" >Delete Playlist</button>
+    </form>
+    {{/if}}
+
+</div>
+
+
+
+<!-- Playlists Table -->
+<div style="display: flex;">
+    <div class="table">
+        <table border="1px" width="100%">
+        <caption>{{heading}}</caption>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+        {{#each playlists}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{title}}</td>
+                <td>{{year}}</td>
+            </tr>
+        {{/each}}
+        </table>
+    </div>
+</div>

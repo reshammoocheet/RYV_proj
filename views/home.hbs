@@ -1,0 +1,22 @@
+<h1>{{message}}</h1>
+<!-- Songs Table -->
+<div style="display: flex;">
+    <div class="table">
+        <table border="1px" width="100%">
+        <caption>{{heading}}</caption>
+        <input type="text" placeholder="Search">
+        <tr> 
+            <th>Position</th>
+            <th>Name</th>
+            <th>Artist</th>
+        </tr>
+        {{#each songs}}
+            <tr>
+                <td>{{position}}</td>
+                <td>{{name}}</td>
+                <td>{{artist}}</td>
+            </tr>
+        {{/each}}
+        </table>
+    </div>
+</div>
