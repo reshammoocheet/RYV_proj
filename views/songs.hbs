@@ -1,93 +1,148 @@
-<!-- Forms -->
-<div>
-    {{#if displayAddForm}}
+<!-- Songs Page -->
+<div class="page">
+    <!-- Forms -->
+    <div class="forms">
+        {{#if displayAddForm}}
 
-    <div class="form">
-    <form action="/song" method="post" role ="form" >
-        <legend class="formLegend" style="padding: 10px;"><u>Add new song</u></legend>
-        <label for="name">Enter song name:</label><br>
-        <input type="text" name="name" id="name">
-        <br>
-        <label for="artist">Enter song artist:</label><br>
-        <input type="text" name="artist" id="artist">
-        <br>
-        <button type="submit" class="btn btn-primary">Submit</button>
-
-    </form>
-    {{/if}}
-
-
-    {{#if displayEditForm}}
-    </div>
-    <div class="form">
-        <form action="/song-edit" method="post" role ="form" >
-            <legend class="formLegend" style="padding: 10px;"><u>Edit song</u></legend>
-            <label for="currentName">Enter current song name:</label><br>
-            <input type="text" name="currentName" id="currentName">
-            <br>
-            <label for="newName">Enter new song name:</label><br>
-            <input type="text" name="newName" id="newName">
-            <br>
-            <label for="newArtist">Enter new song artist:</label><br>
-            <input type="text" name="newArtist" id="newArtist">
-            <br>
-            <button type="submit" class="btn btn-primary">Submit</button>
-
-        </form>
-    </div>
-    {{/if}}
-
-    {{#if displayDeleteForm}}
-    <div class="form">
-        <form action="/song-delete" method="post" role ="form" >
-            <legend class="formLegend" style="padding: 10px;"><u>Delete song</u></legend>
-            <label for="name">Enter song name to be deleted:</label><br>
+        <div class="form">
+        <form action="/song" method="post" role ="form" >
+            <legend class="formLegend" style="padding: 10px;"><u>Add new song</u></legend>
+            <label for="name">Enter song name:</label><br>
             <input type="text" name="name" id="name">
             <br>
-            <label for="name">Enter song artist to be deleted:</label><br>
+            <label for="artist">Enter song artist:</label><br>
             <input type="text" name="artist" id="artist">
             <br>
             <button type="submit" class="btn btn-primary">Submit</button>
 
         </form>
-    </div>
-    {{/if}}
-
-    {{#if displayChoices}}
-    <form action="/songForms" method="post" role ="form" enctype="application/x-www-form-urlencoded">
-    <legend>What would you like to do?</legend>
-      <button name="choice" type="submit" class="btn btn-primary" value="add" >Add Song</button>    
-      <button name="choice" type="submit" class="btn btn-primary" value="list" >List All Songs</button>  
-      <button name="choice" type="submit" class="btn btn-primary" value="edit" >Edit Song</button>  
-      <button name="choice" type="submit" class="btn btn-primary" value="delete" >Delete Song</button>
-    </form>
-    {{/if}}
-
-</div>
+        {{/if}}
 
 
+        {{#if displayEditForm}}
+        </div>
+        <div class="form">
+            <form action="/song-edit" method="post" role ="form" >
+                <legend class="formLegend" style="padding: 10px;"><u>Edit song</u></legend>
+                <label for="currentName">Enter current song name:</label><br>
+                <input type="text" name="currentName" id="currentName">
+                <br>
+                <label for="newName">Enter new song name:</label><br>
+                <input type="text" name="newName" id="newName">
+                <br>
+                <label for="newArtist">Enter new song artist:</label><br>
+                <input type="text" name="newArtist" id="newArtist">
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
 
-<!-- Songs Table -->
-<div style="display: flex;">
-    <div class="table">
-        <table border="1px" width="100%">
-        <caption>{{heading}}</caption>
-        <form >
-            <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
-            <button>Search</button>
+            </form>
+        </div>
+        {{/if}}
+
+        {{#if displayDeleteForm}}
+        <div class="form">
+            <form action="/song-delete" method="post" role ="form" >
+                <legend class="formLegend" style="padding: 10px;"><u>Delete song</u></legend>
+                <label for="name">Enter song name to be deleted:</label><br>
+                <input type="text" name="name" id="name">
+                <br>
+                <label for="name">Enter song artist to be deleted:</label><br>
+                <input type="text" name="artist" id="artist">
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+
+            </form>
+        </div>
+        {{/if}}
+
+        {{#if displayChoices}}
+        <form action="/songForms" method="post" role ="form" enctype="application/x-www-form-urlencoded" >
+            <ul>
+                <li><legend style="font-size: 40px;">What would you like to do?</legend></li>
+                <li><button name="choice" type="submit" class="btn btn-primary" value="add" >Add Song</button>    </li>
+                <li><button name="choice" type="submit" class="btn btn-primary" value="list" >List All Songs</button>  </li>
+                <li><button name="choice" type="submit" class="btn btn-primary" value="edit" >Edit Song</button>  </li>
+                <li><button name="choice" type="submit" class="btn btn-primary" value="delete" >Delete Song</button></li>
+            
+            </ul>
         </form>
-        <tr> 
-            <th>Id</th>
-            <th>Name</th>
-            <th>Artist</th>
-        </tr>
-        {{#each songs}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{name}}</td>
-                <td>{{artist}}</td>
-            </tr>
-        {{/each}}
-        </table>
+        {{/if}}
+
     </div>
+
+
+
+    <!-- Songs Table -->
+    {{!-- <div style="display: flex;">
+        <div class="table">
+            <table border="1px" width="100%">
+            <caption>{{heading}}</caption>
+            <form >
+                <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
+                <button>Search</button>
+            </form>
+            <tr> 
+                <th>Id</th>
+                <th>Name</th>
+                <th>Artist</th>
+            </tr>
+            {{#each songs}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{name}}</td>
+                    <td>{{artist}}</td>
+                <button>Play</button>
+                </tr>
+            {{/each}}
+            </table>
+        </div>
+    </div> --}}
+
+    <div class="library">
+        <div style="display: block;">
+
+
+            <!-- Song Library -->
+            <ul class="songList">
+                <h1 style="text-align: center; margin: left -10px;">Library</h1>
+                <!-- Search Bar -->
+                <form >
+                    <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
+                    <button>Search</button>
+                </form>
+                <li class="song-list-item">
+                    <p class="song-list-item-text" style="text-decoration: underline;">Id</p>  
+                    <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
+                    <p class="song-list-item-text" style="text-decoration: underline;">Artist</p>  
+                </li>
+                {{#each songs}}
+                    <li class="song-list-item">
+                        <p class="song-list-item-text">{{id}}</p>
+                        <p class="song-list-item-text">{{name}}</p>
+                        <p class="song-list-item-text">{{artist}}</p>
+                        <button class="play-button">Play</button>
+                    </li>
+                {{/each}}
+            </ul>
+            <div class="musicplayer">
+                <h2>{{song.name}}</h2>
+                <h3>{{song.artist}}</h3>
+                <button style="background-color: yellowgreen;">
+                    <img src="images/skip-to-start.png">
+                </button>
+                <button style="background-color: yellowgreen;">
+                    <img src="images/play.png">
+                </button>
+                <button style="background-color: yellowgreen;">
+                    <img src="images/skip-to-end.png">
+                </button>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
 </div>

@@ -24,6 +24,36 @@ nav{
     display: flex;
 }
 
+
+.page{
+    display: flex;
+    align-items: center;
+    justify-content: center ;
+}
+
+
+.forms{
+    width: 100%;
+    margin-left: 25%;
+    align-items: left;
+    justify-content: center; 
+}
+
+.musicplayer{
+    background-color: rgb(55, 53, 53);
+    text-align: center; 
+    width: 75%;
+    align-items: center;
+    justify-content: center; 
+
+}
+
+.library{
+    width: 100%;
+    align-items: right;
+    justify-content: center; 
+}
+
 nav a {
     flex: 1;
     transition-duration: 0.4s;
@@ -52,7 +82,13 @@ a{
 footer{
     color: yellow;
     text-shadow: 1px 1px black;
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
 }
+
+
 
 input {
     border: none;
@@ -78,10 +114,29 @@ button {
     height: 10%;
 }
 
+.play-button{
+    transition-duration: 0.4s;
+    border: yellowgreen;
+    border-style: solid;
+    color: yellowgreen;
+    background-color: black;
+    padding: 7px 14px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block; 
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    height: 5%;
+}
+
 button:hover {
     background-color: white;
     color: black;
 }
+
+
 
 .addForm{
     border: 3spx solid yellow;
@@ -99,6 +154,21 @@ button:hover {
     width: fit-content;
 }
 
+.song-list-item{
+    display: flex;
+}
+
+.song-list-item-text{
+    margin: 10px;
+}
+
+.songList{
+    border: yellowgreen;
+    border-style: solid;
+    width: 75%;
+    text-align: center;
+}
+
 .table{
     border: 3px solid yellow;
     width: 50%;
@@ -114,6 +184,12 @@ button:hover {
 #account{
     text-align: right;
 }
+
+ul{
+    list-style-type: none;
+}
+
+
 /* @media screen and (max-width: 1224px) {
     .header-logo{
         width: 10%;

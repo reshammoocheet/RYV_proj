@@ -25,7 +25,7 @@ async function showForm(request, response) {
     }
 }
 router.post('/songForms', showForm)
-router.get('/song', readAllSongs)
+router.get('/song', listSongs)
 router.post('/song', newSong);
 router.post('/song-edit', updateSong)
 router.post('/song-delete', deleteSong);
@@ -78,22 +78,12 @@ async function searchSong(songs, searchName){
         songs.forEach((song) =>{
             // if we find the song we need
             if(song.name == searchName){
-                // get from database and display as sole song in table
                 
-                const songPageData = {
-                    songs: [song],
-                    heading: song.name,
-                    displayChoices: true
-                }
-            
-            
-                response.render('songs.hbs', songPageData)
-                return;
+                return song;
             }
         })
 
-        response.render('error.hbs', {message: "Empty search"})
-        return;
+        return undefined;
 
 }
 /**
@@ -143,18 +133,26 @@ async function newSong(request, response){
 * @param {Object} response
 * @returns {Array} An array of song objects
 */
-async function listSong(request, response){
+async function listSongs(request, response){
     try {
         const songs = await model.findAll();
+
+        // if user is searching up a song
+        const searchName = request.query.searchQuery;
+        if(searchName){
+            // get from database and display as sole song in table
+            const song = searchSong(songs, searchName)
+            if(song){
+                const songPageData = {
+                    songs: [song],
+                    heading: song.name,
+                    displayChoices: true
+                }
+                response.render('songs.hbs', songPageData )
     
-        // if(songs.length == 0){
-        //     const errorPageData = {
-        //         heading: "Empty DB",
-        //         message: 'The database does not contain any songs. '
-        //     }
-        //     response.render('error.hbs', errorPageData)
-        //     return;
-        // }
+            }
+
+        }
 
         const listPageData = {
             heading: 'Songs',
@@ -162,7 +160,6 @@ async function listSong(request, response){
             displayChoices: true
         }
         response.render('songs.hbs', listPageData)
-        //response.send(message);
         return songs;
     } 
     catch (error) {
