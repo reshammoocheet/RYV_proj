@@ -4,7 +4,7 @@ const validateUtils = require('../validateUtils');
 var connection;
 
 /**
- * Initializes Database and creates Song table with ID, Name and Release Artist as fields if the table does not already exist
+ * Initializes Database and creates Song table with ID, Name and Artist as fields if the table does not already exist
  * 
 */
 async function initialize(dbName, reset) {
@@ -97,7 +97,7 @@ async function findById(id){
     try{
         // Execute Sql command to database
         const sqlQuery = `SELECT * FROM song WHERE id = ?`;
-        const [songs, fields] = await connection.execute(sqlQuery, [name]);
+        const [songs, fields] = await connection.execute(sqlQuery, [id]);
 
         return songs[0];
     }
@@ -189,11 +189,10 @@ async function update(currentName, newName, newArtist){
 
 /**
  * Deletes any song containing the specified name and artist
-* @param {string} name
-* @param {number} artist
+* @param {Number} id
 * @returns {boolean} if db is now removed of that song
 */
-async function remove(name, artist){
+async function remove(id){
 
     // if song doesn't exist
     if(findByName(name).length < 1){
@@ -202,8 +201,8 @@ async function remove(name, artist){
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `DELETE FROM song WHERE name = ? AND artist = ?`;
-        await connection.execute(sqlQuery, [name, artist]);
+        const sqlQuery = `DELETE FROM song WHERE id = ?`;
+        await connection.execute(sqlQuery, [id]);
 
         return true;
     }
@@ -242,6 +241,7 @@ module.exports = {
     truncate,
     create,
     findByName,
+    findById,
     findAll,
     update,
     remove,

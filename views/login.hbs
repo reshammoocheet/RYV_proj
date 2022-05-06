@@ -1,15 +1,15 @@
-<form action="/signup" method="get" role="form" id="signup-form">
-    <button type="submit" class="btn btn-primary">Sign Up</button>
-</form>
+
 <form action="/login" method="post" role="form" id="login-form">
+    <h2>{{errorMessage}}</h2>
     <legend>Please enter your email and password to login</legend>
     <br>
-        <label for="email">Email:</label><br>
-        <input type="text" id="email" name="email" required><br>
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br>
         <label for="password">Password:</label><br>
         <input type="password" id="password" name="password" minlength="8" required>
         <div>
         <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary" formaction="/register" formmethod="post">Sign Up</button>
         </div>
 </form>
 

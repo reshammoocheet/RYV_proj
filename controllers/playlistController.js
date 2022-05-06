@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const routeRoot = '/';
 const model = require('../models/playlist-model')
+const { sessionManager } = require('../sessionManager');
 
 
 router.post('/playlist', newPlaylist)
@@ -45,20 +46,26 @@ async function newPlaylist(request, response){
 
     try{
         const playlist = await model.create(title, year);
-        response.send(`Playlist ${playlist.title} released in ${playlist.year} was created successfully! `)
-        return playlist;
+        const playlists = await model.findAll();
+        const listPageData = {
+            heading: `Playlist ${playlist.name} with description ${playlist.description} was created successfully! `,
+            songs: songs,
+            displayChoices: true
+        }
+
+        response.render('songs.hbs', listPageData )
     }
     catch(error){
         if(error instanceof model.InvalidInputError){
             response.statusCode = 400;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else{
-            console.error(error.message);
+            response.render('error.hbs', {message: error.message})
             throw error;
         }
     }
@@ -73,6 +80,13 @@ async function newPlaylist(request, response){
 * @returns {Array} An array of playlist objects
 */
 async function listPlaylist(request, response){
+    // check for valid session
+    const authenticatedSession = sessionManager.authenticateUser(request);
+    if(!authenticatedSession || authenticatedSession == null){
+        response.render('login.hbs');
+        return;
+    }
+
     try {
         const playlists = await model.findAll();
     
@@ -97,10 +111,10 @@ async function listPlaylist(request, response){
     catch (error) {
         if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else{
-            console.error(error.message);
+            response.render('error.hbs', {message: error.message})
             throw error;
         }
 }
@@ -131,10 +145,10 @@ async function findPlaylistByTitle(request, response){
     catch (error) {
         if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else{
-            console.error(error.message);
+            response.render('error.hbs', {message: error.message})
             throw error;
         }
     }
@@ -162,14 +176,14 @@ async function updatePlaylist(request, response){
     catch (error) {
         if(error instanceof model.InvalidInputError){
             response.statusCode = 400;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else{
-            console.error(error.message);
+            response.render('error.hbs', {message: error.message})
             throw error;
         }
 
@@ -184,23 +198,22 @@ async function updatePlaylist(request, response){
 * @returns {boolean} Whether the playlist was deleted successfully
 */
 async function deletePlaylist(request, response){
-    const title = request.body.title;
-    const year = request.body.year;
+    const id = request.body.id;
 
 
     try {
-        const success = await model.remove(title, year);
-        response.send(`Playlist ${title} was removed successfully!`)
+        const success = await model.remove(idid);
+        response.send(`Playlist was removed successfully!`)
         return success;
     } 
     
     catch (error) {
         if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else{
-            console.error(error.message);
+            response.render('error.hbs', {message: error.message})
             throw error;
         }
     }

@@ -23,7 +23,7 @@ app.use(express.static('public'))
 app.use(express.json());
 
 // Make sure errorController is last!
-const controllers = ['homeController', 'songController', 'playlistController', 'errorController'] 
+const controllers = ['homeController', 'songController', 'playlistController', 'userController','errorController'] 
 
 
 // Register routes from all controllers 

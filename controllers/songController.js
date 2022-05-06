@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const routeRoot = '/';
+const { sessionManager } = require('../sessionManager');
 
 const model = require('../models/song-model.js');
 
@@ -29,6 +30,7 @@ router.get('/song', listSongs)
 router.post('/song', newSong);
 router.post('/song-edit', updateSong)
 router.post('/song-delete', deleteSong);
+router.post('/play', playSong);
 
 /**
  * READ of CRUD.
@@ -53,6 +55,40 @@ async function readAllSongs(request, response) {
             songs: songs,
             heading: "All songs",
             displayChoices: true
+        }
+    
+    
+        response.render('songs.hbs', songPageData)
+    }
+    catch (error) {
+        // error handling.
+        if (error instanceof model.DBConnectionError) {
+            response.status("500");
+            response.render("home.hbs", { alert: true, message: "System error trying to read songs: " + error });
+        } else {
+            response.status("500");
+            response.render("home.hbs", { alert: true, message: "Unexpected error trying to read songs: " + error });
+        }
+    }
+
+}
+
+/**
+ * @param {*} request: Express request expecting JSON body. 
+ * @param {*} response: Sends a successful response, or a 500-level response if there is a system error
+ */
+ async function playSong(request, response) {
+    try{
+        let songs = await model.findAll();
+        let song = await model.findById(request.body.playSongId);
+    
+        console.log(song)
+    
+        const songPageData = {
+            songs: songs,
+            heading: "All songs",
+            displayChoices: true,
+            playSong: song
         }
     
     
@@ -100,26 +136,25 @@ async function newSong(request, response){
         const song = await model.create(name, artist);
         const songs = await model.findAll();
         const listPageData = {
-            heading: `Song ${song.name} released in ${song.artist} was created successfully! `,
+            heading: `Song ${song.name} by ${song.artist} was created successfully! `,
             songs: songs,
             displayChoices: true
         }
 
         response.render('songs.hbs', listPageData )
-        //response.send(`Song ${song.name} released in ${song.artist} was created successfully! `)
         return song;
     }
     catch(error){
         if(error instanceof model.InvalidInputError){
+            response.render('error.hbs', {message: error.message})
             response.statusCode = 400;
-            response.send(error.message);
         }
         else if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else{
-            console.error(error.message);
+            response.render('error.hbs', {message: error.message})
             throw error;
         }
     }
@@ -134,6 +169,13 @@ async function newSong(request, response){
 * @returns {Array} An array of song objects
 */
 async function listSongs(request, response){
+    // check for valid session
+    const authenticatedSession = sessionManager.authenticateUser(request);
+    if(!authenticatedSession || authenticatedSession == null){
+        response.render('login.hbs');
+        return;
+    }
+
     try {
         const songs = await model.findAll();
 
@@ -165,10 +207,10 @@ async function listSongs(request, response){
     catch (error) {
         if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else{
-            console.error(error.message);
+            response.render('error.hbs', {message: error.message})
             throw error;
         }
 }
@@ -176,38 +218,6 @@ async function listSongs(request, response){
 
 }
 
-/**
- * Finds an song based on id
-* @param {Object} request
-* @param {Object} response
-* @returns {Object} An song object
-*/
-async function findSongByTitle(request, response){
-    const name = request.query.name;
-
-    try {
-        const songs = await model.findByTitle(name);
-        if(songs[0]){
-            response.send(`Song ${songs[0].name} was found successfully! `)
-        }
-        else{
-            response.statusCode = 404;
-            response.send(`Song could not be found. `)
-        }
-        return songs[0];
-    } 
-    catch (error) {
-        if(error instanceof model.DatabaseExecutionError){
-            response.statusCode = 500;
-            response.send(error.message);
-        }
-        else{
-            console.error(error.message);
-            throw error;
-        }
-    }
-
-}
 
 /**
  * Finds an song based on id
@@ -235,11 +245,11 @@ async function updateSong(request, response){
     catch (error) {
         if(error instanceof model.InvalidInputError){
             response.statusCode = 400;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else{
             console.error(error.message);
@@ -257,16 +267,15 @@ async function updateSong(request, response){
 * @returns {boolean} Whether the song was deleted successfully
 */
 async function deleteSong(request, response){
-    const name = request.body.name;
-    const artist = request.body.artist;
+    const id = request.body.id;
 
 
     try {
-        const success = await model.remove(name, artist);
+        const success = await model.remove(id);
 
         const songs = await model.findAll();
         const listPageData = {
-            heading: `Song ${name} was removed successfully!`,
+            heading: `Song was removed successfully!`,
             songs: songs,
             displayChoices: true
         }
@@ -278,10 +287,10 @@ async function deleteSong(request, response){
     catch (error) {
         if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
-            response.send(error.message);
+            response.render('error.hbs', {message: error.message})
         }
         else{
-            console.error(error.message);
+            response.render('error.hbs', {message: error.message})
             throw error;
         }
     }

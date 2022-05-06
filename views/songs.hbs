@@ -43,12 +43,8 @@
         <div class="form">
             <form action="/song-delete" method="post" role ="form" >
                 <legend class="formLegend" style="padding: 10px;"><u>Delete song</u></legend>
-                <label for="name">Enter song name to be deleted:</label><br>
+                <label for="name">Enter song id to be deleted:</label><br>
                 <input type="text" name="name" id="name">
-                <br>
-                <label for="name">Enter song artist to be deleted:</label><br>
-                <input type="text" name="artist" id="artist">
-                <br>
                 <button type="submit" class="btn btn-primary">Submit</button>
 
             </form>
@@ -110,23 +106,30 @@
                     <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
                     <button>Search</button>
                 </form>
-                <li class="song-list-item">
-                    <p class="song-list-item-text" style="text-decoration: underline;">Id</p>  
-                    <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
-                    <p class="song-list-item-text" style="text-decoration: underline;">Artist</p>  
-                </li>
-                {{#each songs}}
+                <form method="post" role="form" action="/play">
                     <li class="song-list-item">
-                        <p class="song-list-item-text">{{id}}</p>
-                        <p class="song-list-item-text">{{name}}</p>
-                        <p class="song-list-item-text">{{artist}}</p>
-                        <button class="play-button">Play</button>
+                        <p class="song-list-item-text" style="text-decoration: underline;">Id</p>  
+                        <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
+                        <p class="song-list-item-text" style="text-decoration: underline;">Artist</p>  
                     </li>
-                {{/each}}
+                    {{#each songs}}
+                        <li class="song-list-item">
+                            <p class="song-list-item-text" >{{id}}</p>
+                            <p class="song-list-item-text" >{{name}}</p>
+                            <p class="song-list-item-text" >{{artist}}</p>
+                            <button class="play-button" type="submit" name="playSongId" value={{id}}>Play</button>
+                        </li>
+                    {{/each}}
+                </form>
+
             </ul>
             <div class="musicplayer">
-                <h2>{{song.name}}</h2>
-                <h3>{{song.artist}}</h3>
+                <h2>{{playSong.name}}</h2>
+                <h3>{{playSong.artist}}</h3>
+                <img class="song-image" src="images/song-image.jpg">
+                <div class="slidecontainer">
+                    <input type="range" min="0" max="3" value="0" disabled="true">
+                </div>
                 <button style="background-color: yellowgreen;">
                     <img src="images/skip-to-start.png">
                 </button>

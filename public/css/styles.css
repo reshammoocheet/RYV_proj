@@ -154,6 +154,11 @@ button:hover {
     width: fit-content;
 }
 
+.song-image{
+    width: 30%;
+    height: 30%;
+}
+
 .song-list-item{
     display: flex;
 }

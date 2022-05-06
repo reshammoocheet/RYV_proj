@@ -4,7 +4,7 @@ const validateUtils = require('../validateUtils');
 var connection;
 
 /**
- * Initializes Database and creates User table with ID, Name and Release Artist as fields if the table does not already exist
+ * Initializes Database and creates User table with ID, Username and Password as fields if the table does not already exist
  * 
 */
 async function initialize(dbName, reset) {
@@ -28,7 +28,7 @@ async function initialize(dbName, reset) {
     }
 
     try{
-        const sqlQuery = 'CREATE TABLE IF NOT EXISTS user(id int AUTO_INCREMENT, email VARCHAR(50), password VARCHAR(50), PRIMARY KEY (id))';
+        const sqlQuery = 'CREATE TABLE IF NOT EXISTS user(id int AUTO_INCREMENT, username VARCHAR(50), password VARCHAR(255), PRIMARY KEY (id))';
         await connection.execute(sqlQuery);
     }
     catch(error){
@@ -38,7 +38,7 @@ async function initialize(dbName, reset) {
 
 
 /**
- * Creates a new user based on its email and release password.
+ * Creates a new user based on its username and release password.
 * @param {string} tableName
 * @returns {boolean} success of truncate
 */
@@ -55,30 +55,25 @@ async function truncate(tableName){
 }
 
 /**
- * Creates a new user based on its email and release password.
-* @param {string} email
+ * Creates a new user based on its username and release password.
+* @param {string} username
 * @param {number} password
 * @returns {Object} An user Object
 */
-async function create(email, password){
+async function create(username, password){
     // Validate Input
-    if(!validateUtils.isValid(email, password)){
-        throw new InvalidInputError(`Invalid input when trying to create ${email} released in ${password}. `);
+    if(!validateUtils.isValid(username, password)){
+        throw new InvalidInputError(`Invalid input when trying to create ${username} released in ${password}. `);
     }
 
-    // check if user already exists
-    const users = await findByName(email);
-    if(users.length > 0){
-        throw new InvalidInputError(`${email} already exists. `);
-    }
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `INSERT INTO user (email, password) VALUES (?, ?)`;
-        await connection.execute(sqlQuery, [email, password]);
+        const sqlQuery = `INSERT INTO user (username, password) VALUES (?, ?)`;
+        await connection.execute(sqlQuery, [username, password]);
 
         // return created user
-        const user = {"email": email, "password": password}
+        const user = {"username": username, "password": password}
         return user;
     }
     catch(error){
@@ -97,7 +92,7 @@ async function findById(id){
     try{
         // Execute Sql command to database
         const sqlQuery = `SELECT * FROM user WHERE id = ?`;
-        const [users, fields] = await connection.execute(sqlQuery, [email]);
+        const [users, fields] = await connection.execute(sqlQuery, [username]);
 
         return users[0];
     }
@@ -109,15 +104,15 @@ async function findById(id){
 }
 
 /**
- * Finds an user based on its email
-* @param {string} email
+ * Finds an user based on its username
+* @param {string} username
 * @returns {Array} An array of user objects
 */
-async function findByName(email){
+async function findByUsername(username){
     try{
         // Execute Sql command to database
-        const sqlQuery = `SELECT * FROM user WHERE email = ?`;
-        const [users, fields] = await connection.execute(sqlQuery, [email]);
+        const sqlQuery = `SELECT * FROM user WHERE username = ?`;
+        const [users, fields] = await connection.execute(sqlQuery, [username]);
 
         return users;
     }
@@ -149,21 +144,21 @@ async function findAll(){
 }
 
 /**
- * Updates an user with a new email and password.
-* @param {string} currentName
-* @param {string} newName
-* @param {number} newArtist
+ * Updates an user with a new username and password.
+* @param {string} currentUsername
+* @param {string} newUsername
+* @param {number} newPassword
 * @returns {boolean} whether update was successful
 */
-async function update(currentName, newName, newArtist){
-    // Validate Input for both current and new email, and make sure element exists
-    if(!validateUtils.isValid(newName, newArtist)){
-        throw new InvalidInputError(`Invalid input when trying to update fields to ${newName} and ${newArtist}`);
+async function update(currentUsername, newUsername, newPassword){
+    // Validate Input for both current and new username, and make sure element exists
+    if(!validateUtils.isValid(newUsername, newPassword)){
+        throw new InvalidInputError(`Invalid input when trying to update fields to ${newUsername} and ${newPassword}`);
     }
 
     try {
-        if(await findByName(currentName) == null){
-            console.error(`No such user with email ${currentName}`);
+        if(await findByUsername(currentUsername) == null){
+            console.error(`No such user with username ${currentUsername}`);
             return false;
         }
     } 
@@ -175,8 +170,8 @@ async function update(currentName, newName, newArtist){
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `UPDATE user SET email = ?, password = ? WHERE email = ?`;
-        await connection.execute(sqlQuery, [newName, newArtist, currentName]);
+        const sqlQuery = `UPDATE user SET username = ?, password = ? WHERE username = ?`;
+        await connection.execute(sqlQuery, [newUsername, newPassword, currentUsername]);
 
         return true;
     }
@@ -188,22 +183,22 @@ async function update(currentName, newName, newArtist){
 }
 
 /**
- * Deletes any user containing the specified email and password
-* @param {string} email
+ * Deletes any user containing the specified username and password
+* @param {string} username
 * @param {number} password
 * @returns {boolean} if db is now removed of that user
 */
 async function remove(id){
 
     // if user doesn't exist
-    if(findByName(email).length < 1){
+    if(findByUsername(username).length < 1){
         return false;
     }
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `DELETE FROM user WHERE email = ? AND password = ?`;
-        await connection.execute(sqlQuery, [email, password]);
+        const sqlQuery = `DELETE FROM user WHERE username = ? AND password = ?`;
+        await connection.execute(sqlQuery, [username, password]);
 
         return true;
     }
@@ -241,7 +236,7 @@ module.exports = {
     initialize,
     truncate,
     create,
-    findByName,
+    findByUsername,
     findAll,
     update,
     remove,

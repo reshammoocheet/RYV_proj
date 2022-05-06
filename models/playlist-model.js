@@ -4,7 +4,7 @@ const validateUtils = require('../validateUtils');
 var connection;
 
 /**
- * Initializes Database and creates Playlist table with ID, Title and Release Year as fields if the table does not already exist
+ * Initializes Database and creates Playlist table with ID, Name and Release Description as fields if the table does not already exist
  * 
 */
 async function initialize(dbName, reset) {
@@ -28,7 +28,7 @@ async function initialize(dbName, reset) {
     }
 
     try{
-        const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist(id int AUTO_INCREMENT, title VARCHAR(50), year INT, PRIMARY KEY (id))';
+        const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist(id int AUTO_INCREMENT, name VARCHAR(50), description INT, PRIMARY KEY (id))';
         await connection.execute(sqlQuery);
     }
     catch(error){
@@ -38,13 +38,13 @@ async function initialize(dbName, reset) {
 
 
 /**
- * Creates a new playlist based on its title and release year.
-* @param {string} tableTitle
+ * Creates a new playlist based on its name and release description.
+* @param {string} tableName
 * @returns {boolean} success of truncate
 */
-async function truncate(tableTitle){
+async function truncate(tableName){
     try{
-        const sqlQuery = `TRUNCATE TABLE ${tableTitle}`;
+        const sqlQuery = `TRUNCATE TABLE ${tableName}`;
         await connection.execute(sqlQuery);
         return true;
     }
@@ -55,30 +55,30 @@ async function truncate(tableTitle){
 }
 
 /**
- * Creates a new playlist based on its title and release year.
-* @param {string} title
-* @param {number} year
+ * Creates a new playlist based on its name and release description.
+* @param {string} name
+* @param {number} description
 * @returns {Object} An playlist Object
 */
-async function create(title, year){
+async function create(name, description){
     // Validate Input
-    if(!validateUtils.isValid(title, year)){
-        throw new InvalidInputError(`Invalid input when trying to create ${title} released in ${year}. `);
+    if(!validateUtils.isValid(name, description)){
+        throw new InvalidInputError(`Invalid input when trying to create ${name} with description ${description}. `);
     }
 
     // check if playlist already exists
-    const playlists = await findByTitle(title);
+    const playlists = await findByName(name);
     if(playlists.length > 0){
-        throw new InvalidInputError(`${title} already exists. `);
+        throw new InvalidInputError(`${name} already exists. `);
     }
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `INSERT INTO playlist (title, year) VALUES (?, ?)`;
-        await connection.execute(sqlQuery, [title, year]);
+        const sqlQuery = `INSERT INTO playlist (name, description) VALUES (?, ?)`;
+        await connection.execute(sqlQuery, [name, description]);
 
         // return created playlist
-        const playlist = {"title": title, "year": year}
+        const playlist = {"name": name, "description": description}
         return playlist;
     }
     catch(error){
@@ -97,7 +97,7 @@ async function findById(id){
     try{
         // Execute Sql command to database
         const sqlQuery = `SELECT * FROM playlist WHERE id = ?`;
-        const [playlists, fields] = await connection.execute(sqlQuery, [title]);
+        const [playlists, fields] = await connection.execute(sqlQuery, [id]);
 
         return playlists[0];
     }
@@ -109,15 +109,15 @@ async function findById(id){
 }
 
 /**
- * Finds an playlist based on its title
-* @param {string} title
+ * Finds an playlist based on its name
+* @param {string} name
 * @returns {Array} An array of playlist objects
 */
-async function findByTitle(title){
+async function findByName(name){
     try{
         // Execute Sql command to database
-        const sqlQuery = `SELECT * FROM playlist WHERE title = ?`;
-        const [playlists, fields] = await connection.execute(sqlQuery, [title]);
+        const sqlQuery = `SELECT * FROM playlist WHERE name = ?`;
+        const [playlists, fields] = await connection.execute(sqlQuery, [name]);
 
         return playlists;
     }
@@ -149,21 +149,21 @@ async function findAll(){
 }
 
 /**
- * Updates an playlist with a new title and year.
-* @param {string} currentTitle
-* @param {string} newTitle
-* @param {number} newYear
+ * Updates an playlist with a new name and description.
+* @param {string} currentName
+* @param {string} newName
+* @param {number} newDescription
 * @returns {boolean} whether update was successful
 */
-async function update(currentTitle, newTitle, newYear){
-    // Validate Input for both current and new title, and make sure element exists
-    if(!validateUtils.isValid(newTitle, newYear)){
-        throw new InvalidInputError(`Invalid input when trying to update fields to ${newTitle} and ${newYear}`);
+async function update(currentName, newName, newDescription){
+    // Validate Input for both current and new name, and make sure element exists
+    if(!validateUtils.isValid(newName, newDescription)){
+        throw new InvalidInputError(`Invalid input when trying to update fields to ${newName} and ${newDescription}`);
     }
 
     try {
-        if(await findByTitle(currentTitle) == null){
-            console.error(`No such playlist with title ${currentTitle}`);
+        if(await findByName(currentName) == null){
+            console.error(`No such playlist with name ${currentName}`);
             return false;
         }
     } 
@@ -175,8 +175,8 @@ async function update(currentTitle, newTitle, newYear){
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `UPDATE playlist SET title = ?, year = ? WHERE title = ?`;
-        await connection.execute(sqlQuery, [newTitle, newYear, currentTitle]);
+        const sqlQuery = `UPDATE playlist SET name = ?, description = ? WHERE name = ?`;
+        await connection.execute(sqlQuery, [newName, newDescription, currentName]);
 
         return true;
     }
@@ -188,22 +188,21 @@ async function update(currentTitle, newTitle, newYear){
 }
 
 /**
- * Deletes any playlist containing the specified title and year
-* @param {string} title
-* @param {number} year
+ * Deletes any playlist containing the specified name and description
+* @param {Number} id
 * @returns {boolean} if db is now removed of that playlist
 */
-async function remove(title, year){
+async function remove(id){
 
     // if playlist doesn't exist
-    if(findByTitle(title).length < 1){
+    if(findByName(name).length < 1){
         return false;
     }
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `DELETE FROM playlist WHERE title = ? AND year = ?`;
-        await connection.execute(sqlQuery, [title, year]);
+        const sqlQuery = `DELETE FROM playlist WHERE id = ?`;
+        await connection.execute(sqlQuery, [id]);
 
         return true;
     }
@@ -241,7 +240,8 @@ module.exports = {
     initialize,
     truncate,
     create,
-    findByTitle,
+    findByName,
+    findById,
     findAll,
     update,
     remove,
