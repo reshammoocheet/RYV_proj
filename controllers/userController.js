@@ -88,7 +88,7 @@ async function registerUser(request, response){
 async function logoutUser(request, response){
     const authenticatedSession = sessionManager.authenticateUser(request);
     if (!authenticatedSession) {
-        response.redirect('/'); // Unauthorized access
+        response.redirect('/home'); // Unauthorized access
         return;
     }
     delete sessionManager.sessions[authenticatedSession.sessionId]

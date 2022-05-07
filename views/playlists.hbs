@@ -1,5 +1,7 @@
 <!-- Forms -->
-<div>
+<div class="page">
+    <div class="forms">
+
     {{#if displayAddForm}}
 
     <div class="form">
@@ -62,13 +64,13 @@
       <button name="choice" type="submit" class="btn btn-primary" value="delete" >Delete Playlist</button>
     </form>
     {{/if}}
+    </div>
 
-</div>
 
 
 
 <!-- Playlists Table -->
-<div style="display: flex;">
+{{!-- <div style="display: flex;">
     <div class="table">
         <table border="1px" width="100%">
         <caption>{{heading}}</caption>
@@ -85,5 +87,58 @@
             </tr>
         {{/each}}
         </table>
+    </div>
+</div> --}}
+
+<div class="library">
+        <div style="display: block;">
+
+
+            <!-- Song Library -->
+            <ul class="songList">
+                <h1 style="text-align: center; margin: left -10px;">Library</h1>
+                <!-- Search Bar -->
+                <form >
+                    <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
+                    <button>Search</button>
+                </form>
+                <form method="post" role="form" action="/play">
+                    <li class="song-list-item">
+                        <p class="song-list-item-text" style="text-decoration: underline;">Id</p>  
+                        <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
+                        <p class="song-list-item-text" style="text-decoration: underline;">Artist</p>  
+                    </li>
+                    {{#each songs}}
+                        <li class="song-list-item">
+                            <p class="song-list-item-text" >{{id}}</p>
+                            <p class="song-list-item-text" >{{name}}</p>
+                            <p class="song-list-item-text" >{{artist}}</p>
+                            <button class="play-button" type="submit" name="playSongId" value={{id}}>Play</button>
+                        </li>
+                    {{/each}}
+                </form>
+
+            </ul>
+            <div class="musicplayer">
+                <h2>{{playSong.name}}</h2>
+                <h3>{{playSong.artist}}</h3>
+                <img class="song-image" src="images/song-image.jpg">
+                <div class="slidecontainer">
+                    <input type="range" min="0" max="3" value="0" disabled="true">
+                </div>
+                <button style="background-color: yellowgreen;">
+                    <img src="images/skip-to-start.png">
+                </button>
+                <button style="background-color: yellowgreen;">
+                    <img src="images/play.png">
+                </button>
+                <button style="background-color: yellowgreen;">
+                    <img src="images/skip-to-end.png">
+                </button>
+            </div>
+        </div>
+
+
+
     </div>
 </div>
