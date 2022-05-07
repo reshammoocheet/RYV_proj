@@ -28,7 +28,7 @@ async function initialize(dbName, reset) {
     }
 
     try{
-        const sqlQuery = 'CREATE TABLE IF NOT EXISTS user(id int AUTO_INCREMENT, username VARCHAR(50), password VARCHAR(255), PRIMARY KEY (id))';
+        const sqlQuery = 'CREATE TABLE IF NOT EXISTS user(id int AUTO_INCREMENT, username VARCHAR(50), password VARCHAR(255), isPremium INT, PRIMARY KEY (id))';
         await connection.execute(sqlQuery);
     }
     catch(error){
@@ -60,20 +60,21 @@ async function truncate(tableName){
 * @param {number} password
 * @returns {Object} An user Object
 */
-async function create(username, password){
+async function create(username, password, premium = false){
     // Validate Input
     if(!validateUtils.isValid(username, password)){
         throw new InvalidInputError(`Invalid input when trying to create ${username} released in ${password}. `);
     }
 
+    isPremium = premium == true ? 1 : 0;
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `INSERT INTO user (username, password) VALUES (?, ?)`;
-        await connection.execute(sqlQuery, [username, password]);
+        const sqlQuery = `INSERT INTO user (username, password, isPremium) VALUES (?, ?, ?)`;
+        await connection.execute(sqlQuery, [username, password, isPremium]);
 
         // return created user
-        const user = {"username": username, "password": password}
+        const user = {"username": username, "password": password, "isPremium": isPremium}
         return user;
     }
     catch(error){
