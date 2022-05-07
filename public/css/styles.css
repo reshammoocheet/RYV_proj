@@ -33,16 +33,16 @@ nav{
 
 
 .forms{
-    width: 100%;
+    /* width: 100%;
     margin-left: 25%;
     align-items: left;
-    justify-content: center; 
+    justify-content: center;  */
 }
 
 .musicplayer{
     background-color: rgb(55, 53, 53);
     text-align: center; 
-    width: 75%;
+    width: 80%;
     align-items: center;
     justify-content: center; 
 

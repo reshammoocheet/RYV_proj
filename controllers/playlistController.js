@@ -8,8 +8,8 @@ const { sessionManager } = require('../sessionManager');
 router.post('/playlist', newPlaylist)
 router.get('/playlists', listPlaylist)
 router.get('/playlist', listPlaylist)
-router.post('/playlist/edit', updatePlaylist)
-router.post('/playlist/delete', deletePlaylist)
+router.post('/playlist-edit', updatePlaylist)
+router.post('/playlist-delete', deletePlaylist)
 
 async function showForm(request, response) {
     let playlists = await model.findAll();
@@ -81,11 +81,11 @@ async function newPlaylist(request, response){
 */
 async function listPlaylist(request, response){
     // check for valid session
-    const authenticatedSession = sessionManager.authenticateUser(request);
-    if(!authenticatedSession || authenticatedSession == null){
-        response.render('login.hbs');
-        return;
-    }
+    // const authenticatedSession = sessionManager.authenticateUser(request);
+    // if(!authenticatedSession || authenticatedSession == null){
+    //     response.render('login.hbs');
+    //     return;
+    // }
 
     try {
         const playlists = await model.findAll();

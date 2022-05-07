@@ -22,7 +22,7 @@
     {{#if displayEditForm}}
     </div>
     <div class="form">
-        <form action="/playlist/edit" method="post" role ="form" >
+        <form action="/playlist-edit" method="post" role ="form" >
             <legend class="formLegend" style="padding: 10px;"><u>Edit playlist</u></legend>
             <label for="currentTitle">Enter current playlist title:</label><br>
             <input type="text" name="currentTitle" id="currentTitle">
@@ -41,7 +41,7 @@
 
     {{#if displayDeleteForm}}
     <div class="form">
-        <form action="/playlist/delete" method="post" role ="form" >
+        <form action="/playlist-delete" method="post" role ="form" >
             <legend class="formLegend" style="padding: 10px;"><u>Delete playlist</u></legend>
             <label for="title">Enter playlist title to be deleted:</label><br>
             <input type="text" name="title" id="title">
@@ -57,11 +57,13 @@
 
     {{#if displayChoices}}
     <form action="/playlistForms" method="post" role ="form" enctype="application/x-www-form-urlencoded">
-    <legend>What would you like to do?</legend>
-      <button name="choice" type="submit" class="btn btn-primary" value="add" >Add Playlist</button>    
-      <button name="choice" type="submit" class="btn btn-primary" value="list" >List All Playlists</button>  
-      <button name="choice" type="submit" class="btn btn-primary" value="edit" >Edit Playlist</button>  
-      <button name="choice" type="submit" class="btn btn-primary" value="delete" >Delete Playlist</button>
+        <ul>
+            <li><legend style="font-size: 40px;">What would you like to do?</legend>
+            <li><button name="choice" type="submit" class="btn btn-primary" value="add" >Add Playlist</button>    </li>
+            <li><button name="choice" type="submit" class="btn btn-primary" value="list" >List All Playlists</button>  </li>
+            <li><button name="choice" type="submit" class="btn btn-primary" value="edit" >Edit Playlist</button>  </li>
+            <li><button name="choice" type="submit" class="btn btn-primary" value="delete" >Delete Playlist</button></li>
+        </ul>
     </form>
     {{/if}}
     </div>
