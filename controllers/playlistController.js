@@ -41,19 +41,19 @@ router.post('/playlistForms', showForm)
 * @returns {Object} An playlist object
 */
 async function newPlaylist(request, response){
-    const title = request.body.title;
-    const year = request.body.year;
+    const name = request.body.name;
+    const description = request.body.description;
 
     try{
-        const playlist = await model.create(title, year);
+        const playlist = await model.create(name, description);
         const playlists = await model.findAll();
         const listPageData = {
             heading: `Playlist ${playlist.name} with description ${playlist.description} was created successfully! `,
-            songs: songs,
+            playlists: playlists,
             displayChoices: true
         }
 
-        response.render('songs.hbs', listPageData )
+        response.render('playlists.hbs', listPageData )
     }
     catch(error){
         if(error instanceof model.InvalidInputError){
@@ -130,17 +130,17 @@ async function listPlaylist(request, response){
 * @returns {boolean} Whether the playlist was edited successfully
 */
 async function updatePlaylist(request, response){
-    const title = request.body.currentName;
+    const name = request.body.currentName;
     const newTitle = request.body.newName;
     const newYear = request.body.newDescription;
 
     try {
         const success = await model.update(currentName, newName, newDescription);
     
-        const songs = await model.findAll();
+        const playlists = await model.findAll();
         const listPageData = {
             heading: `Playlist ${currentName} was updated successfully with new name: ${newName} and new description: ${newDescription}. `,
-            songs: songs,
+            playlists: playlists,
             displayChoices: true
         }
 
@@ -178,10 +178,10 @@ async function deletePlaylist(request, response){
     try {
         const success = await model.remove(id);
 
-        const songs = await model.findAll();
+        const playlists = await model.findAll();
         const listPageData = {
             heading: `Playlist was removed successfully!`,
-            songs: songs,
+            playlists: playlists,
             displayChoices: true
         }
 

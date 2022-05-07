@@ -191,7 +191,7 @@ async function listSongs(request, response){
                     displayChoices: true
                 }
                 response.render('songs.hbs', songPageData )
-    
+                return;
             }
 
         }

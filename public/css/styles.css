@@ -33,10 +33,10 @@ nav{
 
 
 .forms{
-    /* width: 100%;
+    width: 100%;
     margin-left: 25%;
     align-items: left;
-    justify-content: center;  */
+    justify-content: center; 
 }
 
 .musicplayer{
@@ -82,8 +82,6 @@ a{
 footer{
     color: yellow;
     text-shadow: 1px 1px black;
-    position: fixed;
-    bottom: 0;
     text-align: center;
     width: 100%;
 }
@@ -151,7 +149,8 @@ button:hover {
 .form{
     border: 3px solid yellow;
     padding: 10px;
-    width: fit-content;
+    width: 75%;
+    text-align: center;
 }
 
 .song-image{
@@ -161,6 +160,7 @@ button:hover {
 
 .song-list-item{
     display: flex;
+    width: 100%;
 }
 
 .song-list-item-text{

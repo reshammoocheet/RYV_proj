@@ -7,30 +7,30 @@
     <div class="form">
     <form action="/playlist" method="post" role ="form" >
         <legend class="formLegend" style="padding: 10px;"><u>Add new playlist</u></legend>
-        <label for="title">Enter playlist title:</label><br>
-        <input type="text" name="title" id="title">
+        <label for="name">Enter playlist name:</label><br>
+        <input type="text" name="name" id="name">
         <br>
-        <label for="year">Enter playlist release year:</label><br>
-        <input type="text" name="year" id="year">
+        <label for="description">Enter playlist description</label><br>
+        <input type="text" name="description" id="description">
         <br>
         <button type="submit" class="btn btn-primary">Submit</button>
 
     </form>
+    </div>
     {{/if}}
 
 
     {{#if displayEditForm}}
-    </div>
     <div class="form">
         <form action="/playlist-edit" method="post" role ="form" >
             <legend class="formLegend" style="padding: 10px;"><u>Edit playlist</u></legend>
-            <label for="currentTitle">Enter current playlist title:</label><br>
+            <label for="currentTitle">Enter current playlist name:</label><br>
             <input type="text" name="currentTitle" id="currentTitle">
             <br>
-            <label for="newTitle">Enter new playlist title:</label><br>
+            <label for="newTitle">Enter new playlist name:</label><br>
             <input type="text" name="newTitle" id="newTitle">
             <br>
-            <label for="newYear">Enter new playlist release year:</label><br>
+            <label for="newYear">Enter new playlist release description:</label><br>
             <input type="text" name="newYear" id="newYear">
             <br>
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -43,11 +43,8 @@
     <div class="form">
         <form action="/playlist-delete" method="post" role ="form" >
             <legend class="formLegend" style="padding: 10px;"><u>Delete playlist</u></legend>
-            <label for="title">Enter playlist title to be deleted:</label><br>
-            <input type="text" name="title" id="title">
-            <br>
-            <label for="title">Enter playlist year to be deleted:</label><br>
-            <input type="text" name="year" id="year">
+            <label for="id">Enter playlist id to be deleted:</label><br>
+            <input type="text" name="id" id="id">
             <br>
             <button type="submit" class="btn btn-primary">Submit</button>
 
@@ -84,8 +81,8 @@
         {{#each playlists}}
             <tr>
                 <td>{{id}}</td>
-                <td>{{title}}</td>
-                <td>{{year}}</td>
+                <td>{{name}}</td>
+                <td>{{description}}</td>
             </tr>
         {{/each}}
         </table>
@@ -108,13 +105,13 @@
                     <li class="song-list-item">
                         <p class="song-list-item-text" style="text-decoration: underline;">Id</p>  
                         <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
-                        <p class="song-list-item-text" style="text-decoration: underline;">Artist</p>  
+                        <p class="song-list-item-text" style="text-decoration: underline;">Description</p>  
                     </li>
-                    {{#each songs}}
+                    {{#each playlists}}
                         <li class="song-list-item">
                             <p class="song-list-item-text" >{{id}}</p>
                             <p class="song-list-item-text" >{{name}}</p>
-                            <p class="song-list-item-text" >{{artist}}</p>
+                            <p class="song-list-item-text" >{{description}}</p>
                             <button class="play-button" type="submit" name="playSongId" value={{id}}>Play</button>
                         </li>
                     {{/each}}

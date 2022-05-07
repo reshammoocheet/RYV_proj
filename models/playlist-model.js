@@ -28,7 +28,7 @@ async function initialize(dbName, reset) {
     }
 
     try{
-        const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist(id int AUTO_INCREMENT, name VARCHAR(50), description INT, PRIMARY KEY (id))';
+        const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist(id int AUTO_INCREMENT, name VARCHAR(50), description VARCHAR(512), PRIMARY KEY (id))';
         await connection.execute(sqlQuery);
     }
     catch(error){
@@ -60,17 +60,12 @@ async function truncate(tableName){
 * @param {number} description
 * @returns {Object} An playlist Object
 */
-async function create(name, description){
+async function create(name, description = ""){
     // Validate Input
-    if(!validateUtils.isValid(name, description)){
+    if(!name){
         throw new InvalidInputError(`Invalid input when trying to create ${name} with description ${description}. `);
     }
 
-    // check if playlist already exists
-    const playlists = await findByName(name);
-    if(playlists.length > 0){
-        throw new InvalidInputError(`${name} already exists. `);
-    }
 
     try{
         // Execute Sql command to database
@@ -194,10 +189,6 @@ async function update(currentName, newName, newDescription){
 */
 async function remove(id){
 
-    // if playlist doesn't exist
-    if(findByName(name).length < 1){
-        return false;
-    }
 
     try{
         // Execute Sql command to database
