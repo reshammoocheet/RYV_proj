@@ -10,7 +10,7 @@ function welcomePage(request, response) {
     const authenticatedSession = sessionManager.authenticateUser(request);
     console.log(request.cookies);
     if(!authenticatedSession || authenticatedSession == null){
-        response.render('login.hbs');
+        response.render('login.hbs',{username: request.cookies.username});
         return;
     }
 
