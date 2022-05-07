@@ -41,6 +41,7 @@ async function loginUser(request, response){
         console.log(password);
         if (expectedPassword && await bcrypt.compare(password, expectedPassword)) {                     
             console.log("Successful login for user " + username);
+            console.log(user);
             // Create a session object that will expire in 2 minutes
             const sessionId = sessionManager.createSession(username, 120);
             // Save cookie that will expire.
@@ -56,8 +57,12 @@ async function loginUser(request, response){
 }
 
 async function registerUser(request, response){
+    console.log(request.body)
+    console.log(request.body.isPremium)
     const username = request.body.username;
     const password = request.body.password;
+    const isPremium = request.body.isPremium == "on";
+
     const user = await model.findByUsername(username);
 
     if (username && password) {
@@ -71,7 +76,7 @@ async function registerUser(request, response){
         else if(validator.isAlphanumeric(username)){
             console.log("Registering username " + username);
             const hashedPassword = await bcrypt.hash(password, saltRounds);
-            await model.create(username, hashedPassword)
+            await model.create(username, hashedPassword, isPremium)
         }
         else {
             response.render("login.hbs", {errorMessage: "Password was not strong enough."})

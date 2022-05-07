@@ -81,23 +81,14 @@ async function newPlaylist(request, response){
 */
 async function listPlaylist(request, response){
     // check for valid session
-    // const authenticatedSession = sessionManager.authenticateUser(request);
-    // if(!authenticatedSession || authenticatedSession == null){
-    //     response.render('login.hbs');
-    //     return;
-    // }
+    const authenticatedSession = sessionManager.authenticateUser(request);
+    if(!authenticatedSession || authenticatedSession == null){
+        response.render('login.hbs');
+        return;
+    }
 
     try {
         const playlists = await model.findAll();
-    
-        // if(playlists.length == 0){
-        //     const errorPageData = {
-        //         heading: "Empty DB",
-        //         message: 'The database does not contain any playlists. '
-        //     }
-        //     response.render('error.hbs', errorPageData)
-        //     return;
-        // }
 
         const listPageData = {
             heading: 'All Playlists',

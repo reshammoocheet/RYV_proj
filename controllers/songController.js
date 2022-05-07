@@ -170,11 +170,11 @@ async function newSong(request, response){
 */
 async function listSongs(request, response){
     // check for valid session
-    // const authenticatedSession = sessionManager.authenticateUser(request);
-    // if(!authenticatedSession || authenticatedSession == null){
-    //     response.render('login.hbs');
-    //     return;
-    // }
+    const authenticatedSession = sessionManager.authenticateUser(request);
+    if(!authenticatedSession || authenticatedSession == null){
+        response.render('login.hbs');
+        return;
+    }
 
     try {
         const songs = await model.findAll();
