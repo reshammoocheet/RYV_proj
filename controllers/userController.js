@@ -50,7 +50,8 @@ async function loginUser(request, response){
             response.render('error.hbs', {message: "Invalid username / password given for user: " + username})
             console.log("Invalid username / password given for user: " + username);
         }
-        response.render('home.hbs',  { message: "Welcome!" }); // Redirect to main page (whether session was set or not)
+        //response.render('home.hbs',  { message: "Welcome!" }); // Redirect to main page (whether session was set or not)
+        response.redirect('/home');
     }
 }
 
@@ -94,7 +95,7 @@ async function logoutUser(request, response){
     console.log("Logged out user " + authenticatedSession.userSession.username);
 
     response.cookie("sessionId", "", { expires: new Date() }); // "erase" cookie by forcing it to expire.
-    response.redirect('/');
+    response.redirect('/home');
 
 }
 

@@ -100,12 +100,11 @@ async function listPlaylist(request, response){
         // }
 
         const listPageData = {
-            heading: 'Playlists',
+            heading: 'All Playlists',
             playlists: playlists,
             displayChoices: true
         }
         response.render('playlists.hbs', listPageData)
-        //response.send(message);
         return playlists;
     } 
     catch (error) {
@@ -122,38 +121,7 @@ async function listPlaylist(request, response){
 
 }
 
-/**
- * Finds an playlist based on id
-* @param {Object} request
-* @param {Object} response
-* @returns {Object} An playlist object
-*/
-async function findPlaylistByTitle(request, response){
-    const title = request.query.title;
 
-    try {
-        const playlists = await model.findByTitle(title);
-        if(playlists[0]){
-            response.send(`Playlist ${playlists[0].title} was found successfully! `)
-        }
-        else{
-            response.statusCode = 404;
-            response.send(`Playlist could not be found. `)
-        }
-        return playlists[0];
-    } 
-    catch (error) {
-        if(error instanceof model.DatabaseExecutionError){
-            response.statusCode = 500;
-            response.render('error.hbs', {message: error.message})
-        }
-        else{
-            response.render('error.hbs', {message: error.message})
-            throw error;
-        }
-    }
-
-}
 
 /**
  * Finds an playlist based on id
@@ -162,15 +130,22 @@ async function findPlaylistByTitle(request, response){
 * @returns {boolean} Whether the playlist was edited successfully
 */
 async function updatePlaylist(request, response){
-    const title = request.body.currentTitle;
-    const newTitle = request.body.newTitle;
-    const newYear = request.body.newYear;
+    const title = request.body.currentName;
+    const newTitle = request.body.newName;
+    const newYear = request.body.newDescription;
 
     try {
-        const success = await model.update(title, newTitle, newYear);
-
-        response.send(`Playlist ${title} was updated successfully with new title: ${newTitle} and new year: ${newYear}. `)
+        const success = await model.update(currentName, newName, newDescription);
     
+        const songs = await model.findAll();
+        const listPageData = {
+            heading: `Playlist ${currentName} was updated successfully with new name: ${newName} and new description: ${newDescription}. `,
+            songs: songs,
+            displayChoices: true
+        }
+
+        response.render('songs.hbs', listPageData )
+
         return success;
     } 
     catch (error) {
@@ -200,10 +175,17 @@ async function updatePlaylist(request, response){
 async function deletePlaylist(request, response){
     const id = request.body.id;
 
-
     try {
-        const success = await model.remove(idid);
-        response.send(`Playlist was removed successfully!`)
+        const success = await model.remove(id);
+
+        const songs = await model.findAll();
+        const listPageData = {
+            heading: `Playlist was removed successfully!`,
+            songs: songs,
+            displayChoices: true
+        }
+
+        response.render('playlists.hbs', listPageData )
         return success;
     } 
     

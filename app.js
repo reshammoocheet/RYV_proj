@@ -6,7 +6,8 @@ const bodyParser = require('body-parser');
 
 // const pinohttp = require('pino-http');
 const expressListRoutes = require('express-list-routes');
-
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 // Tell the app to use handlebars templating engine.  
 //   Configure the engine to use a simple .hbs extension to simplify file naming

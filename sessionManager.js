@@ -24,6 +24,7 @@ class SessionManager {
     authenticateUser(request) {
         // If this request doesn't have any cookies, that means it isn't authenticated. Return null.
         if (!request.cookies) {
+            console.log("Sessions: " + this.sessions)
             return null;
         }
         // We can obtain the session token from the requests cookies, which come with every request
@@ -33,7 +34,7 @@ class SessionManager {
             return null;
         }
         // We then get the session of the user from our session map
-        userSession = this.sessions[sessionId]
+        var userSession = this.sessions[sessionId]
         if (!userSession) {
             return null;
         }        // If the session has expired, delete the session from our map and return null
