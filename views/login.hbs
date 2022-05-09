@@ -4,12 +4,12 @@
     <legend>Please enter your email and password to login</legend>
     <br>
         <label for="username">Username:</label><br>
-        <input type="text" placeholder="" id="username" name="username" required><br>
-        {{#if username}}
-        <datalist id="username">
+        <input type="text" {{#if username}}placeholder="{{username}}"{{/if}} id="username" name="username" required><br>
+        
+        {{!-- <datalist id="username">
             <option value={{username}}>
-        </datalist>
-        {{/if}}
+        </datalist> --}}
+        
         <label for="password">Password:</label><br>
         <input type="password" id="password" name="password" minlength="8" required>
         <div>

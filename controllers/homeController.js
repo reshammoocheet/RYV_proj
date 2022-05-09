@@ -8,14 +8,14 @@ router.get('/', welcomePage);
 
 function welcomePage(request, response) {
     // check for valid session
-    // const authenticatedSession = sessionManager.authenticateUser(request);
-    // console.log(request.cookies);
-    // if(!authenticatedSession || authenticatedSession == null){
-    //     response.render('login.hbs',{username: request.cookies.username});
-    //     return;
-    // }
+    const authenticatedSession = sessionManager.authenticateUser(request);
+    console.log(request.cookies);
+    if(!authenticatedSession || authenticatedSession == null){
+        response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
+        return;
+    }
 
-    // console.log("User " + authenticatedSession.userSession.username + " is authorized for home page");
+    console.log("User " + authenticatedSession.userSession.username + " is authorized for home page");
 
     response.render('home.hbs', { message: "Welcome "});
 }

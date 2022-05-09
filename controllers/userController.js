@@ -87,7 +87,7 @@ async function loginUser(request, response){
     console.log(user)
 
     if(user.length < 1){
-        response.render('login.hbs', {errorMessage: "Invalid username given for user: " + username})
+        response.render('login.hbs', {errorMessage: "Invalid username given for user: " + username, hideLogout: true})
         return;
     }
 
@@ -109,7 +109,7 @@ async function loginUser(request, response){
             response.cookie("username", username);
         } 
         else {
-            response.render('login.hbs', {errorMessage: "Invalid username / password given for user: " + username})
+            response.render('login.hbs', {errorMessage: "Invalid username / password given for user: " + username, hideLogout: true})
             console.log("Invalid username / password given for user: " + username);
             return;
         }

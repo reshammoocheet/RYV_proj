@@ -1,14 +1,13 @@
 <header>
     <img src="images/logo-dark.png" class="header-logo"/>
     <h1 class="header-text">RYV</h1>
-    <a href="/home" id="account">Acc.ount</a>
-    <form action="/logout" method="GET" role="form"
-    {{#if hideLogout}}
-        visibility="hidden"
-    {{/if}}
-    
-    >
-        <button id="account" type="submit">Logout</button>
+    <a href="/home" id="account">Account</a>
+    <form action="/logout" method="GET" role="form">
+        <button id="account" type="submit" 
+        {{#if hideLogout}}
+            style="display: none;"
+        {{/if}}
+        >Logout</button>
     </form>
     <nav >
         <a href="/home">Home</a>
