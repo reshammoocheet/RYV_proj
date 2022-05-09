@@ -83,7 +83,7 @@ async function listPlaylist(request, response){
     // check for valid session
     const authenticatedSession = sessionManager.authenticateUser(request);
     if(!authenticatedSession || authenticatedSession == null){
-        response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
+        response.render('login.hbs',{username: request.cookies.username , hideLogout: true});
         return;
     }
 

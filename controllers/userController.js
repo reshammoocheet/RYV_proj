@@ -72,7 +72,7 @@ function showProfilePage(request, response){
 }
 
 function signupPage(request, response){
-    response.render('sign-up.hbs')
+    response.render('sign-up.hbs',{hideLogout: true});
 }
 
 async function loginUser(request, response){
@@ -87,7 +87,7 @@ async function loginUser(request, response){
     console.log(user)
 
     if(user.length < 1){
-        response.render('login.hbs', {errorMessage: "Invalid username given for user: " + username, hideLogout: true})
+        response.render('login.hbs', {errorMessage: "Invalid username given for user: " + username})
         return;
     }
 
@@ -109,7 +109,7 @@ async function loginUser(request, response){
             response.cookie("username", username);
         } 
         else {
-            response.render('login.hbs', {errorMessage: "Invalid username / password given for user: " + username, hideLogout: true})
+            response.render('login.hbs', {errorMessage: "Invalid username / password given for user: " + username , hideLogout: true})
             console.log("Invalid username / password given for user: " + username);
             return;
         }
