@@ -5,9 +5,6 @@
         {{#if displayAddForm}}
 
         <div class="form">
-            <button type="submit" formmethod="get" formaction="/song" style="width: 33%; text-align:left;">
-                <img src="images/back.png" >
-            </button>
             <form action="/song" method="post" role ="form" >
             <legend class="formLegend" style="padding: 10px;"><u>Add new song</u></legend>
             <label for="name">Enter song name:</label><br>
@@ -47,7 +44,7 @@
             <form action="/song-delete" method="post" role ="form" >
                 <legend class="formLegend" style="padding: 10px;"><u>Delete song</u></legend>
                 <label for="name">Enter song id to be deleted:</label><br>
-                <input type="text" name="name" id="name">
+                <input type="text" name="id" id="id">
                 <button type="submit" class="btn btn-primary">Submit</button>
 
             </form>
@@ -127,7 +124,7 @@
 
             </ul>
             <div class="musicplayer">
-                <h2>{{playSong.name}}</h2>
+                <h2 id="songNameHeader">{{playSong.name}}</h2>
                 <h3>{{playSong.artist}}</h3>
                 <img class="song-image" src="images/song-image.jpg">
                 <div class="slidecontainer">
@@ -136,9 +133,15 @@
                 <button style="background-color: yellowgreen;">
                     <img src="images/skip-to-start.png">
                 </button>
-                <button style="background-color: yellowgreen;">
+
+                <button style="background-color: yellowgreen; display: none" id="pause-btn" >
+                    <img src="images/pause.png">
+                </button>
+
+                <button style="background-color: yellowgreen;" id="play-btn" onclick="console.log('hello');">
                     <img src="images/play.png">
                 </button>
+
                 <button style="background-color: yellowgreen;">
                     <img src="images/skip-to-end.png">
                 </button>

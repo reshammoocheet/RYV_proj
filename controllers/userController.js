@@ -13,6 +13,63 @@ router.get('/logout', logoutUser);
 router.post('/register', registerUser)
 router.get('/signup', signupPage)
 router.get('/newPassword', changePassword)
+router.get('/profile', showProfilePage);
+router.post('/profileForms', showForm)
+router.post('/usernameChange', updateUsername)
+
+async function updateUsername(request, response){
+    const username = request.body.currentUsername;
+    const newUsername = request.body.newUsername;
+    const newPassword = request.body.password;
+
+    try {
+        const success = await model.updateUsername(username, newUsername);
+        const songs = await model.findAll();
+        const listPageData = {
+            heading: `User ${username} was updated successfully. `,
+            songs: songs,
+            displayChoices: true
+        }
+
+        response.render('songs.hbs', listPageData )
+        return success;
+    } 
+    catch (error) {
+        if(error instanceof model.InvalidInputError){
+            response.statusCode = 400;
+            response.render('error.hbs', {message: error.message})
+        }
+        else if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: error.message})
+        }
+        else{
+            console.error(error.message);
+            throw error;
+        }
+
+    }
+}
+
+async function showForm(request, response) {
+    switch (request.body.choice) {
+        case 'username':
+            response.render('profile.hbs', { displayUsernameForm: true });
+            break;
+        case 'password':
+            response.render('profile.hbs', { displayPasswordForm: false });
+            break;
+        case 'premium':
+            response.render('profile.hbs', { displayPremiumForm: true});
+            break;
+        default:
+            response.render('songs.hbs');  // no valid choice made
+    }
+}
+
+function showProfilePage(request, response){
+    response.render('profile.hbs', {displayChoices: true})
+}
 
 function signupPage(request, response){
     response.render('sign-up.hbs')

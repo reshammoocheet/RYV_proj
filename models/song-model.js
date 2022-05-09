@@ -11,7 +11,7 @@ async function initialize(dbName, reset) {
     connection = await mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        port: '10000',
+        port: '10003',
         password: 'pass',
         database: dbName
     });
@@ -193,11 +193,6 @@ async function update(currentName, newName, newArtist){
 * @returns {boolean} if db is now removed of that song
 */
 async function remove(id){
-
-    // if song doesn't exist
-    if(findByName(name).length < 1){
-        return false;
-    }
 
     try{
         // Execute Sql command to database
