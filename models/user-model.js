@@ -11,7 +11,7 @@ async function initialize(dbName, reset) {
     connection = await mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        port: '10000',
+        port: '10003',
         password: 'pass',
         database: dbName
     });
@@ -170,9 +170,45 @@ async function update(currentUsername, newUsername, newPassword){
 
 
     try{
+
         // Execute Sql command to database
-        const sqlQuery = `UPDATE user SET username = ?, password = ? WHERE username = ?`;
+        let sqlQuery = `UPDATE user SET username = ?, password = ? WHERE username = ?`;
         await connection.execute(sqlQuery, [newUsername, newPassword, currentUsername]);
+
+
+        return true;
+    }
+    catch(error){
+        console.error(error.message);
+        throw new DatabaseExecutionError(error.message);
+    }
+
+}
+
+async function updateUsername(currentUsername, newUsername){
+    try{
+
+        // Execute Sql command to database
+        let sqlQuery = `UPDATE user SET username = ? WHERE username = ?`;
+        await connection.execute(sqlQuery, [newUsername, currentUsername]);
+
+
+        return true;
+    }
+    catch(error){
+        console.error(error.message);
+        throw new DatabaseExecutionError(error.message);
+    }
+
+}
+
+async function updatePassword(currentPassword, newPassword){
+    try{
+
+        // Execute Sql command to database
+        let sqlQuery = `UPDATE user SET password = ? WHERE password = ?`;
+        await connection.execute(sqlQuery, [newPassword, currentPassword]);
+
 
         return true;
     }
@@ -240,6 +276,8 @@ module.exports = {
     findByUsername,
     findAll,
     update,
+    updateUsername,
+    updatePassword,
     remove,
     getConnection,
     endConnection,
