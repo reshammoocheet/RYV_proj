@@ -12,6 +12,7 @@ router.post('/login', loginUser)
 router.get('/logout', logoutUser);
 router.post('/register', registerUser)
 router.get('/signup', signupPage)
+router.get('/newPassword', changePassword)
 
 function signupPage(request, response){
     response.render('sign-up.hbs')
@@ -42,6 +43,8 @@ async function loginUser(request, response){
         if (expectedPassword && await bcrypt.compare(password, expectedPassword)) {                     
             console.log("Successful login for user " + username);
             console.log(user);
+            // set the currentUser of the session to this user.
+            sessionManager.currentUser = user[0];
             // Create a session object that will expire in 2 minutes
             const sessionId = sessionManager.createSession(username, 120);
             // Save cookie that will expire.
@@ -49,8 +52,9 @@ async function loginUser(request, response){
             response.cookie("username", username);
         } 
         else {
-            response.render('error.hbs', {message: "Invalid username / password given for user: " + username})
+            response.render('login.hbs', {errorMessage: "Invalid username / password given for user: " + username})
             console.log("Invalid username / password given for user: " + username);
+            return;
         }
         //response.render('home.hbs',  { message: "Welcome!" }); // Redirect to main page (whether session was set or not)
         response.redirect('/home');
@@ -104,6 +108,10 @@ async function logoutUser(request, response){
     response.redirect('/home');
 
 }
+
+function changePassword(request, response){
+    const oldPassword = request.body.oldPassword;
+}   
 
 module.exports = {
     router, 

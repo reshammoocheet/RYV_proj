@@ -5,6 +5,7 @@ const { Session } = require('./session');
 class SessionManager {
     constructor(){
         this.sessions = {};
+        this.currentUser = {};
     }
 
     createSession(username, numMinutes) {
@@ -15,7 +16,7 @@ class SessionManager {
     
         // Create a session object containing information about the user and expiry time
         const thisSession = new Session(username, expiresAt);
-    
+        
         // Add the session information to the sessions map, using sessionId as the key
         this.sessions[sessionId] = thisSession;
         return sessionId;
@@ -24,7 +25,6 @@ class SessionManager {
     authenticateUser(request) {
         // If this request doesn't have any cookies, that means it isn't authenticated. Return null.
         if (!request.cookies) {
-            console.log("Sessions: " + this.sessions)
             return null;
         }
         // We can obtain the session token from the requests cookies, which come with every request

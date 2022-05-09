@@ -14,9 +14,9 @@ function welcomePage(request, response) {
         return;
     }
 
-    // console.log("User " + authenticatedSession.userSession.username + " is authorized for home page");
+    console.log("User " + authenticatedSession.userSession.username + " is authorized for home page");
 
-    response.render('home.hbs', { message: "Welcome!" });
+    response.render('home.hbs', { message: "Welcome "});
 }
 
 

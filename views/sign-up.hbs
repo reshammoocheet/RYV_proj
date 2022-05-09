@@ -1,19 +1,62 @@
 <form action="/register" method="post" role="form" id="login-form">
     <legend>Please enter your username and password to sign up</legend>
     <br>
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" required><br>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" minlength="8" required>
-        <br>
-        <label for="password">Confirm Password:</label><br>
-        <input type="password" minlength="8" required>
-        <br>
-        <input type="checkbox" id="html" name="isPremium">
-        <label for="html">Premium</label><br>
-        <div>
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username" required><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password" minlength="8" required>
+    <br>
+    <label for="password">Confirm Password:</label><br>
+    <input type="password" minlength="8" required>
+    <br>
+    <input type="checkbox" id="premiumCheckbox" name="isPremium" disabled="true" checked="true">
+    <label for="html">Premium</label><br>
+    <div>
 
-        
-        <button type="submit" class="btn btn-primary">Sign Up</button>
-        </div>
+    <div id="paypal-button-container">
+
+    </div>
+
+    <div class="premiumTable">
+        <table border="1px" width="100%">
+            <tr> 
+                <th>Free</th>
+                <th>Free</th>
+                <th>Premium</th>
+            </tr>
+            <tr>
+                <td style="display: flex"><p>Can add songs</p></td>
+                <td><input style="align-items: right; justify-content: space-between;" type="checkbox" disabled="true" checked="true"></td>
+                <td><input style="align-items: right; justify-content: space-between;" type="checkbox" disabled="true" checked="true"></td>
+            </tr>
+            <tr>
+                <td style="display: flex"><p>Can create playlists</p></td>
+                <td><input style="align-items: right; justify-content: space-between;" type="checkbox" disabled="true" checked="true"></td>
+                <td><input style="align-items: right; justify-content: space-between;" type="checkbox" disabled="true" checked="true"></td>
+            </tr>
+            <tr>
+                <td style="display: flex"><p>Can download songs</p></td>
+                <td><input style="align-items: right; justify-content: space-between;" type="checkbox"  checked="false" disabled="true"></td>
+                <td><input style="align-items: right; justify-content: space-between;" type="checkbox" disabled="true" checked="true"></td>
+            </tr>
+        </table>
+    </div>
+
+    
+    <button type="submit" class="btn btn-primary">Sign Up</button>
+    </div>
+
+
+        {{!-- <form action="https://www.paypal.com/cgi-bin/webscr" method="post"> 
+    <!-- Identify your business so that you can collect the payments. --> 
+    <input type="hidden" name="business" value="herschelgomez@xyzzyu.com">
+    <!-- Specify a Buy Now button. --> <input type="hidden" name="cmd" value="_xclick"> 
+    <!-- Specify details about the item that buyers will purchase. --> 
+    <input type="hidden" name="item_name" value="Premium Umbrella"> 
+    <input type="hidden" name="amount" value="50.00"> 
+    <input type="hidden" name="currency_code" value="USD"> 
+    <!-- Display the payment button. --> 
+    <input type="image" name="submit" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynow_LG.gif" alt="Buy Now"> 
+    <img alt="" border="0" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" > 
+</form> --}}
 </form>

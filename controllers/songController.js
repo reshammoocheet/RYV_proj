@@ -83,6 +83,7 @@ async function readAllSongs(request, response) {
         let song = await model.findById(request.body.playSongId);
     
         console.log(song)
+        request.cookies.tracks++;
     
         const songPageData = {
             songs: songs,
@@ -176,6 +177,13 @@ async function listSongs(request, response){
         return;
     }
 
+
+    let isPremium = false;
+    if(sessionManager.currentUser.isPremium == '1'){
+        isPremium = true;
+
+    }
+
     try {
         const songs = await model.findAll();
 
@@ -188,7 +196,8 @@ async function listSongs(request, response){
                 const songPageData = {
                     songs: [song],
                     heading: song.name,
-                    displayChoices: true
+                    displayChoices: true,
+                    isPremium: true
                 }
                 response.render('songs.hbs', songPageData )
                 return;

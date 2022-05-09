@@ -5,7 +5,10 @@
         {{#if displayAddForm}}
 
         <div class="form">
-        <form action="/song" method="post" role ="form" >
+            <button type="submit" formmethod="get" formaction="/song" style="width: 33%; text-align:left;">
+                <img src="images/back.png" >
+            </button>
+            <form action="/song" method="post" role ="form" >
             <legend class="formLegend" style="padding: 10px;"><u>Add new song</u></legend>
             <label for="name">Enter song name:</label><br>
             <input type="text" name="name" id="name">
@@ -119,6 +122,7 @@
                             <button class="play-button" type="submit" name="playSongId" value={{id}}>Play</button>
                         </li>
                     {{/each}}
+
                 </form>
 
             </ul>

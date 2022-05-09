@@ -119,7 +119,7 @@ button {
     color: yellowgreen;
     background-color: black;
     padding: 7px 14px;
-    text-align: center;
+    text-align: right;
     text-decoration: none;
     display: inline-block; 
     font-size: 16px;
@@ -194,11 +194,34 @@ ul{
     list-style-type: none;
 }
 
+.premiumTable{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-/* @media screen and (max-width: 1224px) {
+
+@media screen and (max-width: 1224px) {
     .header-logo{
         width: 10%;
         height: 10%;
         margin-bottom: -30px;
     }
-} */
+
+    button {
+        transition-duration: 0.4s;
+        border: white;
+        border-style: solid;
+        color: white;
+        background-color: black;
+        padding: 7px 14px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block; 
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        height: 10%;
+    }
+} 
