@@ -72,7 +72,7 @@ function showProfilePage(request, response){
 }
 
 function signupPage(request, response){
-    response.render('sign-up.hbs')
+    response.render('sign-up.hbs',{hideLogout: true});
 }
 
 async function loginUser(request, response){
