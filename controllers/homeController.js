@@ -10,18 +10,15 @@ const model = require('../models/song-model');
 async function welcomePage(request, response) {
     // check for valid session
     const authenticatedSession = sessionManager.authenticateUser(request);
-    console.log("Cookies: ");
-    //console.log(request.cookies);
-    for (const [key, value] of Object.entries(request.cookies)) {
-        console.log(key, value);
-    }
     if(!authenticatedSession || authenticatedSession == null){
         response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
         return;
     }
 
     // get songs.
-    let songs = await model.findTop();
+    // let songs = await model.findTop();
+    let songs = await getTopSongs(request);
+    console.log(songs);
 
     console.log("User " + authenticatedSession.userSession.username + " is authorized for home page");
 
@@ -33,6 +30,25 @@ async function welcomePage(request, response) {
     }
 }
 
+async function getTopSongs(request){
+    let songs = [];
+    // for each cookie
+    for (const [key, value] of Object.entries(request.cookies)) {
+        // find the song with that name
+        let song = await model.findByName(key);
+        console.log(song[0]);
+        // findByName returns an array of songs with that name so we check if its not empty
+        if(song.length > 0){
+            // add it to the top songs
+            song[0].timesPlayed = parseInt(value);
+            songs.push(song[0]);
+        }
+        console.log(key, value);
+    }
+
+    songs.sort((a, b) => (a.timesPlayed < b.timesPlayed) ? 1 : -1)
+    return songs;
+}
 
 
 

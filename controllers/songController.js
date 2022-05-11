@@ -87,15 +87,31 @@ async function readAllSongs(request, response) {
         
         console.log(song)
         //request.cookies.tracks++;
-        // if(song.name){
-        //     if(request.cookies.song.name > 0){
-        //         response.cookie("top songs", request.cookies.song.name+1);
-        //     }
-        //     else{
-        //         response.cookie(song.name, 1);
-        //     }
 
-        // }
+
+        let found = false;
+        if(song.name){
+            // for every cookie in the cookies object
+            for (const [key, value] of Object.entries(request.cookies)) {
+                console.log(key, value);
+                // if the cookie for this song exists
+                if(key == song.name){
+                    // increase its value
+                    let newValue = parseInt(value);
+                    newValue += 1;
+                    response.cookie(key, newValue);
+                    found = true;
+                    break;
+                }
+            }
+            // if does not exist then create it
+            if(!found){
+                response.cookie(song.name, 1);
+            }
+        }
+
+
+
     
         const songPageData = {
             songs: songs,
