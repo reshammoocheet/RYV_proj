@@ -11,7 +11,7 @@ async function initialize(dbName, reset) {
     connection = await mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        port: '10000',
+        port: '10003',
         password: 'pass',
         database: dbName
     });
@@ -152,10 +152,6 @@ async function findAll(){
 * @returns {boolean} whether update was successful
 */
 async function update(currentName, newName, newDescription){
-    // Validate Input for both current and new name, and make sure element exists
-    if(!validateUtils.isValid(newName, newDescription)){
-        throw new InvalidInputError(`Invalid input when trying to update fields to ${newName} and ${newDescription}`);
-    }
 
     try {
         if(await findByName(currentName) == null){

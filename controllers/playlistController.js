@@ -121,9 +121,9 @@ async function listPlaylist(request, response){
 * @returns {boolean} Whether the playlist was edited successfully
 */
 async function updatePlaylist(request, response){
-    const name = request.body.currentName;
-    const newTitle = request.body.newName;
-    const newYear = request.body.newDescription;
+    const currentName = request.body.currentName;
+    const newName = request.body.newName;
+    const newDescription = request.body.newDescription;
 
     try {
         const success = await model.update(currentName, newName, newDescription);
@@ -135,7 +135,7 @@ async function updatePlaylist(request, response){
             displayChoices: true
         }
 
-        response.render('songs.hbs', listPageData )
+        response.render('playlists.hbs', listPageData )
 
         return success;
     } 
