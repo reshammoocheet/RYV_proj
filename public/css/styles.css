@@ -2,17 +2,19 @@ body{
     background-color: rgb(7, 8, 5); 
     color:white;
     padding: 0;
-    margin: 9;
+    margin: 0;
     font-family: 'Trebuchet MS', sans-serif;
-
 }
-
+.body-ctnt {
+     margin: 5%;
+}
 header{
     background-color: rgb(246, 246, 103);
 }
 checkbox {
     background-color: green;
 }
+
 .header-text{
     margin-top: -33px;
     text-align: center;
@@ -31,32 +33,23 @@ nav{
 
 .page{
     display: flex;
-    align-items: center;
-    justify-content: center ;
+    flex-direction: row;
 }
 
 .crud-song {
     margin: 10px;
 }
 
-.forms{
-    width: 100%;
-    margin-left: 15%;
-    align-items: left;
-    justify-content: center; 
-}
-
 .musicplayer{
     background-color: rgb(55, 53, 53);
     text-align: center; 
-    width: 80%;
-    align-items: center;
-    justify-content: center; 
-
+    width: 60%;
+    border: green solid 1px;
+    padding: 1px;
 }
 
 .library{
-    width: 100%;
+    width: 60%;
     align-items: right;
     justify-content: center; 
 }
@@ -199,7 +192,12 @@ button:hover {
     width: 50%;
     padding: 20px;
 }
-
+th, td, tr, table {
+    padding: 5px;
+}
+table, td, tr, th {
+    border: none;
+}
 #login-form{
     text-align: center;
     margin: 50px;
