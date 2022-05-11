@@ -152,25 +152,8 @@ async function findAll(){
 * @returns {boolean} whether update was successful
 */
 async function update(currentUsername, newUsername, newPassword){
-    // Validate Input for both current and new username, and make sure element exists
-    if(!validateUtils.isValid(newUsername, newPassword)){
-        throw new InvalidInputError(`Invalid input when trying to update fields to ${newUsername} and ${newPassword}`);
-    }
-
-    try {
-        if(await findByUsername(currentUsername) == null){
-            console.error(`No such user with username ${currentUsername}`);
-            return false;
-        }
-    } 
-    catch (error) {
-        throw error;
-    }
-
-
 
     try{
-
         // Execute Sql command to database
         let sqlQuery = `UPDATE user SET username = ?, password = ? WHERE username = ?`;
         await connection.execute(sqlQuery, [newUsername, newPassword, currentUsername]);

@@ -6,50 +6,17 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const model = require('../models/user-model.js');
+const { update } = require('../models/song-model');
 
 
 router.post('/login', loginUser)
 router.get('/logout', logoutUser);
 router.post('/register', registerUser)
 router.get('/signup', signupPage)
-router.get('/newPassword', changePassword)
 router.get('/profile', showProfilePage);
 router.post('/profileForms', showForm)
-router.post('/usernameChange', updateUsername)
+router.post('/user-edit', updateUser)
 
-async function updateUsername(request, response){
-    const username = request.body.currentUsername;
-    const newUsername = request.body.newUsername;
-    const newPassword = request.body.password;
-
-    try {
-        const success = await model.updateUsername(username, newUsername);
-        const songs = await model.findAll();
-        const listPageData = {
-            heading: `User ${username} was updated successfully. `,
-            songs: songs,
-            displayChoices: true
-        }
-
-        response.render('songs.hbs', listPageData )
-        return success;
-    } 
-    catch (error) {
-        if(error instanceof model.InvalidInputError){
-            response.statusCode = 400;
-            response.render('error.hbs', {message: error.message})
-        }
-        else if(error instanceof model.DatabaseExecutionError){
-            response.statusCode = 500;
-            response.render('error.hbs', {message: error.message})
-        }
-        else{
-            console.error(error.message);
-            throw error;
-        }
-
-    }
-}
 
 async function showForm(request, response) {
     switch (request.body.choice) {
@@ -57,7 +24,7 @@ async function showForm(request, response) {
             response.render('profile.hbs', { displayUsernameForm: true });
             break;
         case 'password':
-            response.render('profile.hbs', { displayPasswordForm: false });
+            response.render('profile.hbs', { displayPasswordForm: true });
             break;
         case 'premium':
             response.render('profile.hbs', { displayPremiumForm: true});
@@ -171,9 +138,38 @@ async function logoutUser(request, response){
 
 }
 
-function changePassword(request, response){
-    const oldPassword = request.body.oldPassword;
-}   
+async function updateUser(request, response){
+    const username = request.body.currentUsername;
+    const newUsername = request.body.currentPassword ? request.body.currentUsername : request.body.newUsername;
+    const newPassword = await bcrypt.hash(request.body.password, 10);
+
+
+    try {
+        const success = await model.update(username, newUsername, newPassword);
+        const songs = await model.findAll();
+        const listPageData = {
+            message: `User ${username} was updated successfully with ${newUsername}. `,
+        }
+
+        response.render('home.hbs', listPageData )
+        return success;
+    } 
+    catch (error) {
+        if(error instanceof model.InvalidInputError){
+            response.statusCode = 400;
+            response.render('error.hbs', {message: error.message})
+        }
+        else if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: error.message})
+        }
+        else{
+            console.error(error.message);
+            throw error;
+        }
+
+    }
+}
 
 module.exports = {
     router, 
