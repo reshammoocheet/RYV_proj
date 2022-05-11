@@ -2,13 +2,15 @@ body{
     background-color: rgb(7, 8, 5); 
     color:white;
     padding: 0;
-    margin: 0;
+    margin: 9;
     font-family: 'Trebuchet MS', sans-serif;
 }
 header{
     background-color: rgb(246, 246, 103);
 }
-
+checkbox {
+    background-color: green;
+}
 .header-text{
     margin-top: -33px;
     text-align: center;
@@ -63,14 +65,19 @@ nav a:hover{
     background-color: white; 
     color: black;
 }
-
+.sign-up-btn {
+    margin-top: 20px;
+}
 a{
     font-size: 25px;
     text-decoration: none;
-    color: yellow;
+    color: rgb(246, 246, 103);
     text-shadow: 1px 1px black;
     font-family: 'Trebuchet MS', sans-serif;
     border: none;
+}
+p {
+    font-weight: bold;
 }
 
 .header-logo{
@@ -80,7 +87,7 @@ a{
 }
 
 footer{
-    color: yellow;
+    color: rgb(246, 246, 103);
     text-shadow: 1px 1px black;
     text-align: center;
     width: 100%;
@@ -93,6 +100,7 @@ input {
     background-color: black;
     border-bottom: 2px solid yellow;
     color: white;
+    margin: 2em;
 }
 
 button {
@@ -175,7 +183,6 @@ button:hover {
 }
 
 .table{
-    border: 3px solid yellow;
     width: 50%;
     padding: 20px;
 }

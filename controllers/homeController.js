@@ -21,7 +21,7 @@ async function welcomePage(request, response) {
 
     console.log("User " + authenticatedSession.userSession.username + " is authorized for home page");
 
-    response.render('home.hbs', { message: "Welcome ", songs: songs});
+    response.render('home.hbs', { message: "Welcome, here's your most played songs! ", songs: songs});
 }
 
 
