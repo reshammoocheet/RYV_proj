@@ -141,7 +141,7 @@ async function logoutUser(request, response){
 async function updateUser(request, response){
     const username = request.body.currentUsername;
     const newUsername = request.body.currentPassword ? request.body.currentUsername : request.body.newUsername;
-    const newPassword = await bcrypt.hash(request.body.password, 10);
+    const newPassword = await bcrypt.hash(request.body.newPassword, 10);
 
 
     try {
