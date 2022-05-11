@@ -81,7 +81,10 @@ async function readAllSongs(request, response) {
     try{
         let songs = await model.findAll();
         let song = await model.findById(request.body.playSongId);
-    
+
+        // Counter.
+        await model.counter(request.body.playSongId);
+        
         console.log(song)
         request.cookies.tracks++;
     

@@ -3,20 +3,20 @@
 <div style="display: flex;">
     <div class="table">
         <table border="1px" width="100%">
-        <caption>{{heading}}</caption>
-        <input type="text" placeholder="Search">
-        <tr> 
-            <th>Position</th>
-            <th>Name</th>
-            <th>Artist</th>
-        </tr>
-        {{#each songs}}
+            <caption>{{heading}}</caption>
+            <input type="text" placeholder="Search">
+            <thead>
+                <th>Name</th>
+                <th>Artist</th>
+                <th>Times Played</th>
+            </thead>
+            {{#each songs}}
             <tr>
-                <td>{{position}}</td>
                 <td>{{name}}</td>
                 <td>{{artist}}</td>
+                <td>{{times_played}}</td>
             </tr>
-        {{/each}}
+            {{/each}}
         </table>
     </div>
 </div>

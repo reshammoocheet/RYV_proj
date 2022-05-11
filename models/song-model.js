@@ -11,7 +11,7 @@ async function initialize(dbName, reset) {
     connection = await mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        port: '10003',
+        port: '10000',
         password: 'pass',
         database: dbName
     });
@@ -28,7 +28,7 @@ async function initialize(dbName, reset) {
     }
 
     try{
-        const sqlQuery = 'CREATE TABLE IF NOT EXISTS song(id int AUTO_INCREMENT, name VARCHAR(50), artist VARCHAR(50), PRIMARY KEY (id))';
+        const sqlQuery = 'CREATE TABLE IF NOT EXISTS song(id int AUTO_INCREMENT, name VARCHAR(50), artist VARCHAR(50), times_played int, PRIMARY KEY (id))';
         await connection.execute(sqlQuery);
     }
     catch(error){
@@ -74,7 +74,8 @@ async function create(name, artist){
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `INSERT INTO song (name, artist) VALUES (?, ?)`;
+        let times = 0;
+        const sqlQuery = `INSERT INTO song (name, artist, times_played) VALUES (?, ?, ${times})`;
         await connection.execute(sqlQuery, [name, artist]);
 
         // return created song
@@ -106,6 +107,20 @@ async function findById(id){
         return null;
     }
 
+}
+
+async function findTop() {
+    try{
+        // Execute Sql command to database
+        const sqlQuery = `SELECT * FROM song ORDER BY times_played DESC`;
+        const [songs, fields] = await connection.execute(sqlQuery);
+
+        return songs;
+    }
+    catch(error){
+        console.error(error.message);
+        return null;
+    }
 }
 
 /**
@@ -175,8 +190,9 @@ async function update(currentName, newName, newArtist){
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `UPDATE song SET name = ?, artist = ? WHERE name = ?`;
-        await connection.execute(sqlQuery, [newName, newArtist, currentName]);
+        let times = 0;
+        const sqlQuery = `UPDATE song SET name = ?, artist = ?, times_played = ${times} WHERE name = ?`;
+        await connection.execute(sqlQuery, [newName, newArtist, times, currentName]);
 
         return true;
     }
@@ -185,6 +201,20 @@ async function update(currentName, newName, newArtist){
         throw new DatabaseExecutionError(error.message);
     }
 
+}
+
+async function counter(id) {
+    try{
+        // Execute Sql command to database
+        const sqlQuery = `UPDATE song SET times_played = times_played + 1 WHERE id = ?`;
+        await connection.execute(sqlQuery, [id]);
+
+        return true;
+    }
+    catch(error){
+        console.error(error.message);
+        throw new DatabaseExecutionError(error.message);
+    }
 }
 
 /**
@@ -239,7 +269,9 @@ module.exports = {
     findById,
     findAll,
     update,
+    counter,
     remove,
+    findTop,
     getConnection,
     endConnection,
     InvalidFileError,
