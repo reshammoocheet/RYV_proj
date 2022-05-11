@@ -10,7 +10,11 @@ const model = require('../models/song-model');
 async function welcomePage(request, response) {
     // check for valid session
     const authenticatedSession = sessionManager.authenticateUser(request);
-    console.log(request.cookies);
+    console.log("Cookies: ");
+    //console.log(request.cookies);
+    for (const [key, value] of Object.entries(request.cookies)) {
+        console.log(key, value);
+    }
     if(!authenticatedSession || authenticatedSession == null){
         response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
         return;
@@ -21,7 +25,12 @@ async function welcomePage(request, response) {
 
     console.log("User " + authenticatedSession.userSession.username + " is authorized for home page");
 
-    response.render('home.hbs', { message: "Welcome, here's your most played songs! ", songs: songs});
+    if(songs.length > 0){
+        response.render('home.hbs', { message: "Welcome, here are some suggested songs.", songs: songs});
+    }
+    else{
+        response.render('home.hbs', { message: "Welcome!"});
+    }
 }
 
 

@@ -83,10 +83,19 @@ async function readAllSongs(request, response) {
         let song = await model.findById(request.body.playSongId);
 
         // Counter.
-        await model.counter(request.body.playSongId);
+        //await model.counter(request.body.playSongId);
         
         console.log(song)
-        request.cookies.tracks++;
+        //request.cookies.tracks++;
+        // if(song.name){
+        //     if(request.cookies.song.name > 0){
+        //         response.cookie("top songs", request.cookies.song.name+1);
+        //     }
+        //     else{
+        //         response.cookie(song.name, 1);
+        //     }
+
+        // }
     
         const songPageData = {
             songs: songs,
@@ -100,7 +109,7 @@ async function readAllSongs(request, response) {
     }
     catch (error) {
         // error handling.
-        if (error instanceof model.DBConnectionError) {
+        if (error instanceof model.DatabaseExecutionError) {
             response.status("500");
             response.render("home.hbs", { alert: true, message: "System error trying to read songs: " + error });
         } else {
@@ -113,12 +122,11 @@ async function readAllSongs(request, response) {
 
 
 
-async function searchSong(songs, searchName){
+function searchSong(songs, searchName){
         // loop through songs
         songs.forEach((song) =>{
             // if we find the song we need
             if(song.name == searchName){
-                
                 return song;
             }
         })
@@ -194,13 +202,12 @@ async function listSongs(request, response){
         const searchName = request.query.searchQuery;
         if(searchName){
             // get from database and display as sole song in table
-            const song = searchSong(songs, searchName)
+            const song =  await searchSong(songs, searchName)
             if(song){
                 const songPageData = {
                     songs: [song],
                     heading: song.name,
                     displayChoices: true,
-                    isPremium: true
                 }
                 response.render('songs.hbs', songPageData )
                 return;
