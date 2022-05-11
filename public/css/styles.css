@@ -4,7 +4,9 @@ body{
     padding: 0;
     margin: 9;
     font-family: 'Trebuchet MS', sans-serif;
+
 }
+
 header{
     background-color: rgb(246, 246, 103);
 }
@@ -33,10 +35,13 @@ nav{
     justify-content: center ;
 }
 
+.crud-song {
+    margin: 10px;
+}
 
 .forms{
     width: 100%;
-    margin-left: 25%;
+    margin-left: 15%;
     align-items: left;
     justify-content: center; 
 }
@@ -68,6 +73,11 @@ nav a:hover{
 .sign-up-btn {
     margin-top: 20px;
 }
+
+.sign-up-home {
+    margin: 20px;
+    margin-left: 200px;
+}
 a{
     font-size: 25px;
     text-decoration: none;
@@ -79,11 +89,13 @@ a{
 p {
     font-weight: bold;
 }
-
+.header-container button {
+    border-radius: 10px;
+}
 .header-logo{
     width: 5%;
     height: 100%;
-    margin-bottom: -30px;
+    margin-bottom: -40px;
 }
 
 footer{
@@ -169,6 +181,7 @@ button:hover {
 .song-list-item{
     display: flex;
     width: 100%;
+    margin: 10px;
 }
 
 .song-list-item-text{
@@ -192,9 +205,17 @@ button:hover {
     margin: 50px;
 
 }
+.header-container {
+    display: flex;
+    justify-content: space-around;
+}
+.log-out-nav {
+    align-self: flex-end;
+    align-content: flex-end;
+}
 
-#account{
-    text-align: right;
+.account-btn {
+    align-self: flex-start;
 }
 
 ul{
