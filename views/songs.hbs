@@ -55,9 +55,9 @@
         <form action="/songForms" method="post" role ="form" enctype="application/x-www-form-urlencoded" >
             <ul>
                 <li><legend style="font-size: 40px;">What would you like to do?</legend></li>
-                <li><button name="choice" type="submit" class="crud-song" value="add" >Add Song</button>    </li>
-                <li><button name="choice" type="submit" class="crud-song" value="edit" >Edit Song</button>  </li>
-                <li><button name="choice" type="submit" class="crud-song" value="delete" >Delete Song</button></li>
+                <li><button class="styled-button" name="choice" type="submit" class="crud-song" value="add" >Add Song</button>    </li>
+                <li><button class="styled-button" name="choice" type="submit" class="crud-song" value="edit" >Edit Song</button>  </li>
+                <li><button class="styled-button" name="choice" type="submit" class="crud-song" value="delete" >Delete Song</button></li>
             
             </ul>
         </form>
@@ -97,11 +97,11 @@
 
             <!-- Song Library -->
             <ul class="songList">
-                <h1 style="text-align: center; margin: left -10px;">Library</h1>
+                <h1 style="text-align: center; margin: left -10px;">{{heading}}</h1>
                 <!-- Search Bar -->
                 <form method="get" action="/song">
                     <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
-                    <button>Search</button>
+                    <button class="styled-button">Search</button>
                 </form>
                 <form method="post" role="form" action="/play">
                     <li class="song-list-item">

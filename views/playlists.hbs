@@ -56,9 +56,9 @@
     <form action="/playlistForms" method="post" role ="form" enctype="application/x-www-form-urlencoded">
         <ul>
             <li><legend style="font-size: 40px;">What would you like to do?</legend>
-            <li><button name="choice" type="submit" class="btn btn-primary" value="add" >Add Playlist</button>    </li>
-            <li><button name="choice" type="submit" class="btn btn-primary" value="edit" >Edit Playlist</button>  </li>
-            <li><button name="choice" type="submit" class="btn btn-primary" value="delete" >Delete Playlist</button></li>
+            <li><button class="styled-button" name="choice" type="submit" class="btn btn-primary" value="add" >Add Playlist</button>    </li>
+            <li><button class="styled-button" name="choice" type="submit" class="btn btn-primary" value="edit" >Edit Playlist</button>  </li>
+            <li><button class="styled-button" name="choice" type="submit" class="btn btn-primary" value="delete" >Delete Playlist</button></li>
         </ul>
     </form>
     {{/if}}
@@ -98,24 +98,21 @@
                 <!-- Search Bar -->
                 <form >
                     <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
-                    <button>Search</button>
+                    <button class="styled-button">Search</button>
                 </form>
-                <form method="post" role="form" action="/play">
+                <li class="song-list-item">
+                    <p class="song-list-item-text" style="text-decoration: underline;">Id</p>  
+                    <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
+                    <p class="song-list-item-text" style="text-decoration: underline;">Description</p>  
+                </li>
+                {{#each playlists}}
                     <li class="song-list-item">
-                        <p class="song-list-item-text" style="text-decoration: underline;">Id</p>  
-                        <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
-                        <p class="song-list-item-text" style="text-decoration: underline;">Description</p>  
+                        <p class="song-list-item-text" >{{id}}</p>
+                        <p class="song-list-item-text" >{{name}}</p>
+                        <p class="song-list-item-text" >{{description}}</p>
+                        <button class="play-button" type="submit" name="playlistId" value={{id}}>View</button>
                     </li>
-                    {{#each playlists}}
-                        <li class="song-list-item">
-                            <p class="song-list-item-text" >{{id}}</p>
-                            <p class="song-list-item-text" >{{name}}</p>
-                            <p class="song-list-item-text" >{{description}}</p>
-                            <button class="play-button" type="submit" name="playSongId" value={{id}}>Play</button>
-                        </li>
-                    {{/each}}
-                </form>
-
+                {{/each}}
             </ul>
             <div class="musicplayer">
                 <h2>{{playSong.name}}</h2>
@@ -124,13 +121,13 @@
                 <div class="slidecontainer">
                     <input type="range" min="0" max="3" value="0" disabled="true">
                 </div>
-                <button style="background-color: yellowgreen;">
+                <button class="styled-button" style="background-color: yellowgreen;">
                     <img src="images/skip-to-start.png">
                 </button>
-                <button style="background-color: yellowgreen;">
+                <button class="styled-button" style="background-color: yellowgreen;">
                     <img src="images/play.png">
                 </button>
-                <button style="background-color: yellowgreen;">
+                <button class="styled-button" style="background-color: yellowgreen;">
                     <img src="images/skip-to-end.png">
                 </button>
             </div>

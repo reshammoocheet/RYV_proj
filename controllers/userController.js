@@ -7,12 +7,13 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const model = require('../models/user-model.js');
 const { update } = require('../models/song-model');
-
+let isPremium = false;
 
 router.post('/login', loginUser)
 router.get('/logout', logoutUser);
 router.post('/register', registerUser)
 router.get('/signup', signupPage)
+router.post('/signup', signupPage)
 router.get('/profile', showProfilePage);
 router.post('/profileForms', showForm)
 router.post('/user-edit', updateUser)
@@ -45,7 +46,12 @@ function showProfilePage(request, response){
 }
 
 function signupPage(request, response){
-    response.render('sign-up.hbs',{hideLogout: true});
+    isPremium = false;
+
+    if(request.body.buyButton != null){
+        isPremium = true;
+    }
+    response.render('sign-up.hbs',{hideLogout: true, showPaypal: isPremium});
 }
 
 async function loginUser(request, response){

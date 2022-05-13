@@ -142,6 +142,7 @@ button {
     height: 5%;
 }
 
+
 button:hover {
     background-color: white;
     color: black;
@@ -234,7 +235,7 @@ ul{
         margin-bottom: -30px;
     }
 
-    button {
+    .styled-button {
         transition-duration: 0.4s;
         border: white;
         border-style: solid;

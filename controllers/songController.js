@@ -232,7 +232,7 @@ async function listSongs(request, response){
         }
 
         const listPageData = {
-            heading: 'Songs',
+            heading: 'Browse Songs',
             songs: songs,
             displayChoices: true
         }

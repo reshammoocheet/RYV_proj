@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const routeRoot = '/';
-const model = require('../models/playlist-model')
+const model = require('../models/playlist-model');
+const playlist_song_model = require('../models/playlist_song-model')
 const { sessionManager } = require('../sessionManager');
 
 
@@ -81,11 +82,11 @@ async function newPlaylist(request, response){
 */
 async function listPlaylist(request, response){
     // check for valid session
-    const authenticatedSession = sessionManager.authenticateUser(request);
-    if(!authenticatedSession || authenticatedSession == null){
-        response.render('login.hbs',{username: request.cookies.username , hideLogout: true});
-        return;
-    }
+    // const authenticatedSession = sessionManager.authenticateUser(request);
+    // if(!authenticatedSession || authenticatedSession == null){
+    //     response.render('login.hbs',{username: request.cookies.username , hideLogout: true});
+    //     return;
+    // }
 
     try {
         const playlists = await model.findAll();
@@ -107,9 +108,35 @@ async function listPlaylist(request, response){
             response.render('error.hbs', {message: error.message})
             throw error;
         }
+    }
+
 }
 
+async function showPlaylist(request, response){
 
+    const id = request.body.playlistId;
+    const name = request.body.name;
+
+    try {
+        const songs = await playlist_song_model.findAllSongsInPlaylist(id);
+        const listPageData = {
+            heading: name,
+            songs: songs,
+            displayChoices: false
+        }
+        response.render('songs.hbs', listPageData)
+        return playlists;
+    } 
+    catch (error) {
+        if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: error.message})
+        }
+        else{
+            response.render('error.hbs', {message: error.message})
+            throw error;
+        }
+    }
 }
 
 

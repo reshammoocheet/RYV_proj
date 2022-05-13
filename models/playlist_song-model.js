@@ -18,7 +18,7 @@ async function initialize(dbName, reset) {
 
 
     if (reset){
-        const dropQuery = "DROP TABLE IF EXISTS playlist";
+        const dropQuery = "DROP TABLE IF EXISTS playlist_song";
         try{
             await connection.execute(dropQuery);
         }
@@ -28,10 +28,8 @@ async function initialize(dbName, reset) {
     }
 
     try{
-        const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist(id int AUTO_INCREMENT, name VARCHAR(50), description VARCHAR(512), PRIMARY KEY (id))';
-        const sqlQuery2 = 'CREATE TABLE IF NOT EXISTS playlist_song(playlist_id int, song_id int, PRIMARY KEY (playlist_id))';
+        const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist_song(playlist_id int, song_id int, PRIMARY KEY (playlist_id))';
         await connection.execute(sqlQuery);
-        await connection.execute(sqlQuery2);
     }
     catch(error){
         console.error(error);
@@ -40,7 +38,7 @@ async function initialize(dbName, reset) {
 
 
 /**
- * Creates a new playlist based on its name and release description.
+ * Creates a new playlist_song based on its song_id and release playlist_id.
 * @param {string} tableName
 * @returns {boolean} success of truncate
 */
@@ -57,27 +55,21 @@ async function truncate(tableName){
 }
 
 /**
- * Creates a new playlist based on its name and release description.
-* @param {string} name
-* @param {number} description
-* @returns {Object} An playlist Object
+ * Creates a new playlist_song based on its song_id and release playlist_id.
+* @param {string} song_id
+* @param {number} playlist_id
+* @returns {Object} An playlist_song Object
 */
-async function create(name, description = ""){
-    // Validate Input
-    if(!name){
-        throw new InvalidInputError(`Invalid input when trying to create ${name} with description ${description}. `);
-    }
-
-    
+async function create(song_id, playlist_id){
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `INSERT INTO playlist (name, description) VALUES (?, ?)`;
-        await connection.execute(sqlQuery, [name, description]);
+        const sqlQuery = `INSERT INTO playlist_song (song_id, playlist_song_id) VALUES (?, ?)`;
+        await connection.execute(sqlQuery, [song_id, playlist_id]);
 
-        // return created playlist
-        const playlist = {"name": name, "description": description}
-        return playlist;
+        // return created playlist_song
+        const playlist_song = {"song_id": song_id, "playlist_id": playlist_id}
+        return playlist_song;
     }
     catch(error){
         console.error(error.message);
@@ -87,14 +79,14 @@ async function create(name, description = ""){
 }
 
 /**
- * Finds an playlist based on id
+ * Finds an playlist_song based on id
 * @param {number} id
-* @returns {Object} An playlist object
+* @returns {Object} An playlist_song object
 */
 async function findById(id){
     try{
         // Execute Sql command to database
-        const sqlQuery = `SELECT * FROM playlist WHERE id = ?`;
+        const sqlQuery = `SELECT * FROM playlist_song WHERE id = ?`;
         const [playlists, fields] = await connection.execute(sqlQuery, [id]);
 
         return playlists[0];
@@ -107,17 +99,17 @@ async function findById(id){
 }
 
 /**
- * Finds an playlist based on its name
-* @param {string} name
-* @returns {Array} An array of playlist objects
+ * Finds a playlist_song based on its playlist_id
+* @param {string} playlist_id
+* @returns {Array} An array of playlist_song objects
 */
-async function findByName(name){
+async function findAllSongsInPlaylist(playlist_id){
     try{
         // Execute Sql command to database
-        const sqlQuery = `SELECT * FROM playlist WHERE name = ?`;
-        const [playlists, fields] = await connection.execute(sqlQuery, [name]);
+        const sqlQuery = `SELECT * FROM playlist_song WHERE playlist_id = ?`;
+        const [songs, fields] = await connection.execute(sqlQuery, [playlist_id]);
 
-        return playlists;
+        return songs;
     }
     catch(error){
         console.error(error.message);
@@ -128,7 +120,7 @@ async function findByName(name){
 
 /**
  * Finds all playlists in the table
-* @returns {Array} An array of playlist objects
+* @returns {Array} An array of playlist_song objects
 */
 async function findAll(){
 
@@ -147,7 +139,7 @@ async function findAll(){
 }
 
 /**
- * Updates an playlist with a new name and description.
+ * Updates an playlist_song with a new song_id and playlist_id.
 * @param {string} currentName
 * @param {string} newName
 * @param {number} newDescription
@@ -157,7 +149,7 @@ async function update(currentName, newName, newDescription){
 
     try {
         if(await findByName(currentName) == null){
-            console.error(`No such playlist with name ${currentName}`);
+            console.error(`No such playlist_song with song_id ${currentName}`);
             return false;
         }
     } 
@@ -169,7 +161,7 @@ async function update(currentName, newName, newDescription){
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `UPDATE playlist SET name = ?, description = ? WHERE name = ?`;
+        const sqlQuery = `UPDATE playlist_song SET song_id = ?, playlist_id = ? WHERE song_id = ?`;
         await connection.execute(sqlQuery, [newName, newDescription, currentName]);
 
         return true;
@@ -182,7 +174,7 @@ async function update(currentName, newName, newDescription){
 }
 
 /**
- * Deletes any playlist containing the specified name and description
+ * Deletes any playlist_song containing the specified song_id and playlist_id
 * @param {Number} id
 * @returns {boolean} if db is now removed of that playlist
 */
@@ -191,7 +183,7 @@ async function remove(id){
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `DELETE FROM playlist WHERE id = ?`;
+        const sqlQuery = `DELETE FROM playlist_song WHERE id = ?`;
         await connection.execute(sqlQuery, [id]);
 
         return true;
@@ -230,7 +222,7 @@ module.exports = {
     initialize,
     truncate,
     create,
-    findByName,
+    findAllSongsInPlaylist,
     findById,
     findAll,
     update,
