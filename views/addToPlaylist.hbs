@@ -78,7 +78,7 @@
                 <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
                 <button class="styled-button">Search</button>
             </form>
-        <form method="post" role="form" action="/showPlaylist">
+        <form method="post" role="form" action="/addToPlaylist">
             <li class="song-list-item">
                 <p class="song-list-item-text" style="text-decoration: underline;">Id</p>  
                 <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
@@ -89,7 +89,7 @@
                     <p class="song-list-item-text" >{{id}}</p>
                     <p class="song-list-item-text" >{{name}}</p>
                     <p class="song-list-item-text" >{{description}}</p>
-                    <button class="play-button" type="submit" name="playlistId" value={{id}}>View</button>
+                    <button formaction="/addToPlaylist" formmethod="post"  class="play-button" type="submit" name="playlistId" value={{id}}>+</button>
                 </li>
             {{/each}}
         </form>
