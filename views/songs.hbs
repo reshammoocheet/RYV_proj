@@ -97,6 +97,7 @@
                 <form method="get" action="/song">
                     <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
                     <button class="styled-button">Search</button>
+                    <button formaction="/songForms" formmethod="post" name="choice" value="add" class="styled-button">Add Song</button>
                 </form>
                 <form method="post" role="form" action="/play">
                     <li class="song-list-item">
@@ -120,8 +121,10 @@
                                 <p class="song-list-item-text" >{{id}}</p>
                                 <p class="song-list-item-text" >{{name}}</p>
                                 <p class="song-list-item-text" >{{artist}}</p>
-                                <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
                                 <button formaction="/addSong"  formmethod="post" class="play-button" type="submit" name="songId" value={{id}}>Add to Playlist</button>
+                                <button formaction="/songForms" formmethod="post" name="choice" value="edit" class="play-button" type="submit" name="songId" value={{id}}>Edit</button>
+                                <button formaction="/songForms" formmethod="post" name="choice" value="delete" class="play-button" type="submit" name="songId" value={{id}}>Remove</button>
+                                <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
                             </li>
                         {{/each}}                     
                     {{/if}}
@@ -134,8 +137,9 @@
                 <h2 id="songNameHeader">{{playSong.name}}</h2>
                 <h3>{{playSong.artist}}</h3>
                 <div style="display: block; text-align: center;">
-                    <img class="song-image" src="images/song-image.jpg">
-                    <audio controls src="audio/demo.mp3" style="margin-left: 55px;">
+                    <img class="song-image" src={{#if playSong.iconSource}}{{playsong.iconSource}}{{else}}"images/song-image.jpg"{{/if}}>
+                    <br>
+                    <audio {{#if playSong}}autoplay{{/if}} controls src={{#if playSong.audioSource}}{{playsong.audioSource}}{{else}}"audio/getback.wav"{{/if}}>
                         <div style="border: 1px solid black ;">
                         Sorry, your browser does not support the <audio> tag used in this demo.
                         </div>

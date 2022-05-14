@@ -191,7 +191,7 @@ async function update(currentName, newName, newArtist){
     try{
         // Execute Sql command to database
         let times = 0;
-        const sqlQuery = `UPDATE song SET name = ?, artist = ?, times_played = ${times} WHERE name = ?`;
+        const sqlQuery = `UPDATE song SET name = ?, artist = ?, times_played = ? WHERE name = ?`;
         await connection.execute(sqlQuery, [newName, newArtist, times, currentName]);
 
         return true;
