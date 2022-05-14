@@ -187,13 +187,13 @@ async function update(currentName, newName, newDescription){
 * @param {Number} id
 * @returns {boolean} if db is now removed of that playlist
 */
-async function remove(id){
+async function remove(song_id, playlist_id){
 
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `DELETE FROM playlist_song WHERE id = ?`;
-        await connection.execute(sqlQuery, [id]);
+        const sqlQuery = `DELETE FROM playlist_song WHERE song_id = ? AND playlist_id = ?`;
+        await connection.execute(sqlQuery, [song_id, playlist_id]);
 
         return true;
     }

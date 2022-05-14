@@ -14,7 +14,7 @@ router.post('/playlist-edit', updatePlaylist)
 router.post('/playlist-delete', deletePlaylist)
 router.post('/addSong', addToPlaylistForm);
 router.post('/addToPlaylist', addToPlaylist)
-
+router.post('/removeSongFromPlaylist', removeSongFromPlaylist)
 
 async function showForm(request, response) {
     let playlists = await model.findAll();
@@ -124,6 +124,7 @@ async function showPlaylist(request, response){
         
         const songs = await playlist_song_model.findAllSongsInPlaylist(id);
         const playlist = await model.findById(id);
+        response.cookie("currentPlaylistId", playlist.id)
         const listPageData = {
             heading: playlist.name,
             description: playlist.description,
@@ -179,11 +180,11 @@ async function addToPlaylist(request, response){
         const playlist = await model.findById(request.body.playlistId);
         const song = await songModel.findById(request.cookies.songToAddId);
         const playlist_song = await playlist_song_model.create(song.id, playlist.id);
-        
+
         const listPageData = {
             heading: `Successfully added ${song.name} to .`,
             playlists: playlists,
-            displayChoices: false,
+            displayChoices: true,
         }
         response.render('playlists.hbs', listPageData)
     } 
@@ -281,7 +282,36 @@ async function deletePlaylist(request, response){
 
 }
 
+async function removeSongFromPlaylist(request, response){
+    const songId = request.body.songId;
+    const playlistId = request.cookies.currentPlaylistId;
 
+    try {
+        const success = await playlist_song_model.remove(songId, playlistId);
+        const song = await songModel.findById(songId);
+
+        const playlists = await model.findAll();
+        const listPageData = {
+            heading: `Song ${song.name} was removed successfully!`,
+            playlists: playlists,
+            displayChoices: true
+        }
+
+        response.render('playlists.hbs', listPageData )
+        return success;
+    } 
+    
+    catch (error) {
+        if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: error.message})
+        }
+        else{
+            response.render('error.hbs', {message: error.message})
+            throw error;
+        }
+    }
+}
 module.exports = {
     router,
     routeRoot

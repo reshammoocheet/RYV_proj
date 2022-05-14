@@ -103,19 +103,27 @@
                         <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
                         <p class="song-list-item-text" style="text-decoration: underline;">Artist</p>  
                     </li>
-                    {{#each songs}}
-                        <li class="song-list-item">
-                            <p class="song-list-item-text" >{{id}}</p>
-                            <p class="song-list-item-text" >{{name}}</p>
-                            <p class="song-list-item-text" >{{artist}}</p>
-                            <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
-                            {{#if displayPlaylistChoices}}
-                            <button>I should not be here</button>
-                            {{else}}
+                    {{#if displayPlaylistChoices}}
+                        {{#each songs}}
+                            <li class="song-list-item">
+                                <p class="song-list-item-text" >{{id}}</p>
+                                <p class="song-list-item-text" >{{name}}</p>
+                                <p class="song-list-item-text" >{{artist}}</p>
+                                <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
+                                <button formaction="/removeSongFromPlaylist" formmethod="post" class="play-button" type="submit" name="songId" value={{id}}>X</button>
+                            </li>
+                        {{/each}}
+                    {{else}}
+                        {{#each songs}}
+                            <li class="song-list-item">
+                                <p class="song-list-item-text" >{{id}}</p>
+                                <p class="song-list-item-text" >{{name}}</p>
+                                <p class="song-list-item-text" >{{artist}}</p>
+                                <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
                                 <button formaction="/addSong"  formmethod="post" class="play-button" type="submit" name="songId" value={{id}}>Add to Playlist</button>
-                            {{/if}}
-                        </li>
-                    {{/each}}
+                            </li>
+                        {{/each}}                     
+                    {{/if}}
 
                 </form>
 

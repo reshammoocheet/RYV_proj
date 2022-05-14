@@ -84,14 +84,25 @@
                 <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
                 <p class="song-list-item-text" style="text-decoration: underline;">Description</p>  
             </li>
-            {{#each playlists}}
-                <li class="song-list-item">
-                    <p class="song-list-item-text" >{{id}}</p>
-                    <p class="song-list-item-text" >{{name}}</p>
-                    <p class="song-list-item-text" >{{description}}</p>
-                    <button class="play-button" type="submit" name="playlistId" value={{id}}>View</button>
-                </li>
-            {{/each}}
+            {{#if addingToPlaylist}}
+                {{#each playlists}}
+                    <li class="song-list-item">
+                        <p class="song-list-item-text" >{{id}}</p>
+                        <p class="song-list-item-text" >{{name}}</p>
+                        <p class="song-list-item-text" >{{description}}</p>
+                        <button class="play-button" type="submit" name="playlistId" value={{id}}>+</button>
+                    </li>
+                {{/each}}
+            {{else}}
+                {{#each playlists}}
+                    <li class="song-list-item">
+                        <p class="song-list-item-text" >{{id}}</p>
+                        <p class="song-list-item-text" >{{name}}</p>
+                        <p class="song-list-item-text" >{{description}}</p>
+                        <button class="play-button" type="submit" name="playlistId" value={{id}}>View</button>
+                    </li>
+                {{/each}}
+            {{/if}}
         </form>
 
         </ul>
