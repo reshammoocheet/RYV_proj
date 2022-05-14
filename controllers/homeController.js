@@ -4,8 +4,13 @@ const router = express.Router();
 const routeRoot = '/';
 router.get('/home', welcomePage);
 router.get('/', welcomePage);
-
+router.get('/aboutUs', renderAboutUs)
 const model = require('../models/song-model');
+const { response } = require('../app');
+
+function renderAboutUs(request, reponse){
+    response.render('aboutUs.hbs')
+}
 
 async function welcomePage(request, response) {
     // check for valid session
