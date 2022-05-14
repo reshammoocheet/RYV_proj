@@ -147,7 +147,6 @@ function searchSong(songs, searchName){
             }
         })
 
-        return undefined;
 
 }
 /**
@@ -198,11 +197,11 @@ async function newSong(request, response){
 */
 async function listSongs(request, response){
     // check for valid session
-    const authenticatedSession = sessionManager.authenticateUser(request);
-    if(!authenticatedSession || authenticatedSession == null){
-        response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
-        return;
-    }
+    // const authenticatedSession = sessionManager.authenticateUser(request);
+    // if(!authenticatedSession || authenticatedSession == null){
+    //     response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
+    //     return;
+    // }
 
 
     let isPremium = false;
@@ -218,15 +217,33 @@ async function listSongs(request, response){
         const searchName = request.query.searchQuery;
         if(searchName){
             // get from database and display as sole song in table
-            const song =  await searchSong(songs, searchName)
+            let song;
+
+            // loop through songs
+            songs.forEach((s) =>{
+                // if we find the song we need
+                if(s.name == searchName){
+                    song = s;
+                }
+            })
+
+
             if(song){
                 const songPageData = {
                     songs: [song],
-                    heading: song.name,
                     displayChoices: true,
                 }
                 response.render('songs.hbs', songPageData )
                 return;
+            }
+            else{
+                const songPageData = {
+                    songs: songs,
+                    heading: "Could not find song " + searchName,
+                    displayChoices: true,
+                }
+                response.render('songs.hbs', songPageData )
+                return;       
             }
 
         }

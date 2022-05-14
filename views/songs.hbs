@@ -62,34 +62,27 @@
             </ul>
         </form>
         {{/if}}
+
+
+        {{!-- Songlist for a playlist  --}}
+        {{#if displayPlaylistChoices}}
+        <form action="/songForms" method="post" role ="form" enctype="application/x-www-form-urlencoded" >
+            <ul>
+                <li><legend style="font-size: 40px;">What would you like to do?</legend></li>
+                <li><button class="styled-button" name="choice" type="submit" class="crud-song" value="add" >Add Song to Playlist</button></li>
+                <li><button class="styled-button" name="choice" type="submit" class="crud-song" value="edit" >Edit this Playlist</button>  </li>
+                <li><button class="styled-button" name="choice" type="submit" class="crud-song" value="delete" >Delete this Playlist</button></li>
+            
+            </ul>
+        </form>
+        {{/if}}
+
+
+
+
+
 </div>
 
-
-    <!-- Songs Table -->
-    {{!-- <div style="display: flex;">
-        <div class="table">
-            <table border="1px" width="100%">
-            <caption>{{heading}}</caption>
-            <form >
-                <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
-                <button>Search</button>
-            </form>
-            <tr> 
-                <th>Id</th>
-                <th>Name</th>
-                <th>Artist</th>
-            </tr>
-            {{#each songs}}
-                <tr>
-                    <td>{{id}}</td>
-                    <td>{{name}}</td>
-                    <td>{{artist}}</td>
-                <button>Play</button>
-                </tr>
-            {{/each}}
-            </table>
-        </div>
-    </div> --}}
 
     <div class="library">
         <div style="display: block;">
@@ -98,6 +91,7 @@
             <!-- Song Library -->
             <ul class="songList">
                 <h1 style="text-align: center; margin: left -10px;">{{heading}}</h1>
+                <h3>{{description}}</h3>
                 <!-- Search Bar -->
                 <form method="get" action="/song">
                     <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
@@ -109,14 +103,27 @@
                         <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
                         <p class="song-list-item-text" style="text-decoration: underline;">Artist</p>  
                     </li>
-                    {{#each songs}}
-                        <li class="song-list-item">
-                            <p class="song-list-item-text" >{{id}}</p>
-                            <p class="song-list-item-text" >{{name}}</p>
-                            <p class="song-list-item-text" >{{artist}}</p>
-                            <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
-                        </li>
-                    {{/each}}
+                    {{#if displayPlaylistChoices}}
+                        {{#each songs}}
+                            <li class="song-list-item">
+                                <p class="song-list-item-text" >{{id}}</p>
+                                <p class="song-list-item-text" >{{name}}</p>
+                                <p class="song-list-item-text" >{{artist}}</p>
+                                <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
+                                <button formaction="/removeSongFromPlaylist" formmethod="post" class="play-button" type="submit" name="songId" value={{id}}>X</button>
+                            </li>
+                        {{/each}}
+                    {{else}}
+                        {{#each songs}}
+                            <li class="song-list-item">
+                                <p class="song-list-item-text" >{{id}}</p>
+                                <p class="song-list-item-text" >{{name}}</p>
+                                <p class="song-list-item-text" >{{artist}}</p>
+                                <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
+                                <button formaction="/addSong"  formmethod="post" class="play-button" type="submit" name="songId" value={{id}}>Add to Playlist</button>
+                            </li>
+                        {{/each}}                     
+                    {{/if}}
 
                 </form>
 

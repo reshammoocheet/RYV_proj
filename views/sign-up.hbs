@@ -2,19 +2,27 @@
     <legend>Please enter your username and password to sign up</legend>
     <br>
     <label for="username">Username:</label><br>
-    <input type="text" id="username" name="username" required><br>
+    <input type="text" id="username" name="username"><br>
     <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password" minlength="8" required>
+    <input type="password" id="password" name="password" minlength="8">
     <br>
     <label for="password">Confirm Password:</label><br>
-    <input type="password" minlength="8" required>
+    <input type="password" minlength="8">
     <br>
-    <label for="html" style="font-size:large "><input type="checkbox" name="premiumCheckbox" checked="f">Premium</label>
-    <div>
 
-        <div id="paypal-button-container">
+    {{#if showPaypal}}
+        <button type="submit" formaction="/signup" formmethod="post" name="freeButton">Stay as Free User</button>
+    {{else}}
+        <button type="submit" formaction="/signup" formmethod="post" name="buyButton">Buy Premium</button>
+
+    {{/if}}
+    </button>
+
+    {{#if showPaypal}}
+    <div id="paypal-button-container">
 
     </div>
+    {{/if}}
 
     <div class="premiumTable">
         <table>

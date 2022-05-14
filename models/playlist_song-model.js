@@ -1,5 +1,6 @@
 const mysql = require('mysql2/promise');
 const validateUtils = require('../validateUtils');
+const songModel = require('./song-model');
 
 var connection;
 
@@ -28,7 +29,7 @@ async function initialize(dbName, reset) {
     }
 
     try{
-        const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist_song(playlist_id int, song_id int, PRIMARY KEY (playlist_id))';
+        const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist_song(playlist_id int, song_id int)';
         await connection.execute(sqlQuery);
     }
     catch(error){
@@ -64,7 +65,7 @@ async function create(song_id, playlist_id){
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `INSERT INTO playlist_song (song_id, playlist_song_id) VALUES (?, ?)`;
+        const sqlQuery = `INSERT INTO playlist_song (song_id, playlist_id) VALUES (?, ?)`;
         await connection.execute(sqlQuery, [song_id, playlist_id]);
 
         // return created playlist_song
@@ -107,7 +108,15 @@ async function findAllSongsInPlaylist(playlist_id){
     try{
         // Execute Sql command to database
         const sqlQuery = `SELECT * FROM playlist_song WHERE playlist_id = ?`;
-        const [songs, fields] = await connection.execute(sqlQuery, [playlist_id]);
+        const [playlist_songs, fields] = await connection.execute(sqlQuery, [playlist_id]);
+
+        let songs = [];
+        // loop through songs to get an array of objects not just ids
+        playlist_songs.forEach(async (playlist_song) =>{
+            const song = await songModel.findById(playlist_song.song_id)
+            songs.push(song);
+        })
+
 
         return songs;
     }
@@ -178,13 +187,13 @@ async function update(currentName, newName, newDescription){
 * @param {Number} id
 * @returns {boolean} if db is now removed of that playlist
 */
-async function remove(id){
+async function remove(song_id, playlist_id){
 
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `DELETE FROM playlist_song WHERE id = ?`;
-        await connection.execute(sqlQuery, [id]);
+        const sqlQuery = `DELETE FROM playlist_song WHERE song_id = ? AND playlist_id = ?`;
+        await connection.execute(sqlQuery, [song_id, playlist_id]);
 
         return true;
     }

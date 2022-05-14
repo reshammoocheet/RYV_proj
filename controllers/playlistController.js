@@ -4,13 +4,17 @@ const routeRoot = '/';
 const model = require('../models/playlist-model');
 const playlist_song_model = require('../models/playlist_song-model')
 const { sessionManager } = require('../sessionManager');
-
+const songModel = require('../models/song-model');
 
 router.post('/playlist', newPlaylist)
 router.get('/playlists', listPlaylist)
 router.get('/playlist', listPlaylist)
+router.post('/showPlaylist', showPlaylist)
 router.post('/playlist-edit', updatePlaylist)
 router.post('/playlist-delete', deletePlaylist)
+router.post('/addSong', addToPlaylistForm);
+router.post('/addToPlaylist', addToPlaylist)
+router.post('/removeSongFromPlaylist', removeSongFromPlaylist)
 
 async function showForm(request, response) {
     let playlists = await model.findAll();
@@ -115,17 +119,20 @@ async function listPlaylist(request, response){
 async function showPlaylist(request, response){
 
     const id = request.body.playlistId;
-    const name = request.body.name;
 
     try {
+        
         const songs = await playlist_song_model.findAllSongsInPlaylist(id);
+        const playlist = await model.findById(id);
+        response.cookie("currentPlaylistId", playlist.id)
         const listPageData = {
-            heading: name,
+            heading: playlist.name,
+            description: playlist.description,
             songs: songs,
-            displayChoices: false
+            displayChoices: false,
+            displayPlaylistChoices: true
         }
         response.render('songs.hbs', listPageData)
-        return playlists;
     } 
     catch (error) {
         if(error instanceof model.DatabaseExecutionError){
@@ -138,6 +145,61 @@ async function showPlaylist(request, response){
         }
     }
 }
+
+async function addToPlaylistForm(request, response){
+    try {
+
+        const playlists = await model.findAll();
+        const song = await songModel.findById(request.body.songId);
+        response.cookie("songToAddId", song.id);
+
+        const listPageData = {
+            heading: `Choose a playlist to add ${song.name} to.`,
+            playlists: playlists,
+            displayChoices: false,
+        }
+        response.render('addToPlaylist.hbs', listPageData)
+    } 
+    catch (error) {
+        if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: error.message})
+        }
+        else{
+            response.render('error.hbs', {message: error.message})
+            throw error;
+        }
+    }
+}
+
+async function addToPlaylist(request, response){
+    const id = request.body.id;
+    try {
+
+        const playlists = await model.findAll();
+        const playlist = await model.findById(request.body.playlistId);
+        const song = await songModel.findById(request.cookies.songToAddId);
+        const playlist_song = await playlist_song_model.create(song.id, playlist.id);
+
+        const listPageData = {
+            heading: `Successfully added ${song.name} to .`,
+            playlists: playlists,
+            displayChoices: true,
+        }
+        response.render('playlists.hbs', listPageData)
+    } 
+    catch (error) {
+        if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: error.message})
+        }
+        else{
+            response.render('error.hbs', {message: error.message})
+            throw error;
+        }
+    }
+}
+
 
 
 
@@ -220,7 +282,36 @@ async function deletePlaylist(request, response){
 
 }
 
+async function removeSongFromPlaylist(request, response){
+    const songId = request.body.songId;
+    const playlistId = request.cookies.currentPlaylistId;
 
+    try {
+        const success = await playlist_song_model.remove(songId, playlistId);
+        const song = await songModel.findById(songId);
+
+        const playlists = await model.findAll();
+        const listPageData = {
+            heading: `Song ${song.name} was removed successfully!`,
+            playlists: playlists,
+            displayChoices: true
+        }
+
+        response.render('playlists.hbs', listPageData )
+        return success;
+    } 
+    
+    catch (error) {
+        if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: error.message})
+        }
+        else{
+            response.render('error.hbs', {message: error.message})
+            throw error;
+        }
+    }
+}
 module.exports = {
     router,
     routeRoot
