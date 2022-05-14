@@ -129,6 +129,10 @@ input {
     margin: 2em;
 }
 
+#accountButton{
+    align-self: center;
+}
+
 button {
     transition-duration: 0.4s;
     border: white;
@@ -189,7 +193,8 @@ button:hover {
 }
 
 .song-image{
-    width: 30%;
+    margin-left: 25px;
+    width: 40%;
     height: 30%;
 }
 

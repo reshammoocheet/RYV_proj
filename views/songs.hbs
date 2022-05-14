@@ -13,6 +13,7 @@
             <label for="artist">Enter song artist:</label><br>
             <input type="text" name="artist" id="artist">
             <br>
+            <input type="file">
             <button type="submit" class="btn btn-primary">Submit</button>
 
         </form>
@@ -132,11 +133,20 @@
             <div class="musicplayer">
                 <h2 id="songNameHeader">{{playSong.name}}</h2>
                 <h3>{{playSong.artist}}</h3>
-                <img class="song-image" src="images/song-image.jpg">
-                <div class="slidecontainer">
-                    <input type="range" min="0" max="3" value="0" disabled="true">
+                <div style="display: block; text-align: center;">
+                    <img class="song-image" src="images/song-image.jpg">
+                    <audio controls src="audio/demo.mp3" style="margin-left: 55px;">
+                        <div style="border: 1px solid black ;">
+                        Sorry, your browser does not support the <audio> tag used in this demo.
+                        </div>
+                    </audio>
                 </div>
-                <button style="background-color: yellowgreen;">
+
+
+                {{!-- <div class="slidecontainer">
+                    <input type="range" min="0" max="3" value="0" disabled="true">
+                </div> --}}
+                {{!-- <button style="background-color: yellowgreen;">
                     <img src="images/skip-to-start.png">
                 </button>
 
@@ -150,7 +160,7 @@
 
                 <button style="background-color: yellowgreen;">
                     <img src="images/skip-to-end.png">
-                </button>
+                </button> --}}
             </div>
         </div>
 </div>

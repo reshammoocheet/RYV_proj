@@ -29,9 +29,7 @@ async function initialize(dbName, reset) {
 
     try{
         const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist(id int AUTO_INCREMENT, name VARCHAR(50), description VARCHAR(512), PRIMARY KEY (id))';
-        const sqlQuery2 = 'CREATE TABLE IF NOT EXISTS playlist_song(playlist_id int, song_id int, PRIMARY KEY (playlist_id))';
         await connection.execute(sqlQuery);
-        await connection.execute(sqlQuery2);
     }
     catch(error){
         console.error(error);

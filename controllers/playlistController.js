@@ -95,6 +95,42 @@ async function listPlaylist(request, response){
     try {
         const playlists = await model.findAll();
 
+        // if user is searching up a song
+        const searchName = request.query.searchQuery;
+        if(searchName){
+            // get from database and display as sole song in table
+            let playlist;
+
+            // loop through songs
+            playlists.forEach((p) =>{
+                // if we find the song we need
+                if(p.name == searchName){
+                    playlist = p;
+                }
+            })
+
+
+            if(playlist){
+                const playlistPageData = {
+                    playlist: [playlist],
+                    heading: "Browse Songs",
+                    displayChoices: true,
+                }
+                response.render('playlists.hbs', playlistPageData )
+                return;
+            }
+            else{
+                const playlistPageData = {
+                    playlists: playlists,
+                    heading: "Could not find playlist " + searchName,
+                    displayChoices: true,
+                }
+                response.render('playlists.hbs', playlistPageData )
+                return;       
+            }
+
+        }
+
         const listPageData = {
             heading: 'All Playlists',
             playlists: playlists,
@@ -186,7 +222,8 @@ async function addToPlaylist(request, response){
             playlists: playlists,
             displayChoices: true,
         }
-        response.render('playlists.hbs', listPageData)
+        request.body.playlistId = playlist.id;
+        showPlaylist(request, response)
     } 
     catch (error) {
         if(error instanceof model.DatabaseExecutionError){
