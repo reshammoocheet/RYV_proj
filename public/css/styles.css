@@ -36,15 +36,7 @@ nav{
     flex-direction: row;
 }
 
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    margin-left: 18%;
-    margin-right: auto;
-    margin-top: 100px;
-    margin-bottom: 100px;
-    width: 72%;
-  }
+
   
   td, th {
     border: 1px solid #dddddd;
@@ -251,6 +243,48 @@ ul{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.premiumTable{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+table.premiumTable {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    margin-left: 18%;
+    margin-right: auto;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    width: 72%;
+  }
+
+.aboutTable{
+    margin-top: 100px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.about{
+    text-align: center;
+}
+
+th.about{
+    font-size: 30px;
+}
+
+img.about{
+    width: 50%;
+    height: 50%;
+}
+
+#aboutRYV{
+    font-size: larger;
+    margin-top:50px;
+    margin-bottom:100px;
 }
 
 

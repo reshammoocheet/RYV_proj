@@ -6,9 +6,9 @@ router.get('/home', welcomePage);
 router.get('/', welcomePage);
 router.get('/aboutUs', renderAboutUs)
 const model = require('../models/song-model');
-const { response } = require('../app');
 
-function renderAboutUs(request, reponse){
+
+function renderAboutUs(request, response){
     response.render('aboutUs.hbs')
 }
 
