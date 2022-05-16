@@ -157,6 +157,7 @@ button {
     transition-duration: 0.4s;
     cursor: pointer;
     height: 5%;
+    align-items:right;
 }
 
 
@@ -270,10 +271,12 @@ table.premiumTable {
 
 .about{
     text-align: center;
+    vertical-align: top;
 }
 
 th.about{
     font-size: 30px;
+    padding-bottom: 20px;
 }
 
 img.about{
