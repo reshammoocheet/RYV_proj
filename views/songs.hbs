@@ -5,7 +5,7 @@
         {{#if displayAddForm}}
 
         <div class="form">
-            <form action="/song" method="post" role ="form" >
+            <form action="/song" method="post" role ="form"  encType="multipart/form-data" >
             <legend class="formLegend" style="padding: 10px;"><u>Add new song</u></legend>
             <label for="name">Enter song name:</label><br>
             <input type="text" name="name" id="name">
@@ -13,7 +13,7 @@
             <label for="artist">Enter song artist:</label><br>
             <input type="text" name="artist" id="artist">
             <br>
-            <input type="file">
+            <input type="file" name="audioFile">
             <button type="submit" class="btn btn-primary">Submit</button>
 
         </form>
@@ -119,6 +119,7 @@
                                 <button formaction="/songForms" formmethod="post" name="choice" value="edit" class="play-button" type="submit" name="songId" value={{id}}>Edit</button>
                                 <button formaction="/songForms" formmethod="post" name="choice" value="delete" class="play-button" type="submit" name="songId" value={{id}}>Remove</button>
                                 <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
+                                <button class="play-button" type="submit" name="playSongId" value={{id}}>Download</button>
                             </li>
                         {{/each}}                     
                     {{/if}}
@@ -133,7 +134,7 @@
                 <div style="display: block; text-align: center;">
                     <img class="song-image" src={{#if playSong.iconSource}}{{playsong.iconSource}}{{else}}"images/song-image.jpg"{{/if}}>
                     <br>
-                    <audio {{#if playSong}}autoplay{{/if}} controls src={{#if playSong.audioSource}}{{playsong.audioSource}}{{else}}"audio/getback.wav"{{/if}}>
+                    <audio {{#if playSong}}autoplay{{/if}} controls src={{#if playSong}}"audio/{{playSong.name}}.mp3"{{else}}"audio/getback.wav"{{/if}}>
                         <div style="border: 1px solid black ;">
                         Sorry, your browser does not support the <audio> tag used in this demo.
                         </div>

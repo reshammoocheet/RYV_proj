@@ -3,12 +3,13 @@ const app = express();
 
 const {engine} = require('express-handlebars');
 const bodyParser = require('body-parser');
-
+const fileUpload = require('express-fileupload');
 // const pinohttp = require('pino-http');
 const expressListRoutes = require('express-list-routes');
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
-
+// default option
+app.use(fileUpload());
 // Tell the app to use handlebars templating engine.  
 //   Configure the engine to use a simple .hbs extension to simplify file naming
 app.engine('hbs', engine({ extname: '.hbs'}));

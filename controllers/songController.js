@@ -123,8 +123,9 @@ async function readAllSongs(request, response) {
         }
 
 
-
+        song.audioSource = 'audio/' + song.name + ".mp3"
     
+        console.log(song.audioSource)
         const songPageData = {
             songs: songs,
             heading: "All songs",
@@ -171,6 +172,9 @@ async function newSong(request, response){
     const name = request.body.name;
     const artist = request.body.artist;
 
+
+
+
     try{
         const song = await model.create(name, artist);
         const songs = await model.findAll();
@@ -181,6 +185,27 @@ async function newSong(request, response){
         }
 
         response.render('songs.hbs', listPageData )
+
+        // Getting the uploaded file
+        let audioFile;
+        let uploadPath;
+
+        if(!request.files || Object.keys(request.files).length === 0){
+            return response.render('error.hbs', {message: 'No file was uploaded.'})
+        }
+
+        audioFile = request.files.audioFile;
+        audioFile.name = song.name;
+        uploadPath = __dirname + '/songFiles/' + audioFile.name + ".mp3";
+
+        console.log(audioFile);
+
+        audioFile.mv(uploadPath, function (err){
+            if(err){
+                response.render('error.hbs', {message: err.message})
+            }
+        })
+
         return song;
     }
     catch(error){
