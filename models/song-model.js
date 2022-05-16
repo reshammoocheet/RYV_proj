@@ -1,6 +1,5 @@
 const mysql = require('mysql2/promise');
 const validateUtils = require('../validateUtils');
-
 var connection;
 
 /**
@@ -63,7 +62,7 @@ async function truncate(tableName){
 async function create(name, artist){
     // Validate Input
     if(!validateUtils.isValid(name, artist)){
-        throw new InvalidInputError(`Invalid input when trying to create ${name} released in ${artist}. `);
+        throw new InvalidInputError(`Invalid input when trying to create ${name} by ${artist}. `);
     }
 
     // check if song already exists
@@ -228,6 +227,11 @@ async function remove(id){
         // Execute Sql command to database
         const sqlQuery = `DELETE FROM song WHERE id = ?`;
         await connection.execute(sqlQuery, [id]);
+
+        // Execute Sql command to database
+        const sqlQuery2 = `DELETE FROM playlist_song WHERE song_id = ?`;
+        await connection.execute(sqlQuery2, [id]);
+
 
         return true;
     }

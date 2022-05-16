@@ -52,18 +52,6 @@
         </div>
         {{/if}}
 
-        {{#if displayChoices}}
-        <form action="/songForms" method="post" role ="form" enctype="application/x-www-form-urlencoded" >
-            <ul>
-                <li><legend style="font-size: 40px;">What would you like to do?</legend></li>
-                <li><button class="styled-button" name="choice" type="submit" class="crud-song" value="add" >Add Song</button>    </li>
-                <li><button class="styled-button" name="choice" type="submit" class="crud-song" value="edit" >Edit Song</button>  </li>
-                <li><button class="styled-button" name="choice" type="submit" class="crud-song" value="delete" >Delete Song</button></li>
-            
-            </ul>
-        </form>
-        {{/if}}
-
 
         {{!-- Songlist for a playlist  --}}
         {{#if displayPlaylistChoices}}
@@ -92,12 +80,18 @@
             <!-- Song Library -->
             <ul class="songList">
                 <h1 style="text-align: center; margin: left -10px;">{{heading}}</h1>
-                <h3>{{description}}</h3>
                 <!-- Search Bar -->
                 <form method="get" action="/song">
                     <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
                     <button class="styled-button">Search</button>
+                    {{#if displayPlaylistChoices}}
+                    <button class="styled-button" name="choice" type="submit" class="crud-song" value="add" >Add Song to Playlist</button>
+                    <button class="styled-button" name="choice" type="submit" class="crud-song" value="edit" >Edit this Playlist</button> 
+                    <button class="styled-button" name="choice" type="submit" class="crud-song" value="delete" >Delete this Playlist</button>
+            
+                    {{else}}
                     <button formaction="/songForms" formmethod="post" name="choice" value="add" class="styled-button">Add Song</button>
+                    {{/if}}
                 </form>
                 <form method="post" role="form" action="/play">
                     <li class="song-list-item">
@@ -166,5 +160,6 @@
                     <img src="images/skip-to-end.png">
                 </button> --}}
             </div>
-        </div>
+    </div>
+    
 </div>

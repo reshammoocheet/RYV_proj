@@ -111,12 +111,17 @@ async function findAllSongsInPlaylist(playlist_id){
         const [playlist_songs, fields] = await connection.execute(sqlQuery, [playlist_id]);
 
         let songs = [];
-        // loop through songs to get an array of objects not just ids
-        playlist_songs.forEach(async (playlist_song) =>{
-            const song = await songModel.findById(playlist_song.song_id)
-            songs.push(song);
-        })
+        // // loop through songs to get an array of objects not just ids
+        // playlist_songs.forEach(async (playlist_song) =>{
+        //     const song = await songModel.findById(playlist_song.song_id)
+        //     console.log("ADDING A SONG")
+        //     songs.push(song);
+        // })
 
+        for(let i = 0; i < playlist_songs.length; i++){
+            const song = await songModel.findById(playlist_songs[i].song_id)
+            songs.push(song);
+        }
 
         return songs;
     }
@@ -126,6 +131,7 @@ async function findAllSongsInPlaylist(playlist_id){
     }
 
 }
+
 
 /**
  * Finds all playlists in the table

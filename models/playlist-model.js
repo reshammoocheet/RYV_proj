@@ -192,6 +192,11 @@ async function remove(id){
         const sqlQuery = `DELETE FROM playlist WHERE id = ?`;
         await connection.execute(sqlQuery, [id]);
 
+        // Execute Sql command to database
+        const sqlQuery2 = `DELETE FROM playlist_song WHERE playlist_id = ?`;
+        await connection.execute(sqlQuery2, [id]);
+        
+
         return true;
     }
     catch(error){

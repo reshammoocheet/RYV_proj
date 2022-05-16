@@ -15,28 +15,28 @@ router.post('/playlist-delete', deletePlaylist)
 router.post('/addSong', addToPlaylistForm);
 router.post('/addToPlaylist', addToPlaylist)
 router.post('/removeSongFromPlaylist', removeSongFromPlaylist)
+router.post('/playlistForms', showForm)
 
 async function showForm(request, response) {
     let playlists = await model.findAll();
 
     switch (request.body.choice) {
-        case 'add':
+        case 'addForm':
             response.render('playlists.hbs', { displayAddForm: true, playlists: playlists });
             break;
-        case 'list':
-            response.render('playlists.hbs', { displayChoices: false, playlists: playlists  });
-            break;
-        case 'edit':
+        case 'editForm':
             response.render('playlists.hbs', { displayEditForm: true, playlists: playlists  });
             break;
-        case 'delete':
+        case 'deleteForm':
             response.render('playlists.hbs', { displayDeleteForm: true, playlists: playlists  });
+            break;
+        case 'addSongForm':
+            response.render('playlists.hbs', { displayAddHereForm: true, playlists: playlists });
             break;
         default:
             response.render('playlists.hbs');  // no valid choice made
     }
 }
-router.post('/playlistForms', showForm)
 
 
 /**
@@ -160,15 +160,16 @@ async function showPlaylist(request, response){
         
         const songs = await playlist_song_model.findAllSongsInPlaylist(id);
         const playlist = await model.findById(id);
-        response.cookie("currentPlaylistId", playlist.id)
+        response.cookie("currentPlaylistId", id)
         const listPageData = {
             heading: playlist.name,
             description: playlist.description,
             songs: songs,
             displayChoices: false,
-            displayPlaylistChoices: true
+            displayPlaylistChoices: true,
+            showPlaylist: true
         }
-        response.render('songs.hbs', listPageData)
+        response.render('playlists.hbs', listPageData)
     } 
     catch (error) {
         if(error instanceof model.DatabaseExecutionError){

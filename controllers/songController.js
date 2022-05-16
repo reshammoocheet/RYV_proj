@@ -4,7 +4,8 @@ const routeRoot = '/';
 const { sessionManager } = require('../sessionManager');
 
 const model = require('../models/song-model.js');
-
+const playlistModel = require('../models/playlist-model');
+const playlistSongModel = require('../models/playlist_song-model');
 
 async function showForm(request, response) {
     let songs = await model.findAll()
@@ -20,6 +21,17 @@ async function showForm(request, response) {
             break;
         case 'delete':
             response.render('songs.hbs', { displayDeleteForm: true, songs: songs  });
+            break;
+        case 'editInPlaylist':
+            const playlistId = request.cookies.currentPlaylistId;
+            const playlist = await playlistModel.findById(playlistId);
+            const s = await playlistSongModel.findAllSongsInPlaylist(playlistId)
+            response.render('playlists.hbs', {displayEditSongForm: true, songs: s, showPlaylist: true, heading: playlist.name, description: playlist.description})
+            break;
+        case 'deleteInPlaylist':
+            const PlaylistId = request.cookies.currentPlaylistId;
+            const S = await playlistSongModel.findAllSongsInPlaylist(PlaylistId)
+            response.render('playlists.hbs', {displayDeleteSongForm: true, songs: S, showPlaylist: true})
             break;
         default:
             response.render('songs.hbs');  // no valid choice made
@@ -209,6 +221,8 @@ async function listSongs(request, response){
         isPremium = true;
 
     }
+
+
 
     try {
         const songs = await model.findAll();
