@@ -83,16 +83,6 @@
     </div>
     {{/if}}
 
-    {{!-- {{#if displayChoices}}
-    <form action="/playlistForms" method="post" role ="form" enctype="application/x-www-form-urlencoded">
-        <ul>
-            <li><legend style="font-size: 40px;">What would you like to do?</legend>
-            <li><button class="styled-button" name="choice" type="submit" class="btn btn-primary" value="add" >Add Playlist</button>    </li>
-            <li><button class="styled-button" name="choice" type="submit" class="btn btn-primary" value="edit" >Edit Playlist</button>  </li>
-            <li><button class="styled-button" name="choice" type="submit" class="btn btn-primary" value="delete" >Delete Playlist</button></li>
-        </ul>
-    </form>
-    {{/if}} --}}
     </div>
 
 
@@ -150,23 +140,20 @@
         </form>
 
         </ul>
-        <div class="musicplayer">
-            <h2>{{playSong.name}}</h2>
-            <h3>{{playSong.artist}}</h3>
-            <img class="song-image" src="images/song-image.jpg">
-            <div class="slidecontainer">
-                <input type="range" min="0" max="3" value="0" disabled="true">
+            <div class="musicplayer">
+                <h2 id="songNameHeader">{{playSong.name}}</h2>
+                <h3>{{playSong.artist}}</h3>
+                <div style="display: block; text-align: center;">
+                    <img class="song-image" src={{#if playSong.iconSource}}{{playsong.iconSource}}{{else}}"images/song-image.jpg"{{/if}}>
+                    <br>
+                    <audio {{#if playSong}}autoplay{{/if}} controls controlsList="nodownload" src={{#if playSong}}"audio/{{playSong.name}}.mp3"{{else}}"audio/getback.wav"{{/if}}>
+                        <div style="border: 1px solid black ;">
+                        Sorry, your browser does not support the <audio> tag used in this demo.
+                        </div>
+                    </audio>
+                </div>
+
             </div>
-            <button class="styled-button" style="background-color: yellowgreen;">
-                <img src="images/skip-to-start.png">
-            </button>
-            <button class="styled-button" style="background-color: yellowgreen;">
-                <img src="images/play.png">
-            </button>
-            <button class="styled-button" style="background-color: yellowgreen;">
-                <img src="images/skip-to-end.png">
-            </button>
-        </div>
     </div>
 
 

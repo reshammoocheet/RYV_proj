@@ -134,32 +134,13 @@
                 <div style="display: block; text-align: center;">
                     <img class="song-image" src={{#if playSong.iconSource}}{{playsong.iconSource}}{{else}}"images/song-image.jpg"{{/if}}>
                     <br>
-                    <audio {{#if playSong}}autoplay{{/if}} controls src={{#if playSong}}"audio/{{playSong.name}}.mp3"{{else}}"audio/getback.wav"{{/if}}>
+                    <audio {{#if playSong}}autoplay{{/if}} controls controlsList="nodownload" src={{#if playSong}}"audio/{{playSong.name}}.mp3"{{else}}"audio/getback.wav"{{/if}}>
                         <div style="border: 1px solid black ;">
                         Sorry, your browser does not support the <audio> tag used in this demo.
                         </div>
                     </audio>
                 </div>
 
-
-                {{!-- <div class="slidecontainer">
-                    <input type="range" min="0" max="3" value="0" disabled="true">
-                </div> --}}
-                {{!-- <button style="background-color: yellowgreen;">
-                    <img src="images/skip-to-start.png">
-                </button>
-
-                <button style="background-color: yellowgreen; display: none" id="pause-btn" >
-                    <img src="images/pause.png">
-                </button>
-
-                <button style="background-color: yellowgreen;" id="play-btn" onclick="console.log('hello');">
-                    <img src="images/play.png">
-                </button>
-
-                <button style="background-color: yellowgreen;">
-                    <img src="images/skip-to-end.png">
-                </button> --}}
             </div>
     </div>
     

@@ -105,7 +105,6 @@ async function readAllSongs(request, response) {
         if(song.name){
             // for every cookie in the cookies object
             for (const [key, value] of Object.entries(request.cookies)) {
-                console.log(key, value);
                 // if the cookie for this song exists
                 if(key == song.name){
                     // increase its value
@@ -122,10 +121,6 @@ async function readAllSongs(request, response) {
             }
         }
 
-
-        song.audioSource = 'audio/' + song.name + ".mp3"
-    
-        console.log(song.audioSource)
         const songPageData = {
             songs: songs,
             heading: "All songs",
@@ -196,8 +191,8 @@ async function newSong(request, response){
 
         audioFile = request.files.audioFile;
         audioFile.name = song.name;
-        uploadPath = __dirname + '/songFiles/' + audioFile.name + ".mp3";
-
+        console.log(__dirname)
+        uploadPath = __dirname.replace("controllers", "public") + '/audio/' + audioFile.name + ".mp3";
         console.log(audioFile);
 
         audioFile.mv(uploadPath, function (err){
