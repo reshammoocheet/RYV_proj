@@ -10,20 +10,19 @@ const model = require('../models/song-model');
 
 function renderAboutUs(request, response){
 
+    response.render('aboutUs.hbs',{hideLogout: true});
 
-    response.render('aboutUs.hbs')
 }
 
 async function welcomePage(request, response) {
     // check for valid session
-    // const authenticatedSession = sessionManager.authenticateUser(request);
-    // if(!authenticatedSession || authenticatedSession == null){
-    //     response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
-    //     return;
-    // }
+    const authenticatedSession = sessionManager.authenticateUser(request);
+    if(!authenticatedSession || authenticatedSession == null){
+        response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
+        return;
+    }
 
-    // get songs.
-    // let songs = await model.findTop();
+
     let songs = await getTopSongs(request);
 
     // console.log("User " + authenticatedSession.userSession.username + " is authorized for home page");

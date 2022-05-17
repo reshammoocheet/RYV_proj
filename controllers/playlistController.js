@@ -86,11 +86,11 @@ async function newPlaylist(request, response){
 */
 async function listPlaylist(request, response){
     // check for valid session
-    // const authenticatedSession = sessionManager.authenticateUser(request);
-    // if(!authenticatedSession || authenticatedSession == null){
-    //     response.render('login.hbs',{username: request.cookies.username , hideLogout: true});
-    //     return;
-    // }
+    const authenticatedSession = sessionManager.authenticateUser(request);
+    if(!authenticatedSession || authenticatedSession == null){
+        response.render('login.hbs',{username: request.cookies.username , hideLogout: true});
+        return;
+    }
 
     try {
         const playlists = await model.findAll();
