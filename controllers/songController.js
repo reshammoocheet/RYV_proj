@@ -205,14 +205,28 @@ async function newSong(request, response){
          */
         // Getting the uploaded file
         let audioFile;
-        let uploadPath;
+        let imgFile;
+        let audioPath;
+        let imgPath;
 
         if(request.files){
+            // Get audio file
             audioFile = request.files.audioFile;
             audioFile.name = song.name;
-            uploadPath = __dirname.replace("controllers", "public") + '/audio/' + audioFile.name + ".mp3";
+            audioPath = __dirname.replace("controllers", "public") + '/audio/' + audioFile.name + ".mp3";
     
-            audioFile.mv(uploadPath, function (err){
+            audioFile.mv(audioPath, function (err){
+                if(err){
+                    response.render('error.hbs', {message: err.message})
+                }
+            })
+
+            // Get image file
+            imgFile = request.files.imgFile;
+            imgFile.name = song.name;
+            imgFile = __dirname.replace("controllers", "public") + '/audio/' + imgFile.name + ".png";
+    
+            imgFile.mv(imgPath, function (err){
                 if(err){
                     response.render('error.hbs', {message: err.message})
                 }
