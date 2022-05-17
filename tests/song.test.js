@@ -1,4 +1,4 @@
-const app = require('./app');
+const app = require('../app');
 const supertest = require("supertest");
 const testRequest = supertest(app);
 
@@ -22,8 +22,8 @@ const generateSongData = () => {
 
 // Initialize database before proceeding
 const dbName = "music_db_test";
-const model = require('./models/song-model');
-const playlistSongModel = require('./models/playlist_song-model');
+const model = require('../models/song-model');
+const playlistSongModel = require('../models/playlist_song-model');
 const { test, expect } = require('@jest/globals');
 
 /* Make sure the database is empty before each test.  This runs before each test.  See https://jestjs.io/docs/api */

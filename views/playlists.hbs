@@ -123,7 +123,7 @@
                         <p class="song-list-item-text" >{{artist}}</p>
                         <button formaction="/songForms" formmethod="post" name="choice" value="editInPlaylist" class="play-button" type="submit" >Edit</button>
                         <button formaction="/songForms" formmethod="post" name="choice" value="deleteInPlaylist" class="play-button" type="submit">Remove</button>
-                        <button class="play-button" type="submit" formaction="/play" formmethod="post" name="playSongId" value={{id}}>▶</button>
+                        <button class="play-button" type="submit" formaction="/play" formmethod="post" name="playlistSongId" value={{id}}>▶</button>
                     </li>
                 {{/each}}
             {{else}}

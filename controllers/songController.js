@@ -92,9 +92,15 @@ async function readAllSongs(request, response) {
  */
  async function playSong(request, response) {
     try{
-        let songs = await model.findAll();
-        let song = await model.findById(request.body.playSongId);
+        let song;
+        if(request.body.playlistSongId){
+            song = await model.findById(request.body.playlistSongId);
+        }
+        else if(request.body.playSongId){
+            song = await model.findById(request.body.playSongId);
+        }
 
+        let songs = await model.findAll();
 
         let found = false;
         if(song.name){
@@ -116,15 +122,33 @@ async function readAllSongs(request, response) {
             }
         }
 
-        const songPageData = {
-            songs: songs,
-            heading: "All songs",
-            displayChoices: true,
-            playSong: song
+
+
+
+        // if we have to go back to a song played in a specific playlist
+        if(request.body.playlistSongId){
+            const playlistId = request.cookies.currentPlaylistId;
+            const playlist = await playlistModel.findById(playlistId)
+            const playlistSongs = await playlistSongModel.findAllSongsInPlaylist(playlistId)
+            const songPageData = {
+                songs: playlistSongs,
+                showPlaylist: true,
+                heading: playlist.name,
+                description: playlist.description,
+                displayChoices: true,
+                playSong: song
+            }
+            response.render('playlists.hbs', songPageData)
         }
-    
-    
-        response.render('songs.hbs', songPageData)
+        else{
+            const songPageData = {
+                songs: songs,
+                heading: "All songs",
+                displayChoices: true,
+                playSong: song
+            }
+            response.render('songs.hbs', songPageData)
+        }
     }
     catch (error) {
         // error handling.
