@@ -185,21 +185,25 @@ async function newSong(request, response){
         let audioFile;
         let uploadPath;
 
-        if(!request.files || Object.keys(request.files).length === 0){
-            return response.render('error.hbs', {message: 'No file was uploaded.'})
+        if(request.files){
+            audioFile = request.files.audioFile;
+            audioFile.name = song.name;
+            console.log(__dirname)
+            uploadPath = __dirname.replace("controllers", "public") + '/audio/' + audioFile.name + ".mp3";
+            console.log(audioFile);
+    
+            audioFile.mv(uploadPath, function (err){
+                if(err){
+                    response.render('error.hbs', {message: err.message})
+                }
+            })
+
+        }
+        else{
+            //return response.render('error.hbs', {message: 'No file was uploaded.'})
         }
 
-        audioFile = request.files.audioFile;
-        audioFile.name = song.name;
-        console.log(__dirname)
-        uploadPath = __dirname.replace("controllers", "public") + '/audio/' + audioFile.name + ".mp3";
-        console.log(audioFile);
 
-        audioFile.mv(uploadPath, function (err){
-            if(err){
-                response.render('error.hbs', {message: err.message})
-            }
-        })
 
         return song;
     }

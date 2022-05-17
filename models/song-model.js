@@ -224,6 +224,7 @@ async function counter(id) {
 async function remove(id){
 
     try{
+
         // Execute Sql command to database
         const sqlQuery = `DELETE FROM song WHERE id = ?`;
         await connection.execute(sqlQuery, [id]);
@@ -231,6 +232,7 @@ async function remove(id){
         // Execute Sql command to database
         const sqlQuery2 = `DELETE FROM playlist_song WHERE song_id = ?`;
         await connection.execute(sqlQuery2, [id]);
+
 
 
         return true;

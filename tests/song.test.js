@@ -23,12 +23,14 @@ const generateSongData = () => {
 // Initialize database before proceeding
 const dbName = "music_db_test";
 const model = require('../models/song-model');
+const playlistSongModel = require('../models/playlist_song-model');
 const { test, expect } = require('@jest/globals');
 
 /* Make sure the database is empty before each test.  This runs before each test.  See https://jestjs.io/docs/api */
 beforeEach(async () => {
     try {
         await model.initialize(dbName, true);
+        await playlistSongModel.initialize(dbName, true);
      } 
     catch (err) {
         console.error(err);
@@ -36,7 +38,7 @@ beforeEach(async () => {
 });
 
 // CREATE
-test.only("POST /song success case", async () => {
+test("POST /song success case", async () => {
     // Create Song
     const { name, artist } = generateSongData();
     const testResponse = await testRequest.post('/song').send({
@@ -48,7 +50,7 @@ test.only("POST /song success case", async () => {
     expect(testResponse.text).toContain(`Song ${name} by ${artist} was created successfully! `)
 });
 
-test.only("POST /song fail case with blank name", async () => {
+test("POST /song fail case with blank name", async () => {
     // Create Song
     const { name, artist } = generateSongData();
     const testResponse = await testRequest.post('/song').send({
@@ -60,7 +62,7 @@ test.only("POST /song fail case with blank name", async () => {
     expect(testResponse.text).toContain(`Invalid input when trying to create  by ${artist}. `)
 });
 
-test.only("POST /song fail case with invalid artist", async () => {
+test("POST /song fail case with invalid artist", async () => {
     // Create Song
     const { name, artist } = generateSongData();
     const testResponse = await testRequest.post('/song').send({
@@ -73,7 +75,7 @@ test.only("POST /song fail case with invalid artist", async () => {
 })
 
 
-test.only("POST /song fail case with closed connection", async () => {
+test("POST /song fail case with closed connection", async () => {
     // Create Song
     const { name, artist } = generateSongData();
 
@@ -90,7 +92,7 @@ test.only("POST /song fail case with closed connection", async () => {
     
 
 // READ
-test.only("GET /song full list of songs", async () => {
+test("GET /song full list of songs", async () => {
     // Fill db with list of songs
     await testRequest.post('/song').send({
         name: "name1",
@@ -113,7 +115,7 @@ test.only("GET /song full list of songs", async () => {
     expect(testResponse.status).toBe(200);
 });
     
-test.only("GET /song search success case", async () => { 
+test("GET /song search success case", async () => { 
     // Create Song
     const { name, artist } = generateSongData();
     await testRequest.post('/song').send({
@@ -132,7 +134,7 @@ test.only("GET /song search success case", async () => {
 
 });
 
-test.only("GET /song search fail case", async () => { 
+test("GET /song search fail case", async () => { 
     // Try and find song that does not exist
     const search = "aaaas"
     const testResponse = await testRequest.get(`/song?searchQuery=${search}`);
@@ -155,11 +157,11 @@ test("GET /song fail case with closed connection", async () => {
     });
 
     // Find Previously Created Song
-    const testResponse = await testRequest.get(`/song/show?name=${name}`);
+    const testResponse = await testRequest.get(`/song?name=${name}`);
 
 
     expect(testResponse.status).toBe(500);
-    expect(testResponse.text).toBe(`Can't add new command when connection is in closed state`)
+    expect(testResponse.text).toContain(`add new command when connection is in closed state`)
 
 
 });
@@ -175,17 +177,17 @@ test("PUT /song success case", async () => {
     })
 
     // Edit with new name
-    const newTitle = "New Title";
-    const newYear = artist - 2;
+    const newName = "New Title";
+    const newArtist = "new artist";
 
-    const testResponse = await testRequest.put('/song/update').send({
-        name: name,
-        newTitle: newTitle,
-        newYear: newYear
+    const testResponse = await testRequest.post('/song-edit').send({
+        currentName: name,
+        newName: newName,
+        newArtist: newArtist
     });
     
     expect(testResponse.status).toBe(200);
-    expect(testResponse.text).toBe(`Song ${name} was updated successfully with new name: ${newTitle} and new artist: ${newYear}. `);
+    expect(testResponse.text).toContain(`Song ${name} was updated successfully with new name: ${newName} and new artist: ${newArtist}. `);
 });
 
 
@@ -198,17 +200,17 @@ test("PUT /song fail case with invalid new name", async () => {
     })
 
     // Edit with invalid new name
-    const newTitle = "";
-    const newYear = artist - 2;
+    const newName = "";
+    const newArtist = "new artist";
 
-    const testResponse = await testRequest.put('/song/update').send({
-        name: "",
-        newTitle: newTitle,
-        newYear: newYear
+    const testResponse = await testRequest.post('/song-edit').send({
+        currentName: "",
+        newName: newName,
+        newArtist: newArtist
     });
     
     expect(testResponse.status).toBe(400);
-    expect(testResponse.text).toBe(`Invalid input when trying to update fields to ${newTitle} and ${newYear}`);
+    expect(testResponse.text).toContain(`Invalid input when trying to update fields to ${newName} and ${newArtist}`);
 });
 
 
@@ -221,17 +223,17 @@ test("PUT /song fail case with invalid new artist", async () => {
     })
 
     // Edit with invalid new artist
-    const newTitle = "New Title";
-    const newYear = 3000;
+    const newName = "New Title";
+    const newArtist = "";
 
-    const testResponse = await testRequest.put('/song/update').send({
-        name: name,
-        newTitle: newTitle,
-        newYear: newYear
+    const testResponse = await testRequest.post('/song-edit').send({
+        currentName: name,
+        newName: newName,
+        newArtist: newArtist
     });
     
     expect(testResponse.status).toBe(400);
-    expect(testResponse.text).toBe(`Invalid input when trying to update fields to ${newTitle} and ${newYear}`);
+    expect(testResponse.text).toContain(`Invalid input when trying to update fields to ${newName} and ${newArtist}`);
 });
 
 test("PUT /song fail case with closed connection", async () => {
@@ -243,19 +245,19 @@ test("PUT /song fail case with closed connection", async () => {
     })
 
     // Edit with invalid new artist
-    const newTitle = "New Title";
-    const newYear = 2000;
+    const newName = "New Title";
+    const newArtist = "new artist";
 
     model.endConnection();
 
-    const testResponse = await testRequest.put('/song/update').send({
-        name: name,
-        newTitle: newTitle,
-        newYear: newYear
+    const testResponse = await testRequest.post('/song-edit').send({
+        currentName: name,
+        newName: newName,
+        newArtist: newArtist
     });
     
     expect(testResponse.status).toBe(500);
-    expect(testResponse.text).toBe(`Can't add new command when connection is in closed state`);
+    expect(testResponse.text).toContain(`add new command when connection is in closed state`);
 });
 
 
@@ -269,14 +271,16 @@ test("DELETE /song success case", async () => {
         artist: artist
     })
 
+    const song = await model.findByName(name);
+
+
     // Remove created song
-    const testResponse = await testRequest.delete('/song/removal').send({
-        name: name,
-        artist: artist
+    const testResponse = await testRequest.post('/song-delete').send({
+        id: song[0].id
     });
 
     expect(testResponse.status).toBe(200);
-    expect(testResponse.text).toBe(`Song ${name} was removed successfully!`);
+    expect(testResponse.text).toContain(`Song was removed successfully!`);
 });
 
 // DELETE
@@ -287,16 +291,17 @@ test("DELETE /song fail case", async () => {
         name: name,
         artist: artist
     })
+
+    const song = await model.findByName(name);
     model.endConnection();
 
     // Remove created song
-    const testResponse = await testRequest.delete('/song/removal').send({
-        name: name,
-        artist: artist
+    const testResponse = await testRequest.post('/song-delete').send({
+        id: song[0].id
     });
 
     expect(testResponse.status).toBe(500);
-    expect(testResponse.text).toBe(`Song ${name} was removed successfully!`);
+    expect(testResponse.text).toContain(`add new command when connection is in closed state`);
 });
 
 
