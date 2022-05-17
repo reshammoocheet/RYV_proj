@@ -2,12 +2,12 @@
     <legend>Please enter your username and password to sign up</legend>
     <br>
     <label for="username">Username:</label><br>
-    <input type="text" id="username" name="username"><br>
+    <input type="text" id="username" name="username" value={{username}}><br>
     <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password" minlength="8">
+    <input type="password" id="password" name="password" minlength="8" value={{password}}>
     <br>
     <label for="password">Confirm Password:</label><br>
-    <input type="password" minlength="8">
+    <input type="password" name="confirmpassword" minlength="8" value={{confirmpassword}}>
     <br>
 
     {{#if showPaypal}}

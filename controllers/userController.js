@@ -51,7 +51,12 @@ function signupPage(request, response){
     if(request.body.buyButton != null){
         isPremium = true;
     }
-    response.render('sign-up.hbs',{hideLogout: true, showPaypal: isPremium});
+
+    const username = request.body.username ?? "";
+    const password = request.body.password ?? "";
+    const confirmPassword = request.body.confirmPassword ?? "";
+
+    response.render('sign-up.hbs',{hideLogout: true, showPaypal: isPremium, username: username, password: password, confirmPassword: confirmPassword});
 }
 
 async function loginUser(request, response){

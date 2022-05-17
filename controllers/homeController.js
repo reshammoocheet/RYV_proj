@@ -9,6 +9,8 @@ const model = require('../models/song-model');
 
 
 function renderAboutUs(request, response){
+
+
     response.render('aboutUs.hbs')
 }
 
