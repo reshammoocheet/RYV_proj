@@ -290,7 +290,17 @@ img.about{
     margin-bottom:100px;
 }
 
+#fileInput{
+    width: 100%;
+    margin: 0;
+}
 
+#description{
+    background-color:black;
+    color:white;
+    border:1px solid yellow;
+    resize: none;
+}
 @media screen and (max-width: 1224px) {
     .header-logo{
         width: 10%;

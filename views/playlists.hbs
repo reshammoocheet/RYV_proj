@@ -8,10 +8,12 @@
     <form action="/playlist" method="post" role ="form" >
         <legend class="formLegend" style="padding: 10px;"><u>Add new playlist</u></legend>
         <label for="name">Enter playlist name:</label><br>
-        <input type="text" name="name" id="name">
+        <input class="playlistInput" type="text" name="name" id="name">
         <br>
-        <label for="description">Enter playlist description</label><br>
-        <input type="text" name="description" id="description">
+        <label class="playlistInput" for="description">Enter playlist description</label><br>
+        {{!-- <input type="text" name="description" id="description"> --}}
+        <textarea name="description" id="description" rows = "10" cols = "23"> 
+        </textarea>
         <br>
         <button type="submit" class="btn btn-primary">Submit</button>
 
