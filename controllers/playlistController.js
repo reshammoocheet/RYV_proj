@@ -104,16 +104,17 @@ async function listPlaylist(request, response){
             // loop through songs
             playlists.forEach((p) =>{
                 // if we find the song we need
-                if(p.name == searchName){
+                if(p.name.toLowerCase() == searchName.toLowerCase()){
                     playlist = p;
                 }
             })
 
 
             if(playlist){
+                console.log(playlist)
                 const playlistPageData = {
-                    playlist: [playlist],
-                    heading: "Browse Songs",
+                    playlists: [playlist],
+                    heading: "My Library",
                     displayChoices: true,
                 }
                 response.render('playlists.hbs', playlistPageData )
@@ -132,7 +133,7 @@ async function listPlaylist(request, response){
         }
 
         const listPageData = {
-            heading: 'All Playlists',
+            heading: 'My Library',
             playlists: playlists,
             displayChoices: true
         }

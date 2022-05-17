@@ -55,7 +55,6 @@ function signupPage(request, response){
 }
 
 async function loginUser(request, response){
-    console.log("hesfib")
 
     // Let's assume successful login for now with placeholder username
     const username = request.body.username;
@@ -63,7 +62,6 @@ async function loginUser(request, response){
     const users = await model.findAll();
     const user = await model.findByUsername(username);
 
-    console.log(user)
 
     if(user.length < 1){
         response.render('login.hbs', {errorMessage: "Invalid username given for user: " + username})
@@ -74,8 +72,6 @@ async function loginUser(request, response){
         // Validate the password against our data.
         // If invalid, redirect to the main page without creating a session cookie.
         const expectedPassword = user[0].password;
-        console.log(expectedPassword);
-        console.log(password);
         if (expectedPassword && await bcrypt.compare(password, expectedPassword)) {                     
             console.log("Successful login for user " + username);
             console.log(user);
@@ -98,8 +94,6 @@ async function loginUser(request, response){
 }
 
 async function registerUser(request, response){
-    console.log(request.body)
-    console.log(request.body.isPremium)
     const username = request.body.username;
     const password = request.body.password;
     const isPremium = request.body.isPremium == "on";

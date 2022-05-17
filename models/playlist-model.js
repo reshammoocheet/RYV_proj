@@ -153,6 +153,11 @@ async function findAll(){
 */
 async function update(currentName, newName, newDescription){
 
+    // Validate Input
+    if(!newName){
+        throw new InvalidInputError(`Invalid input when trying to update fields to ${newName} and ${newDescription}. `);
+    }
+
     try {
         if(await findByName(currentName) == null){
             console.error(`No such playlist with name ${currentName}`);

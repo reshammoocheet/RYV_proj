@@ -23,7 +23,6 @@ async function welcomePage(request, response) {
     // get songs.
     // let songs = await model.findTop();
     let songs = await getTopSongs(request);
-    console.log(songs);
 
     // console.log("User " + authenticatedSession.userSession.username + " is authorized for home page");
 
@@ -41,14 +40,12 @@ async function getTopSongs(request){
     for (const [key, value] of Object.entries(request.cookies)) {
         // find the song with that name
         let song = await model.findByName(key);
-        console.log(song[0]);
         // findByName returns an array of songs with that name so we check if its not empty
         if(song.length > 0){
             // add it to the top songs
             song[0].timesPlayed = parseInt(value);
             songs.push(song[0]);
         }
-        console.log(key, value);
     }
 
     songs.sort((a, b) => (a.timesPlayed < b.timesPlayed) ? 1 : -1)

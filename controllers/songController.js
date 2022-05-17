@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const routeRoot = '/';
 const { sessionManager } = require('../sessionManager');
+const fs = require("fs");
 
 const model = require('../models/song-model.js');
 const playlistModel = require('../models/playlist-model');
@@ -94,12 +95,6 @@ async function readAllSongs(request, response) {
         let songs = await model.findAll();
         let song = await model.findById(request.body.playSongId);
 
-        // Counter.
-        //await model.counter(request.body.playSongId);
-        
-        console.log(song)
-        //request.cookies.tracks++;
-
 
         let found = false;
         if(song.name){
@@ -181,6 +176,9 @@ async function newSong(request, response){
 
         response.render('songs.hbs', listPageData )
 
+        /**
+         * Logic was found using tutorial from https://www.youtube.com/watch?v=hyJiNTFtQic&t=1262s
+         */
         // Getting the uploaded file
         let audioFile;
         let uploadPath;
@@ -188,9 +186,7 @@ async function newSong(request, response){
         if(request.files){
             audioFile = request.files.audioFile;
             audioFile.name = song.name;
-            console.log(__dirname)
             uploadPath = __dirname.replace("controllers", "public") + '/audio/' + audioFile.name + ".mp3";
-            console.log(audioFile);
     
             audioFile.mv(uploadPath, function (err){
                 if(err){
@@ -260,7 +256,7 @@ async function listSongs(request, response){
             // loop through songs
             songs.forEach((s) =>{
                 // if we find the song we need
-                if(s.name == searchName){
+                if(s.name.toLowerCase() == searchName.toLowerCase()){
                     song = s;
                 }
             })
@@ -369,6 +365,19 @@ async function deleteSong(request, response){
             songs: songs,
             displayChoices: true
         }
+
+        const song = await model.findById(id);
+        let path = __dirname.replace("controllers", "public") + "/audio/" + song.name + ".mp3";
+        uploadPath = __dirname.replace("controllers", "public") + '/audio/' + audioFile.name + ".mp3";
+
+        fs.unlink(path, function (err){
+            if(err){
+                console.error(err);
+            }
+            else{
+                console.log("File removed: ",path);
+            }
+        })
 
         response.render('songs.hbs', listPageData )
         return success;
