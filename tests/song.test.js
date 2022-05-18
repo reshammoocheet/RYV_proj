@@ -25,10 +25,12 @@ const dbName = "music_db_test";
 const model = require('../models/song-model');
 const playlistSongModel = require('../models/playlist_song-model');
 const { test, expect } = require('@jest/globals');
+const { sessionManager } = require('../sessionManager');
 
 /* Make sure the database is empty before each test.  This runs before each test.  See https://jestjs.io/docs/api */
 beforeEach(async () => {
     try {
+        sessionManager.DEBUG = true;
         await model.initialize(dbName, true);
         await playlistSongModel.initialize(dbName, true);
      } 
@@ -129,7 +131,6 @@ test("GET /song search success case", async () => {
 
     expect(testResponse.status).toBe(200);
     expect(testResponse.text).toContain(name)
-    expect(testResponse.text).toContain(artist)
 
 
 });
@@ -308,5 +309,6 @@ test("DELETE /song fail case", async () => {
 
 
 afterEach(async () => {
+    sessionManager.DEBUG = false;
     model.endConnection();
 })
