@@ -168,7 +168,7 @@ test("GET /song fail case with closed connection", async () => {
 
 
 // UPDATE
-test("PUT /song success case", async () => {
+test("POST /song-edit success case", async () => {
     // Create new Song to test edit
     const { name, artist } = generateSongData();
     await testRequest.post('/song').send({
@@ -191,7 +191,7 @@ test("PUT /song success case", async () => {
 });
 
 
-test("PUT /song fail case with invalid new name", async () => {
+test("POST /song-edit fail case with invalid new name", async () => {
     // Create new Song to test edit
     const { name, artist } = generateSongData();
     await testRequest.post('/song').send({
@@ -214,7 +214,7 @@ test("PUT /song fail case with invalid new name", async () => {
 });
 
 
-test("PUT /song fail case with invalid new artist", async () => {
+test("POST /song-edit fail case with invalid new artist", async () => {
     // Create new Song to test edit
     const { name, artist } = generateSongData();
     await testRequest.post('/song').send({
@@ -236,7 +236,7 @@ test("PUT /song fail case with invalid new artist", async () => {
     expect(testResponse.text).toContain(`Invalid input when trying to update fields to ${newName} and ${newArtist}`);
 });
 
-test("PUT /song fail case with closed connection", async () => {
+test("POST /song-edit fail case with closed connection", async () => {
     // Create new Song to test edit
     const { name, artist } = generateSongData();
     await testRequest.post('/song').send({
