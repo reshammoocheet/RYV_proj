@@ -312,8 +312,9 @@ img.about{
     margin: 0;
 }
 #add-song {
-    margin-left: 55%;
-    padding: 2%;
+    margin-bottom: 70px;
+    padding-top: 5px;
+    padding-bottom:5px;
     font-size: 30px;
 }
 

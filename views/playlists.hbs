@@ -25,7 +25,7 @@
     {{#if displayEditForm}}
     <div class="form">
         <form action="/playlist-edit" method="post" role ="form" >
-            <legend class="formLegend" style="padding: 10px;"><u>Edit playlist</u></legend>
+            <legend class="formLegend" style="padding: 25px;"><u style="text-decoration: none;">Edit playlist</u></legend>
             <label for="currentName">Enter current playlist name:</label><br>
             <input type="text" name="currentName" id="currentName">
             <br>
@@ -35,7 +35,7 @@
             <label for="newDescription">Enter new playlist release description:</label><br>
             <input type="text" name="newDescription" id="newDescription">
             <br>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" style="border-radius: 5px;">Submit</button>
 
         </form>
     </div>
@@ -99,7 +99,7 @@
             <form >
                 <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
                 <button class="styled-button" style="border-radius: 5px;">Search</button>
-                <button formaction="/playlistForms" formmethod="post" name="choice" value="addForm" class="styled-button" style="border-radius: 5px;">Create Playlist</button>
+                <button formaction="/playlistForms" formmethod="post" name="choice" value="addForm" class="styled-button" style="border-radius: 5px;">﹢</button>
 
             </form>
         <form method="post" role="form" action="/showPlaylist">
@@ -135,8 +135,8 @@
                         <p class="song-list-item-text" >{{name}}</p>
                         <p class="song-list-item-text" >{{description}}</p>
                         <button class="play-button" type="submit" name="playlistId" value={{id}}>View</button>
-                        <button formaction="/playlistForms" formmethod="post" name="choice" value="editForm" class="play-button" type="submit" name="playlistId" value={{id}}>Edit</button>
-                        <button formaction="/playlistForms" formmethod="post" name="choice" value="deleteForm" class="play-button" type="submit" name="playlistId" value={{id}}>Remove</button>
+                        <button formaction="/playlistForms" formmethod="post" name="choice" value="editForm" class="play-button" type="submit" name="playlistId" value={{id}}>•••</button>
+                        <button formaction="/playlistForms" formmethod="post" name="choice" value="deleteForm" class="play-button" type="submit" name="playlistId" value={{id}}>x</button>
                     </li>
                 {{/each}}
             {{/if}}

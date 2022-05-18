@@ -60,7 +60,7 @@ async function newPlaylist(request, response){
         }
         const playlists = await model.findAll();
         const listPageData = {
-            heading: `Playlist ${playlist.name} with description ${playlist.description} was created successfully! `,
+            heading: `Playlist ${playlist.name} with description '${playlist.description}' was created successfully! `,
             playlists: playlists,
             displayChoices: true
         }
