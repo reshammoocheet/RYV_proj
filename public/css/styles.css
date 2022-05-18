@@ -191,6 +191,11 @@ button:hover {
     text-align: center;
 }
 
+.song-edit {
+    display: flex;
+    flex-direction: column;
+}
+
 .song-image{
     margin-left: 25px;
     width: 60%;
@@ -299,6 +304,7 @@ img.about{
     font-size: larger;
     margin-top:50px;
     margin-bottom:100px;
+    font-weight: lighter;
 }
 
 #fileInput{

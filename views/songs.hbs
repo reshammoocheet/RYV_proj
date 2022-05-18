@@ -25,8 +25,8 @@
 
         {{#if displayEditForm}}
         <div class="form">
-            <form action="/song-edit" method="post" role ="form" >
-                <legend class="formLegend" style="padding: 10px;"><u>Edit song</u></legend>
+            <form action="/song-edit" class="song-edit"method="post" role ="form" >
+                <legend class="formLegend" style="padding: 30px;"><u style="text-decoration: none;">Edit song</u></legend>
                 <label for="currentName">Enter current song name:</label><br>
                 <input type="text" name="currentName" id="currentName">
                 <br>
@@ -36,7 +36,7 @@
                 <label for="newArtist">Enter new song artist:</label><br>
                 <input type="text" name="newArtist" id="newArtist">
                 <br>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" style="border-radius: 5px;">Submit</button>
 
             </form>
         </div>
@@ -121,7 +121,7 @@
                                 <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
                                 <button formaction="/songForms" formmethod="post" name="choice" value="edit" class="play-button" type="submit" name="songId" value={{id}}>•••</button>                                                            
                                 <button class="play-button" type="submit" name="playSongId" style="border-radius: 25px 25px 25px 25px"value={{id}}>⤓</button>
-                                <button formaction="/songForms" formmethod="post" name="choice" value="delete" class="play-button" type="submit" name="songId" value={{id}}>x</button>
+                                <button formaction="/songForms" formmethod="post" name="choice" value="delete" class="play-button" class="del" type="submit" name="songId" value={{id}}>x</button>
                                 <button formaction="/addSong"  formmethod="post" class="play-button" type="submit" name="songId" value={{id}} style="font-size: 12px; border-style: none; padding: 12px;">Add to Playlist</button>
                             </li>
                         {{/each}}                     
