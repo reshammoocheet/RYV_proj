@@ -3,16 +3,16 @@
 <form action="/profileForms" method="post" role ="form" enctype="application/x-www-form-urlencoded" >
     <ul>
         <li><legend style="font-size: 40px;">What would you like to do?</legend></li>
-        <li><button name="choice" type="submit" class="btn btn-primary" value="username" >Change Username</button></li>
-        <li><button name="choice" type="submit" class="btn btn-primary" value="password" >Change Password</button></li>
+        <li><button name="choice" type="submit" class="btn btn-primary" value="username" style="border-radius:5px; margin: 1em;">Change Username</button></li>
+        <li><button name="choice" type="submit" class="btn btn-primary" value="password" style="border-radius:5px; margin:1em;">Change Password</button></li>
     </ul>
 </form>
 {{/if}}
 
 {{#if displayUsernameForm}}
-    <div class="form">
+    <div class="form" style="margin-left:12%">
         <form action="/user-edit" method="post" role ="form" >
-            <legend class="formLegend" style="padding: 10px;"><u>Edit Username</u></legend>
+            <legend class="formLegend" style="padding: 20px;"><u style="text-decoration: none;">Edit Username</u></legend>
             <label for="currentName">Current username:</label><br>
             <input type="text" name="currentUsername" id="currentUsername" value={{currentUser.username}}>
             <br>
@@ -23,15 +23,15 @@
             <input type="password" name="password" id="password" >
             <br>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" style="border-radius:5px;">Submit</button>
 
         </form>
     </div>
 {{/if}}
 {{#if displayPasswordForm}}
-    <div class="form">
+    <div class="form" style="margin-left:12%">
         <form action="/user-edit" method="post" role ="form" >
-            <legend class="formLegend" style="padding: 10px;"><u>Edit Password</u></legend>
+            <legend class="formLegend" style="padding: 20px;"><u style="text-decoration: none;">Edit Password</u></legend>
             <label for="currentUsername">Enter current username:</label><br>
             <input type="text" name="currentUsername" id="currentUsername">
             <br>
@@ -41,7 +41,7 @@
             <label for="newName">Enter new password:</label><br>
             <input type="password" name="newPassword" id="newPassword">
             <br>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" style="border-radius: 5px;">Submit</button>
 
         </form>
     </div>

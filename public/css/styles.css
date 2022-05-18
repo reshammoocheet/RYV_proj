@@ -62,6 +62,7 @@ nav{
     text-align: center; 
     width: 60%;
     border: green solid 1px;
+    border-radius: 5px;
     padding: 1px;
     margin-left: 20%;
 }
@@ -185,6 +186,15 @@ button:hover {
     font-size: 25px;
 }
 
+input[type="file"] {
+    width: 100%;
+    justify-content: center;
+    margin-left: 8px;
+}
+input[type="file"]:hover {
+    cursor: pointer;
+    
+}
 .form{
     padding: 10px;
     width: 75%;
@@ -215,6 +225,7 @@ button:hover {
 .songList{
     border: yellowgreen;
     border-style: solid;
+    border-radius: 5px;
     width: 100%;
     text-align: center;
 }
@@ -257,6 +268,8 @@ ul{
 }
 
 .premiumTable{
+    width: 100%;
+    margin-left: -50px;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -13,9 +13,9 @@
     <br>
 
     {{#if showPaypal}}
-        <button type="submit" formaction="/signup" formmethod="post" name="freeButton">Stay as Free User</button>
+        <button type="submit" formaction="/signup" formmethod="post" name="freeButton" style="border-radius: 5px;">Stay as Free User</button>
     {{else}}
-        <button type="submit" formaction="/signup" formmethod="post" name="buyButton">Buy Premium</button>
+        <button type="submit" formaction="/signup" formmethod="post" name="buyButton" style="border-radius: 5px;">Buy Premium</button>
 
     {{/if}}
 
@@ -27,6 +27,7 @@
 
     <div class="premiumTable">
         <table class="premiumTable">
+            <th colspan="3" style="text-align: center;"><h2>Package Plans</h2></th>
             <tr> 
                 <th style="text-align:left">Features</th>
                 <th class="offer">Free</th>
@@ -51,7 +52,7 @@
     </div>
 
     
-    <button type="submit" class="sign-up-btn">Sign Up</button>
+    <button type="submit" class="sign-up-btn" style="border-radius: 5px;">Sign Up</button>
     </div>
 
 </form>
