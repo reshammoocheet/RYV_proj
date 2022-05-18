@@ -22,7 +22,7 @@ async function showForm(request, response) {
 
     switch (request.body.choice) {
         case 'addForm':
-            response.render('playlists.hbs', { displayAddForm: true, playlists: playlists });
+            response.render('playlists.hbs', { displayAddForm: true, playlists: playlists, heading: "My Library" });
             break;
         case 'editForm':
             response.render('playlists.hbs', { displayEditForm: true, playlists: playlists  });

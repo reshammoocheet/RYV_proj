@@ -5,17 +5,17 @@
     {{#if displayAddForm}}
 
     <div class="form">
-    <form action="/playlist" method="post" role ="form" >
-        <legend class="formLegend" style="padding: 10px;"><u>Add new playlist</u></legend>
-        <label for="name">Enter playlist name:</label><br>
+    <form action="/playlist" method="post" role ="form" class="playlist-form">
+        <legend class="formLegend"><u style="text-decoration: none; margin-bottom: 5px;">Add new playlist</u></legend>
+        <label for="name" style="margin-top:25%">Enter playlist name:</label><br>
         <input class="playlistInput" type="text" name="name" id="name">
         <br>
-        <label class="playlistInput" for="description">Enter playlist description</label><br>
+        <label class="playlistInput" for="description">Enter playlist description:</label><br>
         {{!-- <input type="text" name="description" id="description"> --}}
-        <textarea name="description" id="description" rows = "10" cols = "23"> 
+        <textarea style="margin-top: 15px" name="description" id="description" rows = "10" cols = "23"> 
         </textarea>
         <br>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" style="border-radius: 5px;">Submit</button>
 
     </form>
     </div>
@@ -98,8 +98,8 @@
             <!-- Search Bar -->
             <form >
                 <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
-                <button class="styled-button">Search</button>
-                <button formaction="/playlistForms" formmethod="post" name="choice" value="addForm" class="styled-button">Create Playlist</button>
+                <button class="styled-button" style="border-radius: 5px;">Search</button>
+                <button formaction="/playlistForms" formmethod="post" name="choice" value="addForm" class="styled-button" style="border-radius: 5px;">Create Playlist</button>
 
             </form>
         <form method="post" role="form" action="/showPlaylist">

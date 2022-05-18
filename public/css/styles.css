@@ -30,6 +30,10 @@ nav{
     display: flex;
 }
 
+.playlist-form {
+    display: flex;
+    flex-direction: column;
+}
 
 .page{
     display: flex;
@@ -59,6 +63,7 @@ nav{
     width: 60%;
     border: green solid 1px;
     padding: 1px;
+    margin-left: 20%;
 }
 
 .library{
@@ -143,23 +148,25 @@ button {
 }
 
 .play-button{
-    transition-duration: 0.4s;
+    transition-duration: 0.3s;
     border: yellowgreen;
     border-style: solid;
+    border-width: 1px;
+    border-radius: 10px;
     color: yellowgreen;
     background-color: black;
     padding: 7px 14px;
+    padding: 10px;
     text-align: right;
     text-decoration: none;
     display: inline-block; 
-    font-size: 16px;
+    font-size: 15px;
     margin: 4px 2px;
     transition-duration: 0.4s;
     cursor: pointer;
     height: 5%;
     align-items:right;
 }
-
 
 button:hover {
     background-color: white;
@@ -179,7 +186,6 @@ button:hover {
 }
 
 .form{
-    border: 3px solid yellow;
     padding: 10px;
     width: 75%;
     text-align: center;
@@ -206,6 +212,11 @@ button:hover {
     border-style: solid;
     width: 100%;
     text-align: center;
+}
+
+button.play-button {
+    margin: 7px;
+    font-size: 16px;
 }
 
 .table{
@@ -294,12 +305,18 @@ img.about{
     width: 100%;
     margin: 0;
 }
+#add-song {
+    margin-left: 55%;
+    padding: 2%;
+    font-size: 30px;
+}
 
 #description{
     background-color:black;
     color:white;
     border:1px solid yellow;
     resize: none;
+    width:95%;
 }
 @media screen and (max-width: 1224px) {
     .header-logo{
