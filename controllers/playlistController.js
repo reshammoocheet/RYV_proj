@@ -18,7 +18,7 @@ router.post('/removeSongFromPlaylist', removeSongFromPlaylist)
 router.post('/playlistForms', showForm)
 
 async function showForm(request, response) {
-    let playlists = await model.findAll();
+    let playlists = await model.findByUserId(sessionManager.currentUser.id);
 
     switch (request.body.choice) {
         case 'addForm':
@@ -49,11 +49,10 @@ async function newPlaylist(request, response){
     const name = request.body.name;
     const description = request.body.description;
     const user = request.cookies.currentUser;
-    console.log(user);
 
     try{
         const playlist = await model.create(name, user[0].id, description);
-        const playlists = await model.find;
+        const playlists = await model.findAll();
         const listPageData = {
             heading: `Playlist ${playlist.name} with description ${playlist.description} was created successfully! `,
             playlists: playlists,
@@ -160,7 +159,6 @@ async function showPlaylist(request, response){
     const id = request.body.playlistId;
 
     try {
-        
         const songs = await playlist_song_model.findAllSongsInPlaylist(id);
         const playlist = await model.findById(id);
         response.cookie("currentPlaylistId", id)
@@ -189,7 +187,7 @@ async function showPlaylist(request, response){
 async function addToPlaylistForm(request, response){
     try {
 
-        const playlists = await model.findAll();
+        const playlists = await model.findByUserId(sessionManager.currentUser.id);
         const song = await songModel.findById(request.body.songId);
         response.cookie("songToAddId", song.id);
 
@@ -260,7 +258,7 @@ async function updatePlaylist(request, response){
     
         const playlists = await model.findAll();
         const listPageData = {
-            heading: `Playlist ${currentName} was updated successfully with new name: ${newName} and new description: ${newDescription}. `,
+            heading: `Playlist ${currentName} was updated successfully with new name: ${newName} and new description: ${newDescription} `,
             playlists: playlists,
             displayChoices: true
         }

@@ -141,11 +141,14 @@ async function readAllSongs(request, response) {
             response.render('playlists.hbs', songPageData)
         }
         else{
+
+            const isPremium = sessionManager.currentUser.isPremium == 1 ? true : false;
             const songPageData = {
                 songs: songs,
                 heading: "All songs",
                 displayChoices: true,
-                playSong: song
+                playSong: song,
+                isPremium: isPremium
             }
             response.render('songs.hbs', songPageData)
         }
@@ -216,17 +219,6 @@ async function newSong(request, response){
             audioPath = __dirname.replace("controllers", "public") + '/audio/' + audioFile.name + ".mp3";
     
             audioFile.mv(audioPath, function (err){
-                if(err){
-                    response.render('error.hbs', {message: err.message})
-                }
-            })
-
-            // Get image file
-            imgFile = request.files.imgFile;
-            imgFile.name = song.name;
-            imgFile = __dirname.replace("controllers", "public") + '/audio/' + imgFile.name + ".png";
-    
-            imgFile.mv(imgPath, function (err){
                 if(err){
                     response.render('error.hbs', {message: err.message})
                 }
@@ -395,6 +387,7 @@ async function deleteSong(request, response){
 
 
     try {
+        const song = await model.findById(id);
         const success = await model.remove(id);
 
         const songs = await model.findAll();
@@ -404,9 +397,7 @@ async function deleteSong(request, response){
             displayChoices: true
         }
 
-        const song = await model.findById(id);
         let path = __dirname.replace("controllers", "public") + "/audio/" + song.name + ".mp3";
-        uploadPath = __dirname.replace("controllers", "public") + '/audio/' + audioFile.name + ".mp3";
 
         fs.unlink(path, function (err){
             if(err){

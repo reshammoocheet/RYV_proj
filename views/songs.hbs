@@ -7,17 +7,15 @@
         <div class="form">
             <form action="/song" method="post" role ="form"  encType="multipart/form-data" >
             <legend class="formLegend" style="padding: 10px;"><u>Add new song</u></legend>
+            <label for="artist">Enter audio file:</label><br>
+            <input type="file" name="audioFile" style="width: 80%;">
+            <br>
             <label for="name">Enter song name:</label><br>
             <input type="text" name="name" id="name">
             <br>
             <label for="artist">Enter song artist:</label><br>
             <input type="text" name="artist" id="artist">
             <br>
-            <label for="artist">Enter audio file:</label><br>
-            <input type="file" name="audioFile" style="width: 80%;">
-            <br>
-            <label for="artist">Enter image file:</label><br>
-            <input type="file" name="imgFile" style="width: 80%;">
             <button type="submit" class="btn btn-primary">Submit</button>
 
         </form>
@@ -123,7 +121,6 @@
                                 <button formaction="/songForms" formmethod="post" name="choice" value="edit" class="play-button" type="submit" name="songId" value={{id}}>Edit</button>
                                 <button formaction="/songForms" formmethod="post" name="choice" value="delete" class="play-button" type="submit" name="songId" value={{id}}>Remove</button>
                                 <button class="play-button" type="submit" name="playSongId" value={{id}}>▶</button>
-                                <button class="play-button" type="submit" name="playSongId" value={{id}}>Download</button>
                             </li>
                         {{/each}}                     
                     {{/if}}
@@ -138,7 +135,7 @@
                 <div style="display: block; text-align: center;">
                     <img class="song-image" src={{#if playSong.iconSource}}{{playsong.iconSource}}{{else}}"images/song-image.jpg"{{/if}}>
                     <br>
-                    <audio {{#if playSong}}autoplay{{/if}} controls controlsList="nodownload" src={{#if playSong}}"audio/{{playSong.name}}.mp3"{{/if}}>
+                    <audio {{#if playSong}}autoplay{{/if}} controls {{#unless isPremium}}controlsList="nodownload"{{/unless}} src={{#if playSong}}"audio/{{playSong.name}}.mp3"{{/if}}>
                         <div style="border: 1px solid black ;">
                         Sorry, your browser does not support the <audio> tag used in this demo.
                         </div>

@@ -22,13 +22,10 @@ router.post('/user-edit', updateUser)
 async function showForm(request, response) {
     switch (request.body.choice) {
         case 'username':
-            response.render('profile.hbs', { displayUsernameForm: true });
+            response.render('profile.hbs', { displayUsernameForm: true, currentUser: sessionManager.currentUser });
             break;
         case 'password':
-            response.render('profile.hbs', { displayPasswordForm: true });
-            break;
-        case 'premium':
-            response.render('profile.hbs', { displayPremiumForm: true});
+            response.render('profile.hbs', { displayPasswordForm: true, currentUser: sessionManager.currentUser });
             break;
         default:
             response.render('songs.hbs');  // no valid choice made
@@ -103,7 +100,7 @@ async function loginUser(request, response){
 async function registerUser(request, response){
     const username = request.body.username;
     const password = request.body.password;
-    const isPremium = request.body.isPremium == "on";
+    const isPremium = request.body.showPaypal;
 
     const user = await model.findByUsername(username);
 
@@ -148,14 +145,14 @@ async function logoutUser(request, response){
 async function updateUser(request, response){
     const username = request.body.currentUsername;
     const newUsername = request.body.currentPassword ? request.body.currentUsername : request.body.newUsername;
-    const newPassword = await bcrypt.hash(request.body.newPassword, 10);
+    const newPassword = await bcrypt.hash(request.body.newPassword ?? request.body.password, 10);
 
 
     try {
         const success = await model.update(username, newUsername, newPassword);
         const songs = await model.findAll();
         const listPageData = {
-            message: `User ${username} was updated successfully with ${newUsername}. `,
+            message: `User ${newUsername} was updated successfully `,
         }
 
         response.render('home.hbs', listPageData )

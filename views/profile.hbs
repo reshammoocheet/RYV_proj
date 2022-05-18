@@ -5,7 +5,6 @@
         <li><legend style="font-size: 40px;">What would you like to do?</legend></li>
         <li><button name="choice" type="submit" class="btn btn-primary" value="username" >Change Username</button></li>
         <li><button name="choice" type="submit" class="btn btn-primary" value="password" >Change Password</button></li>
-        <li><button name="choice" type="submit" class="btn btn-primary" value="premium" >Change Membership</button></li>
     </ul>
 </form>
 {{/if}}
@@ -14,8 +13,8 @@
     <div class="form">
         <form action="/user-edit" method="post" role ="form" >
             <legend class="formLegend" style="padding: 10px;"><u>Edit Username</u></legend>
-            <label for="currentName">Enter current username:</label><br>
-            <input type="text" name="currentUsername" id="currentUsername">
+            <label for="currentName">Current username:</label><br>
+            <input type="text" name="currentUsername" id="currentUsername" value={{currentUser.username}}>
             <br>
             <label for="newName">Enter new username:</label><br>
             <input type="text" name="newUsername" id="newUsername">

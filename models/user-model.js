@@ -66,9 +66,15 @@ async function create(username, password, premium = false){
         throw new InvalidInputError(`Invalid input when trying to create ${username} released in ${password}. `);
     }
 
-    isPremium = premium == true ? 1 : 0;
 
     try{
+        let isPremium;
+        if(premium){
+            isPremium = 1;
+        }
+        else{
+            isPremium = 0;
+        }
         // Execute Sql command to database
         const sqlQuery = `INSERT INTO user (username, password, isPremium) VALUES (?, ?, ?)`;
         await connection.execute(sqlQuery, [username, password, isPremium]);
