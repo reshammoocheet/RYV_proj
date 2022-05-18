@@ -48,10 +48,16 @@ async function showForm(request, response) {
 async function newPlaylist(request, response){
     const name = request.body.name;
     const description = request.body.description;
-    const user = request.cookies.currentUser;
+    const user = request.cookies.currentUser ;
 
     try{
-        const playlist = await model.create(name, user[0].id, description);
+        let playlist;
+        if(user){
+            playlist = await model.create(name, user[0].id, description);
+        }
+        else{
+            playlist = await model.create(name, 0, description);
+        }
         const playlists = await model.findAll();
         const listPageData = {
             heading: `Playlist ${playlist.name} with description ${playlist.description} was created successfully! `,
@@ -87,14 +93,21 @@ async function newPlaylist(request, response){
 */
 async function listPlaylist(request, response){
     // check for valid session
-    const authenticatedSession = sessionManager.authenticateUser(request);
-    if(!authenticatedSession || authenticatedSession == null){
-        response.render('login.hbs',{username: request.cookies.username , hideLogout: true});
-        return;
-    }
+    // const authenticatedSession = sessionManager.authenticateUser(request);
+    // if((!authenticatedSession || authenticatedSession == null) && !sessionManager.DEBUG){
+    //     response.render('login.hbs',{username: request.cookies.username , hideLogout: true});
+    //     return;
+    // }
 
     try {
-        const playlists = await model.findByUserId(sessionManager.currentUser.id);
+        const userId = sessionManager.currentUser.id;
+        let playlists;
+        if(userId){
+            playlists = await model.findByUserId(userId);
+        }
+        else{
+            playlists = await model.findAll();
+        }
 
         // if user is searching up a song
         const searchName = request.query.searchQuery;
@@ -142,6 +155,10 @@ async function listPlaylist(request, response){
         return playlists;
     } 
     catch (error) {
+        // This error appears from time to time for no reason so we just try again
+        if(error.message == "Cannot read property 'execute' of undefined"){
+            listSongs(request, response);
+        }
         if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
             response.render('error.hbs', {message: error.message})

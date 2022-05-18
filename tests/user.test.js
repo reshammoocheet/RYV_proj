@@ -25,10 +25,12 @@ const dbName = "music_db_test";
 const model = require('../models/user-model');
 
 const { test, expect } = require('@jest/globals');
+const { sessionManager } = require('../sessionManager');
 
 /* Make sure the database is empty before each test.  This runs before each test.  See https://jestjs.io/docs/api */
 beforeEach(async () => {
     try {
+        sessionManager.DEBUG = true;
         await model.initialize(dbName, true);
      } 
     catch (err) {
@@ -184,5 +186,6 @@ test("POST /user-edit fail case with closed connection", async () => {
 
 
 afterEach(async () => {
+    sessionManager.DEBUG = false;
     model.endConnection();
 })

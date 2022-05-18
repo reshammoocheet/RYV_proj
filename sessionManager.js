@@ -6,6 +6,7 @@ class SessionManager {
     constructor(){
         this.sessions = {};
         this.currentUser = {};
+        this.DEBUG = false;
     }
 
     createSession(username, numMinutes) {
