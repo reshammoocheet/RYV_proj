@@ -48,10 +48,12 @@ async function showForm(request, response) {
 async function newPlaylist(request, response){
     const name = request.body.name;
     const description = request.body.description;
+    const user = request.cookies.currentUser;
+    console.log(user);
 
     try{
-        const playlist = await model.create(name, description);
-        const playlists = await model.findAll();
+        const playlist = await model.create(name, user[0].id, description);
+        const playlists = await model.find;
         const listPageData = {
             heading: `Playlist ${playlist.name} with description ${playlist.description} was created successfully! `,
             playlists: playlists,
@@ -93,7 +95,7 @@ async function listPlaylist(request, response){
     }
 
     try {
-        const playlists = await model.findAll();
+        const playlists = await model.findByUserId(sessionManager.currentUser.id);
 
         // if user is searching up a song
         const searchName = request.query.searchQuery;

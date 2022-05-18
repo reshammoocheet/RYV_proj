@@ -87,6 +87,8 @@ async function loginUser(request, response){
             // Save cookie that will expire.
             response.cookie("sessionId", sessionId, { expires: sessionManager.sessions[sessionId].expiresAt });
             response.cookie("username", username);
+            const currentUser = await model.findByUsername(username);
+            response.cookie("currentUser", currentUser);
         } 
         else {
             response.render('login.hbs', {errorMessage: "Invalid username / password given for user: " + username , hideLogout: true})

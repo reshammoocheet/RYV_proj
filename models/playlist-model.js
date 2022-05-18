@@ -28,7 +28,7 @@ async function initialize(dbName, reset) {
     }
 
     try{
-        const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist(id int AUTO_INCREMENT, name VARCHAR(50), description VARCHAR(512), PRIMARY KEY (id))';
+        const sqlQuery = 'CREATE TABLE IF NOT EXISTS playlist(id int AUTO_INCREMENT, name VARCHAR(50), description VARCHAR(512), user_id int, PRIMARY KEY (id))';
         await connection.execute(sqlQuery);
     }
     catch(error){
@@ -60,7 +60,7 @@ async function truncate(tableName){
 * @param {number} description
 * @returns {Object} An playlist Object
 */
-async function create(name, description = ""){
+async function create(name, user_id, description = ""){
     // Validate Input
     if(!name){
         throw new InvalidInputError(`Invalid input when trying to create ${name} with description ${description}. `);
@@ -70,11 +70,11 @@ async function create(name, description = ""){
 
     try{
         // Execute Sql command to database
-        const sqlQuery = `INSERT INTO playlist (name, description) VALUES (?, ?)`;
-        await connection.execute(sqlQuery, [name, description]);
+        const sqlQuery = `INSERT INTO playlist (name, description, user_id) VALUES (?, ?, ?)`;
+        await connection.execute(sqlQuery, [name, description, user_id]);
 
         // return created playlist
-        const playlist = {"name": name, "description": description}
+        const playlist = {"name": name, "description": description, "user_id": user_id}
         return playlist;
     }
     catch(error){
@@ -114,6 +114,26 @@ async function findByName(name){
         // Execute Sql command to database
         const sqlQuery = `SELECT * FROM playlist WHERE name = ?`;
         const [playlists, fields] = await connection.execute(sqlQuery, [name]);
+
+        return playlists;
+    }
+    catch(error){
+        console.error(error.message);
+        throw new DatabaseExecutionError(error.message);
+    }
+
+}
+
+/**
+ * Finds an playlist based on its user
+* @param {int} id
+* @returns {Array} An array of playlist objects
+*/
+async function findByUserId(id){
+    try{
+        // Execute Sql command to database
+        const sqlQuery = `SELECT * FROM playlist WHERE user_id = ?`;
+        const [playlists, fields] = await connection.execute(sqlQuery, [id]);
 
         return playlists;
     }
@@ -241,6 +261,7 @@ module.exports = {
     findByName,
     findById,
     findAll,
+    findByUserId,
     update,
     remove,
     getConnection,
