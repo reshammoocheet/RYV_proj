@@ -182,8 +182,8 @@ button:hover {
 }
 
 .header-container button {
-    border-radius: 18%;
-    padding: 15px;
+    border-radius: 10%;
+    padding: 10px 15px;
     background-color: black;
     color: white;
     border: none;
