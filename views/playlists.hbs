@@ -57,7 +57,7 @@
     {{#if displayEditSongForm}}
     <div class="form">
         <form action="/song-edit" method="post" role ="form" >
-            <legend class="formLegend" style="padding: 10px;"><u>Edit song</u></legend>
+            <legend class="formLegend" style="padding: 20px;"><u style="text-decoration: none;">Edit song</u></legend>
             <label for="currentName">Enter current song name:</label><br>
             <input type="text" name="currentName" id="currentName">
             <br>
@@ -67,7 +67,7 @@
             <label for="newArtist">Enter new song artist:</label><br>
             <input type="text" name="newArtist" id="newArtist">
             <br>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" style="border-radius: 5px;">Submit</button>
 
         </form>
     </div>
@@ -124,8 +124,6 @@
                         <p class="song-list-item-text" >{{id}}</p>
                         <p class="song-list-item-text" >{{name}}</p>
                         <p class="song-list-item-text" >{{artist}}</p>
-                        <button formaction="/songForms" formmethod="post" name="choice" value="editInPlaylist" class="play-button" type="submit" >•••</button>
-                        <button formaction="/songForms" formmethod="post" name="choice" value="deleteInPlaylist" class="play-button" type="submit">x</button>
                    <button class="play-button" type="submit" formaction="/play" formmethod="post" name="playlistSongId" value={{id}}>▶</button>
                         <button formaction="/songForms" formmethod="post" name="choice" value="editInPlaylist" class="play-button" type="submit" >•••</button>
                         <button formaction="/songForms" formmethod="post" name="choice" value="deleteInPlaylist" class="play-button" type="submit">x</button>
@@ -148,7 +146,7 @@
                     </li>
                 {{/each}}
                 {{/if}}
-                <button formaction="/playlistForms" formmethod="post" type="submit" name="choice" value="addForm">Create New Playlist</button>
+                <button formaction="/playlistForms" formmethod="post" type="submit" name="choice" value="addForm" style="border-radius: 5px; margin: 20px">Create New Playlist</button>
             {{/if}}
 
         </form>
