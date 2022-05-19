@@ -296,6 +296,7 @@ async function listSongs(request, response){
                 const songPageData = {
                     songs: [song],
                     displayChoices: true,
+                    isEmpty: songs.length <= 0
                 }
                 response.render('songs.hbs', songPageData )
                 return;
@@ -305,6 +306,7 @@ async function listSongs(request, response){
                     songs: songs,
                     heading: "Could not find song " + searchName,
                     displayChoices: true,
+                    isEmpty: songs.length <= 0
                 }
                 response.render('songs.hbs', songPageData )
                 return;       
@@ -315,6 +317,7 @@ async function listSongs(request, response){
         const listPageData = {
             heading: 'Browse Songs',
             songs: songs,
+            isEmpty: songs.length <= 0,
             displayChoices: true
         }
         response.render('songs.hbs', listPageData)
@@ -399,6 +402,7 @@ async function deleteSong(request, response){
         const listPageData = {
             heading: `Song was removed successfully!`,
             songs: songs,
+            isEmpty: songs.length <= 0,
             displayChoices: true
         }
 

@@ -88,11 +88,13 @@
                     <button class="styled-button" style="border-radius: 5px">Search</button>
                 </form>
                 <form method="post" role="form" action="/play">
-                    <li class="song-list-item" style="padding: 0.5em;">
-                        <p class="song-list-item-text">ID</p>  
-                        <p class="song-list-item-text">Name</p>  
-                        <p class="song-list-item-text">Artist</p>  
+                    {{#unless isEmpty}}
+                    <li class="song-list-item">
+                        <p class="song-list-item-text" style="text-decoration: underline;">Id</p>  
+                        <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
+                        <p class="song-list-item-text" style="text-decoration: underline;">Artist</p>  
                     </li>
+                    {{/unless}}
                     {{#if displayPlaylistChoices}}
                         {{#each songs}}
                             <li class="song-list-item">
@@ -104,6 +106,9 @@
                             </li>
                         {{/each}}
                     {{else}}
+                        {{#if isEmpty}}
+                            <h3>Be the first to upload a song!</h3>
+                        {{else}}
                         {{#each songs}}
                             <li class="song-list-item">
                                 <p class="song-list-item-text" >{{id}}</p>
@@ -116,7 +121,8 @@
                                 <button formaction="/songForms" formmethod="post" name="choice" value="delete" class="play-button" class="del" type="submit" name="songId" value={{id}}>x</button>
                                 <button formaction="/addSong"  formmethod="post" class="play-button" type="submit" name="songId" value={{id}} style="font-size: 12px; border-style: none; padding: 12px;">Add to Playlist</button>
                             </li>
-                        {{/each}}                     
+                        {{/each}} 
+                        {{/if}}                    
                     {{/if}}
                     <button formaction="/songForms" formmethod="post" name="choice" value="add" class="styled-button" style="border-radius: 5px; margin: 10px;">Upload Song</button>
 

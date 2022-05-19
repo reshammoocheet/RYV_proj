@@ -102,11 +102,13 @@
 
             </form>
         <form method="post" role="form" action="/showPlaylist">
+            {{#unless isEmpty}}
             <li class="song-list-item">
                 <p class="song-list-item-text">ID</p>  
                 <p class="song-list-item-text">Name</p>  
                 <p class="song-list-item-text">Description</p>  
             </li>
+            {{/unless}}
             {{#if addingToPlaylist}}
                 {{#each playlists}}
                     <li class="song-list-item">
