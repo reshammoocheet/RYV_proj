@@ -44,11 +44,11 @@
     {{#if displayDeleteForm}}
     <div class="form">
         <form action="/playlist-delete" method="post" role ="form" >
-            <legend class="formLegend" style="padding: 10px;"><u>Delete playlist</u></legend>
+            <legend class="formLegend" style="padding: 20px;"><u style="text-decoration: none;">Delete playlist</u></legend>
             <label for="id">Confirm playlist id to be deleted:</label><br>
             <input type="text" name="id" id="id">
             <br>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" style="border-radius: 5px;">Submit</button>
 
         </form>
     </div>
@@ -76,10 +76,10 @@
     {{#if displayDeleteSongForm}}
     <div class="form">
         <form action="/song-delete" method="post" role ="form" >
-            <legend class="formLegend" style="padding: 10px;"><u>Delete song</u></legend>
+            <legend class="formLegend" style="padding: 20px;"><u style="text-decoration: none;">Delete song</u></legend>
             <label for="name">Enter song id to be deleted:</label><br>
             <input type="text" name="id" id="id">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" style="border-radius: 5px;">Submit</button>
 
         </form>
     </div>
@@ -103,9 +103,9 @@
             </form>
         <form method="post" role="form" action="/showPlaylist">
             <li class="song-list-item">
-                <p class="song-list-item-text" style="text-decoration: underline;">Id</p>  
-                <p class="song-list-item-text" style="text-decoration: underline;">Name</p>  
-                <p class="song-list-item-text" style="text-decoration: underline;">Description</p>  
+                <p class="song-list-item-text">ID</p>  
+                <p class="song-list-item-text">Name</p>  
+                <p class="song-list-item-text">Description</p>  
             </li>
             {{#if addingToPlaylist}}
                 {{#each playlists}}
@@ -126,7 +126,9 @@
                         <p class="song-list-item-text" >{{artist}}</p>
                         <button formaction="/songForms" formmethod="post" name="choice" value="editInPlaylist" class="play-button" type="submit" >•••</button>
                         <button formaction="/songForms" formmethod="post" name="choice" value="deleteInPlaylist" class="play-button" type="submit">x</button>
-                        <button class="play-button" type="submit" formaction="/play" formmethod="post" name="playlistSongId" value={{id}}>▶</button>
+                   <button class="play-button" type="submit" formaction="/play" formmethod="post" name="playlistSongId" value={{id}}>▶</button>
+                        <button formaction="/songForms" formmethod="post" name="choice" value="editInPlaylist" class="play-button" type="submit" >•••</button>
+                        <button formaction="/songForms" formmethod="post" name="choice" value="deleteInPlaylist" class="play-button" type="submit">x</button>
                     </li>
                 {{/each}}
                 {{/if}}
