@@ -181,7 +181,7 @@ button:hover {
 .song-list-item button:hover{
     background-color: yellowgreen;
     color: black;
-    box-shadow: 0 2px 5px 0 rgba(16, 131, 26, 0.623), 0 6px 20px 0 rgba(64, 209, 20, 0.568);
+    box-shadow: 0 2px 4px 0 rgba(16, 131, 26, 0.623), 0 6px 20px 0 rgba(64, 209, 20, 0.568);
 
 }
 
