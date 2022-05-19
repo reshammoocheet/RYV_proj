@@ -16,7 +16,8 @@ checkbox {
 }
 
 .header-text{
-    margin-top: -33px;
+    margin-top: -10px;
+    margin-bottom: -10px;
     text-align: center;
     color: black;
     text-shadow: 1.2px 1.2px black ;
@@ -105,9 +106,10 @@ p {
     border-radius: 10px;
 }
 .header-logo{
-    width: 5%;
+    width: 6%;
     height: 100%;
-    margin-bottom: -40px;
+    margin-bottom: -63px;
+    margin-left: 5px;
 }
 
 footer{
@@ -173,10 +175,12 @@ button:hover {
     background-color: white;
     color: black;
 }
-
+.song-list-item button {
+    transition-duration: 0.2s;
+}
 .song-list-item button:hover{
-    background-color: green;
-    color: white;
+    background-color: yellowgreen;
+    color: black;
     box-shadow: 0 2px 5px 0 rgba(16, 131, 26, 0.623), 0 6px 20px 0 rgba(64, 209, 20, 0.568);
 
 }
