@@ -3,6 +3,7 @@ const { sessionManager } = require('../sessionManager');
 const router = express.Router();
 const routeRoot = '/';
 router.get('/home', welcomePage);
+router.get('/home/search', searchSong);
 router.get('/', welcomePage);
 router.get('/aboutUs', renderAboutUs)
 const model = require('../models/song-model');
@@ -51,6 +52,18 @@ async function getTopSongs(request){
 
     songs.sort((a, b) => (a.timesPlayed < b.timesPlayed) ? 1 : -1)
     return songs;
+}
+
+function searchSong(songs, searchName){
+    // loop through songs
+    songs.forEach((song) =>{
+        // if we find the song we need
+        if(song.name == searchName){
+            return song;
+        }
+    })
+
+
 }
 
 

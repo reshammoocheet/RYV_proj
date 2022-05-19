@@ -1,10 +1,13 @@
 <h1>{{message}}</h1>
 <!-- Songs Table -->
 <div style="display: flex;">
+    <form method="get" action="/song">
+        <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
+        <button class="styled-button" style="border-radius: 5px; padding-bottom: 30px">Search</button>
+    </form>
     <div class="table">
         <table border="1px" width="100%">
             <caption>{{heading}}</caption>
-            <input type="text" placeholder="Search">
             <thead>
                 <th>Name</th>
                 <th>Artist</th>
