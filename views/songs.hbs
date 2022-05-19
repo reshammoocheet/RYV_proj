@@ -134,7 +134,7 @@
                 <h2 id="songNameHeader">{{playSong.name}}</h2>
                 <h3>{{playSong.artist}}</h3>
                 <div style="display: block; text-align: center;">
-                    <img class="song-image" src={{#if playSong.iconSource}}{{playsong.iconSource}}{{else}}"images/song-image.jpg"{{/if}}>
+                    <img class="song-image" src={{#if playSong}}"images/{{playSong}}.png"{{else}}"images/song-image.jpg"{{/if}}>
                     <br>
                     <audio {{#if playSong}}autoplay{{/if}} controls {{#unless isPremium}}controlsList="nodownload"{{/unless}} src={{#if playSong}}"audio/{{playSong.name}}.mp3"{{/if}}>
                         <div style="border: 1px solid black ;">

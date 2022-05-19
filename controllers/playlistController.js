@@ -52,13 +52,16 @@ async function newPlaylist(request, response){
 
     try{
         let playlist;
+        let playlists;
+
         if(user){
             playlist = await model.create(name, user[0].id, description);
+            playlists = await model.findByUserId(user[0].id);
         }
         else{
             playlist = await model.create(name, 0, description);
+            playlists = await model.findAll();
         }
-        const playlists = await model.findAll();
         const listPageData = {
             heading: `Playlist ${playlist.name} with description '${playlist.description}' was created successfully! `,
             playlists: playlists,
@@ -242,7 +245,7 @@ async function addToPlaylist(request, response){
     const id = request.body.id;
     try {
 
-        const playlists = await model.findAll();
+        const playlists = await model.findByUserId(request.cookies.currentUser[0].id);
         const playlist = await model.findById(request.body.playlistId);
         const song = await songModel.findById(request.cookies.songToAddId);
         const playlist_song = await playlist_song_model.create(song.id, playlist.id);
@@ -285,7 +288,7 @@ async function updatePlaylist(request, response){
         const success = await model.update(currentName, newName, newDescription);
     
         if(success){
-            const playlists = await model.findAll();
+            const playlists = await model.findByUserId(request.cookies.currentUser[0].id);
             const listPageData = {
                 heading: `Playlist ${currentName} was updated successfully with new name: ${newName} and new description: ${newDescription} `,
                 playlists: playlists,
@@ -295,7 +298,7 @@ async function updatePlaylist(request, response){
             response.render('playlists.hbs', listPageData )
         }
         else{
-            const playlists = await model.findAll();
+            const playlists = await model.findByUserId(request.cookies.currentUser[0].id);
             const listPageData = {
                 heading: `Please enter correct playlist name `,
                 playlists: playlists,
@@ -337,7 +340,7 @@ async function deletePlaylist(request, response){
     try {
         const success = await model.remove(id);
 
-        const playlists = await model.findAll();
+        const playlists = await model.findByUserId(request.cookies.currentUser[0].id);
 
         const listPageData = {
             heading: `Playlist was removed successfully!`,
@@ -371,7 +374,7 @@ async function removeSongFromPlaylist(request, response){
         const success = await playlist_song_model.remove(songId, playlistId);
         const song = await songModel.findById(songId);
 
-        const playlists = await model.findAll();
+        const playlists = await model.findByUserId(request.cookies.currentUser[0].id);
         const listPageData = {
             heading: `Song ${song.name} was removed successfully!`,
             playlists: playlists,
