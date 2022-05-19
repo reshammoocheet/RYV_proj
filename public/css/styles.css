@@ -191,6 +191,10 @@ button:hover {
     margin-bottom: 15px;
 }
 
+td button:hover {
+    border: none;
+}
+
 .header-container button:hover {
     background-color: white;
     color: black;
