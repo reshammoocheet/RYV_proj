@@ -115,9 +115,10 @@
                                 <p class="song-list-item-text" >{{name}}</p>
                                 <p class="song-list-item-text" >{{artist}}</p>
                                 
-                                <button formaction="/songForms" formmethod="post" name="choice" value="delete" class="play-button" class="del" type="submit" name="songId" value={{id}}>x</button>
-                                <button formaction="/songForms" formmethod="post" name="choice" value="edit" class="play-button" type="submit" name="songId" value={{id}}>•••</button>                                                            
+                                
                                 <button class="play-button" type="submit" name="playSongId" value={{id}} style="font-size:smaller; padding: 0.9em">▶</button>
+                                <button formaction="/songForms" formmethod="post" name="choice" value="edit" class="play-button" type="submit" name="songId" value={{id}}>•••</button>                                                                                            
+                                <button formaction="/songForms" formmethod="post" name="choice" value="delete" class="play-button" class="del" type="submit" name="songId" value={{id}}>x</button>
                                 <button formaction="/addSong"  formmethod="post" class="play-button" type="submit" name="songId" value={{id}} style="font-size: 12px; border-style: none; padding: 12px;">Add to Playlist</button>
                             </li>
                         {{/each}} 
