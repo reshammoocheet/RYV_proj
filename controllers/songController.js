@@ -12,16 +12,16 @@ async function showForm(request, response) {
     let songs = await model.findAll()
     switch (request.body.choice) {
         case 'add':
-            response.render('songs.hbs', { displayAddForm: true, songs: songs });
+            response.render('songs.hbs', { displayAddForm: true, songs: songs, isEmpty: songs.length == 0 });
             break;
         case 'list':
-            response.render('songs.hbs', { displayChoices: false, songs: songs  });
+            response.render('songs.hbs', { displayChoices: false, songs: songs, isEmpty: songs.length == 0   });
             break;
         case 'edit':
-            response.render('songs.hbs', { displayEditForm: true, songs: songs  });
+            response.render('songs.hbs', { displayEditForm: true, songs: songs, isEmpty: songs.length == 0   });
             break;
         case 'delete':
-            response.render('songs.hbs', { displayDeleteForm: true, songs: songs  });
+            response.render('songs.hbs', { displayDeleteForm: true, songs: songs, isEmpty: songs.length == 0   });
             break;
         case 'editInPlaylist':
             const playlistId = request.cookies.currentPlaylistId;
@@ -189,9 +189,6 @@ async function newSong(request, response){
     const name = request.body.name;
     const artist = request.body.artist;
 
-
-
-
     try{
         const song = await model.create(name, artist);
         const songs = await model.findAll();
@@ -223,6 +220,17 @@ async function newSong(request, response){
                     response.render('error.hbs', {message: err.message})
                 }
             })
+
+            // // Get img file
+            // imgFile = request.files.imgFile;
+            // imgFile.name = song.name;
+            // imgPath = __dirname.replace("controllers", "public") + '/images/song-covers/' + imgFile.name + ".jpg";
+    
+            // imgFile.mv(imgPath, function (err){
+            //     if(err){
+            //         response.render('error.hbs', {message: err.message})
+            //     }
+            // })
 
         }
         else{
