@@ -99,7 +99,6 @@
             <form >
                 <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
                 <button class="styled-button" style="border-radius: 5px;">Search</button>
-                <button formaction="/playlistForms" formmethod="post" name="choice" value="addForm" class="styled-button" style="border-radius: 5px;">﹢</button>
 
             </form>
         <form method="post" role="form" action="/showPlaylist">
@@ -114,22 +113,30 @@
                         <p class="song-list-item-text" >{{id}}</p>
                         <p class="song-list-item-text" >{{name}}</p>
                         <p class="song-list-item-text" >{{description}}</p>
-                        <button class="play-button" type="submit" name="playlistId" value={{id}}>+</button>
                     </li>
                 {{/each}}
             {{else if showPlaylist}}
+                {{#if isEmpty}}
+                <p>Add some some tracks to this playlist by clicking 'Browse Songs'</p>
+                {{else}}
                 {{#each songs}}
                     <li class="song-list-item">
                         <p class="song-list-item-text" >{{id}}</p>
                         <p class="song-list-item-text" >{{name}}</p>
                         <p class="song-list-item-text" >{{artist}}</p>
-                        
-                        <button class="play-button" type="submit" formaction="/play" formmethod="post" name="playlistSongId" value={{id}}>▶</button>
+                        <button formaction="/songForms" formmethod="post" name="choice" value="editInPlaylist" class="play-button" type="submit" >•••</button>
+                        <button formaction="/songForms" formmethod="post" name="choice" value="deleteInPlaylist" class="play-button" type="submit">x</button>
+                   <button class="play-button" type="submit" formaction="/play" formmethod="post" name="playlistSongId" value={{id}}>▶</button>
                         <button formaction="/songForms" formmethod="post" name="choice" value="editInPlaylist" class="play-button" type="submit" >•••</button>
                         <button formaction="/songForms" formmethod="post" name="choice" value="deleteInPlaylist" class="play-button" type="submit">x</button>
                     </li>
                 {{/each}}
+                {{/if}}
+
             {{else}}
+                {{#if isEmpty}}
+                <p>Press + to add playlists to your library</p>
+                {{else}}
                 {{#each playlists}}
                     <li class="song-list-item">
                         <p class="song-list-item-text" >{{id}}</p>
@@ -140,7 +147,10 @@
                         <button formaction="/playlistForms" formmethod="post" name="choice" value="deleteForm" class="play-button" type="submit" name="playlistId" value={{id}}>x</button>
                     </li>
                 {{/each}}
+                {{/if}}
+                <button formaction="/playlistForms" formmethod="post" type="submit" name="choice" value="addForm">Create New Playlist</button>
             {{/if}}
+
         </form>
 
         </ul>

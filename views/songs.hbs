@@ -8,7 +8,7 @@
             <form action="/song" method="post" role ="form"  encType="multipart/form-data" >
             <legend class="formLegend" style="padding: 20px;"><u style="text-decoration: none;">Add new song</u></legend>
             <label for="artist">Enter audio file:</label><br>
-            <input type="file" name="audioFile">
+            <input type="file" name="audioFile" style="padding: 5px;">
             <br>
             <label for="name">Enter song name:</label><br>
             <input type="text" name="name" id="name">
@@ -86,14 +86,6 @@
                 <form method="get" action="/song">
                     <input type="text" placeholder="Search" class="search-bar" name="searchQuery">
                     <button class="styled-button" style="border-radius: 5px">Search</button>
-                    {{#if displayPlaylistChoices}}
-                    <button class="styled-button" name="choice" type="submit" class="crud-song" value="add" >Add Song to Playlist</button>
-                    <button class="styled-button" name="choice" type="submit" class="crud-song" value="edit" >Edit this Playlist</button> 
-                    <button class="styled-button" name="choice" type="submit" class="crud-song" value="delete" >Delete this Playlist</button>
-            
-                    {{else}}
-                    <button id="add-song" formaction="/songForms" formmethod="post" name="choice" value="add" class="styled-button" style="border-radius: 5px; padding-bottom:10px;">﹢</button>
-                    {{/if}}
                 </form>
                 <form method="post" role="form" action="/play">
                     <li class="song-list-item" style="padding: 0.5em;">
@@ -118,18 +110,19 @@
                                 <p class="song-list-item-text" >{{name}}</p>
                                 <p class="song-list-item-text" >{{artist}}</p>
                                 
-                                <button class="play-button" type="submit" name="playSongId" value={{id}} style="font-size:smaller; padding: 0.9em">▶</button>
-                                <button formaction="/songForms" formmethod="post" name="choice" value="edit" class="play-button" type="submit" name="songId" value={{id}}>•••</button>                                                            
-                                <button class="play-button" type="submit" name="playSongId" style="border-radius: 25px 25px 25px 25px"value={{id}}>⤓</button>
                                 <button formaction="/songForms" formmethod="post" name="choice" value="delete" class="play-button" class="del" type="submit" name="songId" value={{id}}>x</button>
+                                <button formaction="/songForms" formmethod="post" name="choice" value="edit" class="play-button" type="submit" name="songId" value={{id}}>•••</button>                                                            
+                                <button class="play-button" type="submit" name="playSongId" value={{id}} style="font-size:smaller; padding: 0.9em">▶</button>
                                 <button formaction="/addSong"  formmethod="post" class="play-button" type="submit" name="songId" value={{id}} style="font-size: 12px; border-style: none; padding: 12px;">Add to Playlist</button>
                             </li>
                         {{/each}}                     
                     {{/if}}
+                    <button formaction="/songForms" formmethod="post" name="choice" value="add" class="styled-button" style="border-radius: 5px; margin: 10px;">Upload Song</button>
 
                 </form>
 
             </ul>
+
             </div>
             <div class="musicplayer">
                 <h2 id="songNameHeader">{{playSong.name}}</h2>
