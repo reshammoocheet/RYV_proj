@@ -1,6 +1,6 @@
 const app = require('../app');
 const supertest = require("supertest");
-const testRequest = supertest(app);
+const testRequest = supertest.agent(app);
 
 /* Data to be used to generate random playlist for testing */
 const playlistData = [
@@ -24,15 +24,17 @@ const generatePlaylistData = () => {
 const dbName = "music_db_test";
 const model = require('../models/playlist-model');
 const playlistPlaylistModel = require('../models/song-model');
+const userModel = require('../models/user-model');
 const { test, expect } = require('@jest/globals');
 const { sessionManager } = require('../sessionManager');
 
 /* Make sure the database is empty before each test.  This runs before each test.  See https://jestjs.io/docs/api */
 beforeEach(async () => {
     try {
-        sessionManager.DEBUG = true;
+
         await model.initialize(dbName, true);
         await playlistPlaylistModel.initialize(dbName, true);
+        await userModel.initialize(dbName, true)
      } 
     catch (err) {
         console.error(err);
@@ -41,6 +43,17 @@ beforeEach(async () => {
 
 // CREATE
 test("POST /playlist success case", async () => {
+    const registerResponse = await testRequest.post('/register').send({
+        username:"aaa",
+        password:"Abcd123!",});
+    const loginResponse = await testRequest.post('/login').send({
+            username:"aaa",
+            password:"Abcd123!"});
+
+        
+    expect (registerResponse.status).toBe(302);
+    expect (loginResponse.get('Set-Cookie')).toBeDefined();
+
     // Create Playlist
     const { name, description } = generatePlaylistData();
     const testResponse = await testRequest.post('/playlist').send({
@@ -49,7 +62,7 @@ test("POST /playlist success case", async () => {
     })
 
     expect(testResponse.status).toBe(200);
-    expect(testResponse.text).toContain(`Playlist ${name} with description ${description} was created successfully! `)
+    expect(testResponse.text).toContain(`successfully`)
 });
 
 test("POST /playlist fail case with blank name", async () => {
@@ -61,7 +74,7 @@ test("POST /playlist fail case with blank name", async () => {
     })
 
     expect(testResponse.status).toBe(400);
-    expect(testResponse.text).toContain(`Invalid input when trying to create  with description ${description}. `)
+    expect(testResponse.text).toContain(`Invalid input`)
 });
 
 
@@ -177,7 +190,7 @@ test("PUT /playlist success case", async () => {
     });
     
     expect(testResponse.status).toBe(200);
-    expect(testResponse.text).toContain(`Playlist ${name} was updated successfully with new name: ${newName} and new description: ${newDescription}. `);
+    expect(testResponse.text).toContain(`successfully`);
 });
 
 
@@ -200,7 +213,7 @@ test("PUT /playlist fail case with invalid new name", async () => {
     });
     
     expect(testResponse.status).toBe(400);
-    expect(testResponse.text).toContain(`Invalid input when trying to update fields to ${newName} and ${newDescription}`);
+    expect(testResponse.text).toContain(`try again`);
 });
 
 
@@ -248,7 +261,7 @@ test("DELETE /playlist success case", async () => {
     });
 
     expect(testResponse.status).toBe(200);
-    expect(testResponse.text).toContain(`Playlist was removed successfully!`);
+    expect(testResponse.text).toContain(`successfully!`);
 });
 
 // DELETE
