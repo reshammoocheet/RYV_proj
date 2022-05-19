@@ -117,7 +117,7 @@
                 {{/each}}
             {{else if showPlaylist}}
                 {{#if isEmpty}}
-                <p>Add some some tracks to this playlist by clicking 'Browse Songs'</p>
+                <h3>Add some some tracks to this playlist by clicking 'Browse Songs'</h3>
                 {{else}}
                 {{#each songs}}
                     <li class="song-list-item">
@@ -126,16 +126,14 @@
                         <p class="song-list-item-text" >{{artist}}</p>
                         <button formaction="/songForms" formmethod="post" name="choice" value="editInPlaylist" class="play-button" type="submit" >•••</button>
                         <button formaction="/songForms" formmethod="post" name="choice" value="deleteInPlaylist" class="play-button" type="submit">x</button>
-                   <button class="play-button" type="submit" formaction="/play" formmethod="post" name="playlistSongId" value={{id}}>▶</button>
-                        <button formaction="/songForms" formmethod="post" name="choice" value="editInPlaylist" class="play-button" type="submit" >•••</button>
-                        <button formaction="/songForms" formmethod="post" name="choice" value="deleteInPlaylist" class="play-button" type="submit">x</button>
+                       <button class="play-button" type="submit" formaction="/play" formmethod="post" name="playlistSongId" value={{id}}>▶</button>
                     </li>
                 {{/each}}
                 {{/if}}
 
             {{else}}
                 {{#if isEmpty}}
-                <p>Press + to add playlists to your library</p>
+                <h3>Press + to add playlists to your library</h3>
                 {{else}}
                 {{#each playlists}}
                     <li class="song-list-item">
