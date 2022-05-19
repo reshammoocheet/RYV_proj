@@ -93,11 +93,11 @@ async function newPlaylist(request, response){
 */
 async function listPlaylist(request, response){
     // check for valid session
-    // const authenticatedSession = sessionManager.authenticateUser(request);
-    // if((!authenticatedSession || authenticatedSession == null) && !sessionManager.DEBUG){
-    //     response.render('login.hbs',{username: request.cookies.username , hideLogout: true});
-    //     return;
-    // }
+    const authenticatedSession = sessionManager.authenticateUser(request);
+    if((!authenticatedSession || authenticatedSession == null) && !sessionManager.DEBUG){
+        response.render('login.hbs',{username: request.cookies.username , hideLogout: true});
+        return;
+    }
 
     try {
         const userId = sessionManager.currentUser.id;
@@ -109,6 +109,7 @@ async function listPlaylist(request, response){
             playlists = await model.findAll();
         }
 
+        let isEmpty = playlists.length == 0;
         // if user is searching up a song
         const searchName = request.query.searchQuery;
         if(searchName){
@@ -130,6 +131,7 @@ async function listPlaylist(request, response){
                     playlists: [playlist],
                     heading: "My Library",
                     displayChoices: true,
+                    isEmpty: isEmpty
                 }
                 response.render('playlists.hbs', playlistPageData )
                 return;
@@ -139,6 +141,7 @@ async function listPlaylist(request, response){
                     playlists: playlists,
                     heading: "Could not find playlist " + searchName,
                     displayChoices: true,
+                    isEmpty: isEmpty
                 }
                 response.render('playlists.hbs', playlistPageData )
                 return;       
@@ -149,7 +152,8 @@ async function listPlaylist(request, response){
         const listPageData = {
             heading: 'My Library',
             playlists: playlists,
-            displayChoices: true
+            displayChoices: true,
+            isEmpty: isEmpty
         }
         response.render('playlists.hbs', listPageData)
         return playlists;
@@ -179,13 +183,20 @@ async function showPlaylist(request, response){
         const songs = await playlist_song_model.findAllSongsInPlaylist(id);
         const playlist = await model.findById(id);
         response.cookie("currentPlaylistId", id)
+        
+        let isEmpty = false;
+        if(songs.length < 1){
+            isEmpty = true;
+        }
+
         const listPageData = {
-            heading: playlist.name,
+            heading: "Playlist: " + playlist.name,
             description: playlist.description,
             songs: songs,
             displayChoices: false,
             displayPlaylistChoices: true,
-            showPlaylist: true
+            showPlaylist: true,
+            isEmpty: isEmpty
         }
         response.render('playlists.hbs', listPageData)
     } 
@@ -273,16 +284,28 @@ async function updatePlaylist(request, response){
     try {
         const success = await model.update(currentName, newName, newDescription);
     
-        const playlists = await model.findAll();
-        const listPageData = {
-            heading: `Playlist ${currentName} was updated successfully with new name: ${newName} and new description: ${newDescription} `,
-            playlists: playlists,
-            displayChoices: true
+        if(success){
+            const playlists = await model.findAll();
+            const listPageData = {
+                heading: `Playlist ${currentName} was updated successfully with new name: ${newName} and new description: ${newDescription} `,
+                playlists: playlists,
+                displayChoices: true
+            }
+    
+            response.render('playlists.hbs', listPageData )
+        }
+        else{
+            const playlists = await model.findAll();
+            const listPageData = {
+                heading: `Please enter correct playlist name `,
+                playlists: playlists,
+                displayChoices: true
+            }
+    
+            response.render('playlists.hbs', listPageData )   
         }
 
-        response.render('playlists.hbs', listPageData )
 
-        return success;
     } 
     catch (error) {
         if(error instanceof model.InvalidInputError){
@@ -315,10 +338,12 @@ async function deletePlaylist(request, response){
         const success = await model.remove(id);
 
         const playlists = await model.findAll();
+
         const listPageData = {
             heading: `Playlist was removed successfully!`,
             playlists: playlists,
-            displayChoices: true
+            displayChoices: true,
+            isEmpty: playlists.length < 1
         }
 
         response.render('playlists.hbs', listPageData )

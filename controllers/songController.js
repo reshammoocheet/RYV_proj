@@ -27,7 +27,7 @@ async function showForm(request, response) {
             const playlistId = request.cookies.currentPlaylistId;
             const playlist = await playlistModel.findById(playlistId);
             const s = await playlistSongModel.findAllSongsInPlaylist(playlistId)
-            response.render('playlists.hbs', {displayEditSongForm: true, songs: s, showPlaylist: true, heading: playlist.name, description: playlist.description})
+            response.render('playlists.hbs', {displayEditSongForm: true, songs: s, showPlaylist: true, heading: "Playlist: " + playlist.name, description: playlist.description})
             break;
         case 'deleteInPlaylist':
             const PlaylistId = request.cookies.currentPlaylistId;
@@ -259,11 +259,11 @@ async function newSong(request, response){
 */
 async function listSongs(request, response){
     // check for valid session
-    // const authenticatedSession = sessionManager.authenticateUser(request);
-    // if((!authenticatedSession || authenticatedSession == null) && !sessionManager.DEBUG){
-    //     response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
-    //     return;
-    // }
+    const authenticatedSession = sessionManager.authenticateUser(request);
+    if((!authenticatedSession || authenticatedSession == null) && !sessionManager.DEBUG){
+        response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
+        return;
+    }
 
 
     let isPremium = false;

@@ -63,7 +63,7 @@ async function truncate(tableName){
 async function create(name, user_id, description = ""){
     // Validate Input
     if(!name){
-        throw new InvalidInputError(`Invalid input when trying to create ${name} with description ${description}. `);
+        throw new InvalidInputError(`Invalid input when trying to create playlist. Make sure you entered a valid name. `);
     }
 
     
@@ -175,7 +175,7 @@ async function update(currentName, newName, newDescription){
 
     // Validate Input
     if(!newName){
-        throw new InvalidInputError(`Invalid input when trying to update fields to ${newName} and ${newDescription}. `);
+        throw new InvalidInputError(`Invalid input when trying to update fields to ${newName} and ${newDescription} press My Library to try again. `);
     }
 
     try {
