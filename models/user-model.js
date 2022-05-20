@@ -64,13 +64,13 @@ async function truncate(tableName){
 async function create(username, password, premium = false){
     // Validate Input
     if(!validateUtils.isValid(username, password)){
-        throw new InvalidInputError(`Invalid input when trying to create ${username} released in ${password}. `);
+        throw new InvalidInputError(`Invalid input when trying to create user. `);
     }
 
 
     try{
         let isPremium;
-        if(premium){
+        if(premium == true){
             isPremium = 1;
         }
         else{
@@ -159,6 +159,10 @@ async function findAll(){
 * @returns {boolean} whether update was successful
 */
 async function update(currentUsername, newUsername, newPassword){
+
+    if(newUsername == "" || newPassword == ""){
+        throw new InvalidInputError(`Invalid input when trying to update`);
+    }
 
     try{
         // Execute Sql command to database

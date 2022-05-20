@@ -125,31 +125,44 @@ async function registerUser(request, response){
     const password = request.body.password;
     const isPremium = request.body.showPaypal;
 
-    const user = await model.findByUsername(username);
+    try{
+        const user = await model.findByUsername(username);
 
-    if (username && password) {
-        // Check to see if the user already exists.  If not, then create it.
-        if (user.length > 0) {
-            console.log("Invalid registration - username " + username + ' already exists.');
-            response.status(400);
-            response.render("login.hbs", {errorMessage: "Invalid registration - username " + username + ' already exists.',username: request.cookies.username, hideLogout: true});
-            return;
-        } 
-        else if(validator.isStrongPassword(password) && validator.isAlphanumeric(username) ){
-            console.log("Registering username " + username);
-            const hashedPassword = await bcrypt.hash(password, saltRounds);
-            await model.create(username, hashedPassword, isPremium);
+        if (username && password) {
+            // Check to see if the user already exists.  If not, then create it.
+            if (user.length > 0) {
+                console.log("Invalid registration - username " + username + ' already exists.');
+                response.status(400);
+                response.render("login.hbs", {errorMessage: "Invalid registration - username " + username + ' already exists.',username: request.cookies.username, hideLogout: true});
+                return;
+            } 
+            else if(validator.isStrongPassword(password) && validator.isAlphanumeric(username) ){
+                console.log("Registering username " + username);
+                const hashedPassword = await bcrypt.hash(password, saltRounds);
+                await model.create(username, hashedPassword, isPremium);
+            }
+            else {
+                response.status(400);
+                response.render("login.hbs", {errorMessage: "Password was not strong enough.",username: request.cookies.username, hideLogout: true})
+                console.log("Password was not strong enough.")
+                return
+            }
         }
-        else {
+        const users = await model.findAll();
+        console.log(users);
+        response.redirect('/home'); // Redirect to main page whether successful or not.  We require the user to login in after registering.
+    
+    }
+    catch(error){
+        if(error instanceof model.InvalidInputError){
             response.status(400);
-            response.render("login.hbs", {errorMessage: "Password was not strong enough.",username: request.cookies.username, hideLogout: true})
-            console.log("Password was not strong enough.")
-            return
+            response.render('login.hbs', {heading: error.message})
+        }
+        else{
+            response.status(500);
+            response.render('login.hbs', {heading: error.message})
         }
     }
-    const users = await model.findAll();
-    console.log(users);
-    response.redirect('/home'); // Redirect to main page whether successful or not.  We require the user to login in after registering.
 
 }
 /**
@@ -182,6 +195,11 @@ async function updateUser(request, response){
     const newUsername = request.body.currentPassword ? request.body.currentUsername : request.body.newUsername;
     const newPassword = await bcrypt.hash(request.body.newPassword ?? request.body.password, 10);
 
+    if(newPassword == ""){
+        response.statusCode = 400;
+        response.render('error.hbs', {message: error.message})
+        return;
+    }
 
     try {
         const success = await model.update(username, newUsername, newPassword);

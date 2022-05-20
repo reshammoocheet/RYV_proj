@@ -433,7 +433,7 @@ async function deleteSong(request, response){
 
 
     try {
-        const songs = await model.findAll();
+        let songs = await model.findAll();
 
         if(!id){
             const listPageData = {
@@ -462,7 +462,7 @@ async function deleteSong(request, response){
 
         const success = await model.remove(id);
 
-
+        songs = await model.findAll();
         const listPageData = {
             heading: `Song was removed successfully!`,
             songs: songs,

@@ -290,5 +290,9 @@ test("DELETE /playlist fail case", async () => {
 
 afterEach(async () => {
     sessionManager.DEBUG = false;
-    model.endConnection();
+
+    connection = model.getConnection();
+    if (connection) {
+        //await connection.close();
+    } 
 })

@@ -361,7 +361,7 @@ async function deletePlaylist(request, response){
     const id = request.body.id;
 
     try {
-        const playlists = await model.findByUserId(request.cookies.currentUser[0].id);
+        let playlists = await model.findByUserId(request.cookies.currentUser[0].id);
         if(!id){
             const listPageData = {
                 heading: `Playlist could not be deleted`,
@@ -387,6 +387,7 @@ async function deletePlaylist(request, response){
         }
         const success = await model.remove(id);
 
+        
         if(!success){
             const listPageData = {
                 heading: `Playlist could not be deleted`,
@@ -398,6 +399,8 @@ async function deletePlaylist(request, response){
             response.render('playlists.hbs', listPageData )
             return;
         }
+
+        playlists = await model.findByUserId(request.cookies.currentUser[0].id);
 
         const listPageData = {
             heading: `Playlist was removed successfully!`,

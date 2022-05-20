@@ -79,20 +79,7 @@ test("POST /song fail case with invalid artist", async () => {
 })
 
 
-test("POST /song fail case with closed connection", async () => {
-    // Create Song
-    const { name, artist } = generateSongData();
 
-    model.endConnection();
-    
-    const testResponse = await testRequest.post('/song').send({
-        name: name,
-        artist: artist
-    })
-
-    expect(testResponse.status).toBe(500);
-    expect(testResponse.text).toContain(`add new command when connection is in closed state`);
-});
     
 
 // READ
@@ -180,35 +167,7 @@ test("GET /song search fail case", async () => {
 
 });
 
-test("GET /song fail case with closed connection", async () => {
-    const registerResponse = await testRequest.post('/register').send({
-        username:"aaa",
-        password:"Abcd123!",});
-    const loginResponse = await testRequest.post('/login').send({
-            username:"aaa",
-            password:"Abcd123!"});
 
-    expect (registerResponse.status).toBe(302);
-    expect (loginResponse.get('Set-Cookie')).toBeDefined();
-
-    // Create Song
-    const { name, artist } = generateSongData();
-
-    model.endConnection();
-    await testRequest.post('/song').send({
-        name: name,
-        artist: artist
-    });
-
-    // Find Previously Created Song
-    const testResponse = await testRequest.get(`/song?name=${name}`);
-
-
-    expect(testResponse.status).toBe(500);
-    expect(testResponse.text).toContain(`add new command when connection is in closed state`)
-
-
-});
 
 
 // UPDATE
@@ -280,29 +239,7 @@ test("POST /song-edit fail case with invalid new artist", async () => {
     expect(testResponse.text).toContain(`try again`);
 });
 
-test("POST /song-edit fail case with closed connection", async () => {
-    // Create new Song to test edit
-    const { name, artist } = generateSongData();
-    await testRequest.post('/song').send({
-        name: name,
-        artist: artist
-    })
 
-    // Edit with invalid new artist
-    const newName = "New Title";
-    const newArtist = "new artist";
-
-    model.endConnection();
-
-    const testResponse = await testRequest.post('/song-edit').send({
-        currentName: name,
-        newName: newName,
-        newArtist: newArtist
-    });
-    
-    expect(testResponse.status).toBe(500);
-    expect(testResponse.text).toContain(`add new command when connection is in closed state`);
-});
 
 
 
@@ -344,14 +281,83 @@ test("DELETE /song fail case", async () => {
         id: song[0].id
     });
 
-    expect(testResponse.status).toBe(400);
+    expect(testResponse.status).toBe(500);
+    expect(testResponse.text).toContain(`Sorry there was a problem with the server`);
+});
+
+test("POST /song fail case with closed connection", async () => {
+    // Create Song
+    const { name, artist } = generateSongData();
+
+    model.endConnection();
+    
+    const testResponse = await testRequest.post('/song').send({
+        name: name,
+        artist: artist
+    })
+
+    expect(testResponse.status).toBe(500);
     expect(testResponse.text).toContain(`add new command when connection is in closed state`);
 });
 
+test("POST /song-edit fail case with closed connection", async () => {
+    // Create new Song to test edit
+    const { name, artist } = generateSongData();
+    await testRequest.post('/song').send({
+        name: name,
+        artist: artist
+    })
 
+    // Edit with invalid new artist
+    const newName = "New Title";
+    const newArtist = "new artist";
+
+    model.endConnection();
+
+    const testResponse = await testRequest.post('/song-edit').send({
+        currentName: name,
+        newName: newName,
+        newArtist: newArtist
+    });
+    
+    expect(testResponse.status).toBe(500);
+    expect(testResponse.text).toContain(`add new command when connection is in closed state`);
+});
+
+test("GET /song fail case with closed connection", async () => {
+    const registerResponse = await testRequest.post('/register').send({
+        username:"aaa",
+        password:"Abcd123!",});
+    const loginResponse = await testRequest.post('/login').send({
+            username:"aaa",
+            password:"Abcd123!"});
+
+    expect (registerResponse.status).toBe(302);
+    expect (loginResponse.get('Set-Cookie')).toBeDefined();
+
+    // Create Song
+    const { name, artist } = generateSongData();
+
+    model.endConnection();
+    await testRequest.post('/song').send({
+        name: name,
+        artist: artist
+    });
+
+    // Find Previously Created Song
+    const testResponse = await testRequest.get(`/song?name=${name}`);
+
+
+    expect(testResponse.status).toBe(500);
+    expect(testResponse.text).toContain(`add new command when connection is in closed state`)
+
+
+});
 
 
 afterEach(async () => {
-    sessionManager.DEBUG = false;
-    model.endConnection();
+    connection = model.getConnection();
+    if (connection) {
+        //await connection.close();
+    } 
 })
