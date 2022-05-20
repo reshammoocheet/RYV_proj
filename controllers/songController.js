@@ -7,7 +7,11 @@ const fs = require("fs");
 const model = require('../models/song-model.js');
 const playlistModel = require('../models/playlist-model');
 const playlistSongModel = require('../models/playlist_song-model');
-
+/**
+ * Renders the form depending on the selected CRUD functionality
+ * @param {Object} request 
+ * @param {Object} response 
+ */
 async function showForm(request, response) {
     let songs = await model.findAll()
     switch (request.body.choice) {
@@ -87,8 +91,9 @@ async function readAllSongs(request, response) {
 }
 
 /**
- * @param {*} request: Express request expecting JSON body. 
- * @param {*} response: Sends a successful response, or a 500-level response if there is a system error
+ * Plays the selected song and increases the song play counter in the cookies
+ * @param {Object} request 
+ * @param {Object} response 
  */
  async function playSong(request, response) {
     try{
@@ -167,7 +172,12 @@ async function readAllSongs(request, response) {
 }
 
 
-
+/**
+ * Searchs the looked up song
+ * @param {Array} songs 
+ * @param {string} searchName
+ * @returns {Object} the searched song 
+ */
 function searchSong(songs, searchName){
         // loop through songs
         songs.forEach((song) =>{

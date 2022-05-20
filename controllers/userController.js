@@ -18,7 +18,11 @@ router.get('/profile', showProfilePage);
 router.post('/profileForms', showForm)
 router.post('/user-edit', updateUser)
 
-
+/**
+ * Renders the selected form
+ * @param {Object} request 
+ * @param {Object} response 
+ */
 async function showForm(request, response) {
     switch (request.body.choice) {
         case 'username':
@@ -31,7 +35,12 @@ async function showForm(request, response) {
             response.render('songs.hbs');  // no valid choice made
     }
 }
-
+/**
+ * Renders Profile page
+ * @param {Object} request 
+ * @param {Object} response 
+ * @returns 
+ */
 function showProfilePage(request, response){
     // check for valid session
     const authenticatedSession = sessionManager.authenticateUser(request);
@@ -41,7 +50,11 @@ function showProfilePage(request, response){
     }
     response.render('profile.hbs', {displayChoices: true})
 }
-
+/**
+ * Renders SignUp page 
+ * @param {Object} request 
+ * @param {Object} response 
+ */
 function signupPage(request, response){
     isPremium = false;
 
@@ -55,7 +68,12 @@ function signupPage(request, response){
 
     response.render('sign-up.hbs',{hideLogout: true, showPaypal: isPremium, username: username, password: password, confirmPassword: confirmPassword});
 }
-
+/**
+ * Logs in user by creating a session
+ * @param {Object} request 
+ * @param {Object} response 
+ * @returns 
+ */
 async function loginUser(request, response){
 
     // Let's assume successful login for now with placeholder username
@@ -96,7 +114,12 @@ async function loginUser(request, response){
         response.redirect('/home');
     }
 }
-
+/**
+ * Registers the new user and validates his entered values
+ * @param {Object} request 
+ * @param {Object} response 
+ * @returns 
+ */
 async function registerUser(request, response){
     const username = request.body.username;
     const password = request.body.password;
@@ -127,7 +150,12 @@ async function registerUser(request, response){
     response.redirect('/home'); // Redirect to main page whether successful or not.  We require the user to login in after registering.
 
 }
-
+/**
+ * Logs out the user and deletes the session
+ * @param {Object} request 
+ * @param {Object} response 
+ * @returns 
+ */
 async function logoutUser(request, response){
     const authenticatedSession = sessionManager.authenticateUser(request);
     if (!authenticatedSession) {
@@ -141,7 +169,12 @@ async function logoutUser(request, response){
     response.redirect('/home');
 
 }
-
+/**
+ * Updates the properties of the user
+ * @param {Object} request 
+ * @param {Object} response 
+ * @returns {boolean} whether update was successful
+ */
 async function updateUser(request, response){
     const username = request.body.currentUsername;
     const newUsername = request.body.currentPassword ? request.body.currentUsername : request.body.newUsername;

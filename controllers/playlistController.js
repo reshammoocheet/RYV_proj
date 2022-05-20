@@ -16,7 +16,11 @@ router.post('/addSong', addToPlaylistForm);
 router.post('/addToPlaylist', addToPlaylist)
 router.post('/removeSongFromPlaylist', removeSongFromPlaylist)
 router.post('/playlistForms', showForm)
-
+/**
+ * Renders the form depending on the selected CRUD functionality
+ * @param {Object} request 
+ * @param {Object} response 
+ */
 async function showForm(request, response) {
     let playlists = await model.findByUserId(sessionManager.currentUser.id);
 
@@ -177,7 +181,11 @@ async function listPlaylist(request, response){
     }
 
 }
-
+/**
+ * Renders playlists page
+ * @param {Object} request 
+ * @param {Object} response 
+ */
 async function showPlaylist(request, response){
 
     const id = request.body.playlistId;
@@ -214,7 +222,11 @@ async function showPlaylist(request, response){
         }
     }
 }
-
+/**
+ * Renders the page where user adds the song to a selected playlist
+ * @param {Object} request 
+ * @param {Object} response 
+ */
 async function addToPlaylistForm(request, response){
     try {
 
@@ -240,7 +252,11 @@ async function addToPlaylistForm(request, response){
         }
     }
 }
-
+/**
+ * Adds song to selected playlist
+ * @param {Object} request 
+ * @param {Object} response 
+ */
 async function addToPlaylist(request, response){
     const id = request.body.id;
     try {
@@ -365,7 +381,12 @@ async function deletePlaylist(request, response){
     }
 
 }
-
+/**
+ * Removes a song from the playlist
+ * @param {Object} request 
+ * @param {Object} response 
+ * @returns 
+ */
 async function removeSongFromPlaylist(request, response){
     const songId = request.body.songId;
     const playlistId = request.cookies.currentPlaylistId;

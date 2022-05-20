@@ -231,11 +231,16 @@ async function remove(id){
 
 }
 
-
+/**
+ * Gets the connection to the database
+ * @returns {object} the connection to the database
+ */
 function getConnection(){
     return connection;
 }
-
+/**
+ * Ends the connection to the database
+ */
 function endConnection(){
     if(connection){
         connection.end();

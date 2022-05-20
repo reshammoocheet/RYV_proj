@@ -4,8 +4,9 @@ var connection;
 
 /**
  * Initializes Database and creates Song table with ID, Name and Artist as fields if the table does not already exist
- * 
-*/
+ * @param {string} dbName 
+ * @param {boolean} reset 
+ */
 async function initialize(dbName, reset) {
     connection = await mysql.createConnection({
         host: 'localhost',
@@ -107,7 +108,10 @@ async function findById(id){
     }
 
 }
-
+/**
+ * Finds all songs and orders them by most times_played
+ * @returns {Array} An array of songs objects ordered by times played
+ */
 async function findTop() {
     try{
         // Execute Sql command to database
@@ -201,7 +205,11 @@ async function update(currentName, newName, newArtist){
     }
 
 }
-
+/**
+ * Updates the times_played property of a song by incrementing it by 1
+ * @param {number} id 
+ * @returns {boolean} whether the update was successful
+ */
 async function counter(id) {
     try{
         // Execute Sql command to database
@@ -244,11 +252,16 @@ async function remove(id){
 
 }
 
-
+/**
+ * Gets the connection to the database
+ * @returns {object} the connection to the database
+ */
 function getConnection(){
     return connection;
 }
-
+/**
+ * Ends the connection to the database
+ */
 function endConnection(){
     if(connection){
         connection.end();

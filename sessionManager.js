@@ -3,12 +3,21 @@ const { Session } = require('./session');
 // Each session contains the username of the user and the time at which it expires
 //  This object can be extended to store additional protected session information
 class SessionManager {
+    /**
+     * Represents the session manager
+     * @constructor
+     */
     constructor(){
         this.sessions = {};
         this.currentUser = {};
         this.DEBUG = false;
     }
-
+    /**
+     * Creates a session
+     * @param {string} username 
+     * @param {number} numMinutes 
+     * @returns 
+     */
     createSession(username, numMinutes) {
         // Generate a random UUID as the sessionId
         const sessionId = uuid.v4()
@@ -22,7 +31,11 @@ class SessionManager {
         this.sessions[sessionId] = thisSession;
         return sessionId;
     }
-
+    /**
+     * Authenticates the user
+     * @param {Object} request 
+     * @returns 
+     */
     authenticateUser(request) {
         // If this request doesn't have any cookies, that means it isn't authenticated. Return null.
         if (!request.cookies) {
@@ -45,7 +58,12 @@ class SessionManager {
         }
         return { sessionId, userSession }; // Successfully validated.
     }
-
+    /**
+     * Refreshes the session by creating a new session
+     * @param {Object} request 
+     * @param {Object} response 
+     * @returns 
+     */
     refreshSession(request, response){
         const authenticatedSession = authenticateUser(request);
         if (!authenticatedSession) {

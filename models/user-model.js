@@ -5,8 +5,9 @@ var connection;
 
 /**
  * Initializes Database and creates User table with ID, Username and Password as fields if the table does not already exist
- * 
-*/
+ * @param {string} dbName 
+ * @param {boolean} reset 
+ */
 async function initialize(dbName, reset) {
     connection = await mysql.createConnection({
         host: 'localhost',
@@ -58,7 +59,7 @@ async function truncate(tableName){
  * Creates a new user based on its username and release password.
 * @param {string} username
 * @param {number} password
-* @returns {Object} An user Object
+* @returns {Object} A user Object
 */
 async function create(username, password, premium = false){
     // Validate Input
@@ -91,9 +92,9 @@ async function create(username, password, premium = false){
 }
 
 /**
- * Finds an user based on id
+ * Finds a user based on id
 * @param {number} id
-* @returns {Object} An user object
+* @returns {Object} A user object
 */
 async function findById(id){
     try{
@@ -111,7 +112,7 @@ async function findById(id){
 }
 
 /**
- * Finds an user based on its username
+ * Finds a user based on its username
 * @param {string} username
 * @returns {Array} An array of user objects
 */
@@ -151,7 +152,7 @@ async function findAll(){
 }
 
 /**
- * Updates an user with a new username and password.
+ * Updates a user with a new username and password.
 * @param {string} currentUsername
 * @param {string} newUsername
 * @param {number} newPassword
@@ -173,7 +174,12 @@ async function update(currentUsername, newUsername, newPassword){
     }
 
 }
-
+/**
+ * Updates a user with a new username
+* @param {string} currentUsername
+* @param {string} newUsername
+* @returns {boolean} whether update was successful
+*/
 async function updateUsername(currentUsername, newUsername){
     try{
 
@@ -190,7 +196,12 @@ async function updateUsername(currentUsername, newUsername){
     }
 
 }
-
+/**
+ * Updates a user with a new password 
+ * @param {string} currentPassword 
+ * @param {string} newPassword 
+ * @returns whether update was successful
+ */
 async function updatePassword(currentPassword, newPassword){
     try{
 
@@ -235,11 +246,16 @@ async function remove(id){
 
 }
 
-
+/**
+ * Gets the connection to the database
+ * @returns {object} the connection to the database
+ */
 function getConnection(){
     return connection;
 }
-
+/**
+ * Ends the connection to the database
+ */
 function endConnection(){
     if(connection){
         connection.end();

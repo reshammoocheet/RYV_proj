@@ -8,13 +8,22 @@ router.get('/', welcomePage);
 router.get('/aboutUs', renderAboutUs)
 const model = require('../models/song-model');
 
-
+/**
+ * Renders the About Us page
+ * @param {Object} request 
+ * @param {Object} response 
+ */
 function renderAboutUs(request, response){
 
     response.render('aboutUs.hbs',{hideLogout: true});
 
 }
-
+/**
+ * Renders the Home/Login page
+ * @param {Object} request 
+ * @param {Object} response 
+ * @returns 
+ */
 async function welcomePage(request, response) {
     // check for valid session
     const authenticatedSession = sessionManager.authenticateUser(request);
@@ -35,7 +44,11 @@ async function welcomePage(request, response) {
         response.render('home.hbs', { message: "Welcome!"});
     }
 }
-
+/**
+ * Get and sorts the most played songs in order of times played
+ * @param {Object} request 
+ * @returns {Array} the songs ordered by the most played
+ */
 async function getTopSongs(request){
     let songs = [];
     // for each cookie
@@ -53,7 +66,12 @@ async function getTopSongs(request){
     songs.sort((a, b) => (a.timesPlayed < b.timesPlayed) ? 1 : -1)
     return songs;
 }
-
+/**
+ * Searchs the looked up song
+ * @param {Array} songs 
+ * @param {string} searchName
+ * @returns {Object} the searched song 
+ */
 function searchSong(songs, searchName){
     // loop through songs
     songs.forEach((song) =>{

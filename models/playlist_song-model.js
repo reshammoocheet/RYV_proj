@@ -6,8 +6,9 @@ var connection;
 
 /**
  * Initializes Database and creates Playlist table with ID, Name and Release Description as fields if the table does not already exist
- * 
-*/
+ * @param {srting} dbName 
+ * @param {boolean} reset 
+ */
 async function initialize(dbName, reset) {
     connection = await mysql.createConnection({
         host: 'localhost',
@@ -204,11 +205,16 @@ async function remove(song_id, playlist_id){
 
 }
 
-
+/**
+ * Gets the connection to the database
+ * @returns {object} the connection to the database
+ */
 function getConnection(){
     return connection;
 }
-
+/**
+ * Ends the connection to the database
+ */
 function endConnection(){
     if(connection){
         connection.end();
