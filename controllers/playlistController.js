@@ -316,7 +316,7 @@ async function updatePlaylist(request, response){
         else{
             const playlists = await model.findByUserId(request.cookies.currentUser[0].id);
             const listPageData = {
-                heading: `Please enter correct playlist name `,
+                heading: `No playlist exists with this name`,
                 playlists: playlists,
                 displayChoices: true
             }
@@ -329,7 +329,14 @@ async function updatePlaylist(request, response){
     catch (error) {
         if(error instanceof model.InvalidInputError){
             response.statusCode = 400;
-            response.render('error.hbs', {message: error.message})
+            const playlists = await model.findByUserId(request.cookies.currentUser[0].id);
+            const listPageData = {
+                heading: `Please try again with valid input`,
+                playlists: playlists,
+                displayChoices: true
+            }
+    
+            response.render('playlists.hbs', listPageData ) 
         }
         else if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
@@ -354,9 +361,43 @@ async function deletePlaylist(request, response){
     const id = request.body.id;
 
     try {
+        const playlists = await model.findByUserId(request.cookies.currentUser[0].id);
+        if(!id){
+            const listPageData = {
+                heading: `Playlist could not be deleted`,
+                playlists: playlists,
+                displayChoices: true,
+                isEmpty: playlists.length < 1
+            }
+            response.status(400)
+            response.render('playlists.hbs', listPageData )
+            return;
+        }
+        const playlist = await model.findById(id);
+        if(!playlist){
+            const listPageData = {
+                heading: `Playlist does not exist`,
+                playlists: playlists,
+                displayChoices: true,
+                isEmpty: playlists.length < 1
+            }
+    
+            response.render('playlists.hbs', listPageData )
+            return success;
+        }
         const success = await model.remove(id);
 
-        const playlists = await model.findByUserId(request.cookies.currentUser[0].id);
+        if(!success){
+            const listPageData = {
+                heading: `Playlist could not be deleted`,
+                playlists: playlists,
+                displayChoices: true,
+                isEmpty: playlists.length < 1
+            }
+            response.status(400)
+            response.render('playlists.hbs', listPageData )
+            return;
+        }
 
         const listPageData = {
             heading: `Playlist was removed successfully!`,

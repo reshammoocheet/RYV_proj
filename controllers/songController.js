@@ -374,20 +374,40 @@ async function updateSong(request, response){
 
     try {
         const success = await model.update(name, newName, newArtist);
-        const songs = await model.findAll();
-        const listPageData = {
-            heading: `Song ${name} was updated successfully with new name: ${newName} and new artist: ${newArtist}. `,
-            songs: songs,
-            displayChoices: true
+        if(success){
+            const songs = await model.findAll();
+            const listPageData = {
+                heading: `Song ${name} was updated successfully with new name: ${newName} and new artist: ${newArtist}. `,
+                songs: songs,
+                displayChoices: true
+            }
+    
+            response.render('songs.hbs', listPageData )
         }
-
-        response.render('songs.hbs', listPageData )
+        else{
+            const songs = await model.findAll();
+            const listPageData = {
+                heading: `No song exists with this name`,
+                songs: songs,
+                displayChoices: true
+            }
+    
+            response.render('songs.hbs', listPageData )
+        }
         return success;
+
     } 
     catch (error) {
         if(error instanceof model.InvalidInputError){
             response.statusCode = 400;
-            response.render('error.hbs', {message: error.message})
+            const songs = await model.findAll();
+            const listPageData = {
+                heading: `Please try again with valid input`,
+                songs: songs,
+                displayChoices: true
+            }
+    
+            response.render('songs.hbs', listPageData )
         }
         else if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
@@ -413,10 +433,36 @@ async function deleteSong(request, response){
 
 
     try {
+        const songs = await model.findAll();
+
+        if(!id){
+            const listPageData = {
+                heading: `Song could not be deleted`,
+                songs: songs,
+                isEmpty: songs.length <= 0,
+                displayChoices: true
+            }
+            response.status(400)
+            response.render('songs.hbs', listPageData )
+            return;
+        }
+        
         const song = await model.findById(id);
+
+        if(!song){
+            const listPageData = {
+                heading: `Song does not exist`,
+                songs: songs,
+                isEmpty: songs.length <= 0,
+                displayChoices: true
+            }
+            response.render('songs.hbs', listPageData);
+            return;
+        }
+
         const success = await model.remove(id);
 
-        const songs = await model.findAll();
+
         const listPageData = {
             heading: `Song was removed successfully!`,
             songs: songs,
@@ -442,7 +488,7 @@ async function deleteSong(request, response){
     catch (error) {
         if(error instanceof model.DatabaseExecutionError){
             response.statusCode = 500;
-            response.render('error.hbs', {message: error.message})
+            response.render('error.hbs', {message: "Sorry there was a problem with the server. Try refreshing the page"})
         }
         else{
             response.render('error.hbs', {message: error.message})

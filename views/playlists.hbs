@@ -143,13 +143,13 @@
                         <p class="song-list-item-text" >{{id}}</p>
                         <p class="song-list-item-text" >{{name}}</p>
                         <p class="song-list-item-text" >{{description}}</p>
-                        <button class="play-button" type="submit" name="playlistId" value={{id}}>View</button>
+                        <button class="play-button" type="submit" name="playlistId" value={{id}}><u style="font-size: smaller; text-decoration: none">View</u></button>
                         <button formaction="/playlistForms" formmethod="post" name="choice" value="editForm" class="play-button" type="submit" name="playlistId" value={{id}}>•••</button>
                         <button formaction="/playlistForms" formmethod="post" name="choice" value="deleteForm" class="play-button" type="submit" name="playlistId" value={{id}}>x</button>
                     </li>
                 {{/each}}
                 {{/if}}
-                <button formaction="/playlistForms" formmethod="post" type="submit" name="choice" value="addForm" style="border-radius: 5px; margin: 20px">Create New Playlist</button>
+                <button formaction="/playlistForms" formmethod="post" type="submit" name="choice" value="addForm" style="border-radius: 5px; margin: 20px;">Create New Playlist</button>
             {{/if}}
 
         </form>

@@ -131,15 +131,17 @@ async function registerUser(request, response){
         // Check to see if the user already exists.  If not, then create it.
         if (user.length > 0) {
             console.log("Invalid registration - username " + username + ' already exists.');
+            response.status(400);
             response.render("login.hbs", {errorMessage: "Invalid registration - username " + username + ' already exists.',username: request.cookies.username, hideLogout: true});
             return;
         } 
-        else if(validator.isAlphanumeric(username)){
+        else if(validator.isStrongPassword(password) && validator.isAlphanumeric(username) ){
             console.log("Registering username " + username);
             const hashedPassword = await bcrypt.hash(password, saltRounds);
             await model.create(username, hashedPassword, isPremium);
         }
         else {
+            response.status(400);
             response.render("login.hbs", {errorMessage: "Password was not strong enough.",username: request.cookies.username, hideLogout: true})
             console.log("Password was not strong enough.")
             return

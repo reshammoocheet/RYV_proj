@@ -1,6 +1,6 @@
 const app = require('../app');
 const supertest = require("supertest");
-const testRequest = supertest(app);
+let testRequest = supertest.agent(app);
 
 /* Data to be used to generate random song for testing */
 const songData = [
@@ -24,15 +24,17 @@ const generateSongData = () => {
 const dbName = "music_db_test";
 const model = require('../models/song-model');
 const playlistSongModel = require('../models/playlist_song-model');
+const userModel = require('../models/user-model');
 const { test, expect } = require('@jest/globals');
 const { sessionManager } = require('../sessionManager');
 
 /* Make sure the database is empty before each test.  This runs before each test.  See https://jestjs.io/docs/api */
 beforeEach(async () => {
     try {
-        sessionManager.DEBUG = true;
+        testRequest = supertest.agent(app);
         await model.initialize(dbName, true);
         await playlistSongModel.initialize(dbName, true);
+        await userModel.initialize(dbName, true)
      } 
     catch (err) {
         console.error(err);
@@ -95,6 +97,17 @@ test("POST /song fail case with closed connection", async () => {
 
 // READ
 test("GET /song full list of songs", async () => {
+
+    const registerResponse = await testRequest.post('/register').send({
+        username:"aaa",
+        password:"Abcd123!",});
+    const loginResponse = await testRequest.post('/login').send({
+            username:"aaa",
+            password:"Abcd123!"});
+
+    expect (registerResponse.status).toBe(302);
+    expect (loginResponse.get('Set-Cookie')).toBeDefined();
+
     // Fill db with list of songs
     await testRequest.post('/song').send({
         name: "name1",
@@ -118,6 +131,16 @@ test("GET /song full list of songs", async () => {
 });
     
 test("GET /song search success case", async () => { 
+    const registerResponse = await testRequest.post('/register').send({
+        username:"aaa",
+        password:"Abcd123!",});
+    const loginResponse = await testRequest.post('/login').send({
+            username:"aaa",
+            password:"Abcd123!"});
+
+    expect (registerResponse.status).toBe(302);
+    expect (loginResponse.get('Set-Cookie')).toBeDefined();
+
     // Create Song
     const { name, artist } = generateSongData();
     await testRequest.post('/song').send({
@@ -135,7 +158,17 @@ test("GET /song search success case", async () => {
 
 });
 
-test("GET /song search fail case", async () => { 
+test("GET /song search fail case", async () => {
+    const registerResponse = await testRequest.post('/register').send({
+        username:"aaa",
+        password:"Abcd123!",});
+    const loginResponse = await testRequest.post('/login').send({
+            username:"aaa",
+            password:"Abcd123!"});
+
+    expect (registerResponse.status).toBe(302);
+    expect (loginResponse.get('Set-Cookie')).toBeDefined();
+
     // Try and find song that does not exist
     const search = "aaaas"
     const testResponse = await testRequest.get(`/song?searchQuery=${search}`);
@@ -148,6 +181,16 @@ test("GET /song search fail case", async () => {
 });
 
 test("GET /song fail case with closed connection", async () => {
+    const registerResponse = await testRequest.post('/register').send({
+        username:"aaa",
+        password:"Abcd123!",});
+    const loginResponse = await testRequest.post('/login').send({
+            username:"aaa",
+            password:"Abcd123!"});
+
+    expect (registerResponse.status).toBe(302);
+    expect (loginResponse.get('Set-Cookie')).toBeDefined();
+
     // Create Song
     const { name, artist } = generateSongData();
 
@@ -211,7 +254,7 @@ test("POST /song-edit fail case with invalid new name", async () => {
     });
     
     expect(testResponse.status).toBe(400);
-    expect(testResponse.text).toContain(`Invalid input when trying to update fields to ${newName} and ${newArtist}`);
+    expect(testResponse.text).toContain(`try again`);
 });
 
 
@@ -234,7 +277,7 @@ test("POST /song-edit fail case with invalid new artist", async () => {
     });
     
     expect(testResponse.status).toBe(400);
-    expect(testResponse.text).toContain(`Invalid input when trying to update fields to ${newName} and ${newArtist}`);
+    expect(testResponse.text).toContain(`try again`);
 });
 
 test("POST /song-edit fail case with closed connection", async () => {
@@ -301,7 +344,7 @@ test("DELETE /song fail case", async () => {
         id: song[0].id
     });
 
-    expect(testResponse.status).toBe(500);
+    expect(testResponse.status).toBe(400);
     expect(testResponse.text).toContain(`add new command when connection is in closed state`);
 });
 
