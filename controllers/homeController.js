@@ -22,7 +22,6 @@ function renderAboutUs(request, response){
  * Renders the Home/Login page
  * @param {Object} request 
  * @param {Object} response 
- * @returns 
  */
 async function welcomePage(request, response) {
     // check for valid session

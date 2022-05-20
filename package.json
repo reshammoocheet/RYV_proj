@@ -35,5 +35,8 @@
   "description": "",
   "jest": {
     "testTimeout": 15000
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.10"
   }
 }

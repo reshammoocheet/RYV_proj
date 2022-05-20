@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: songController.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: songController.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const express = require('express');
+const router = express.Router();
+const routeRoot = '/';
+const { sessionManager } = require('../sessionManager');
+const fs = require("fs");
+
+const model = require('../models/song-model.js');
+const playlistModel = require('../models/playlist-model');
+const playlistSongModel = require('../models/playlist_song-model');
+/**
+ * Renders the form depending on the selected CRUD functionality
+ * @param {Object} request 
+ * @param {Object} response 
+ */
+async function showForm(request, response) {
+    let songs = await model.findAll()
+    switch (request.body.choice) {
+        case 'add':
+            response.render('songs.hbs', { displayAddForm: true, songs: songs, isEmpty: songs.length == 0 });
+            break;
+        case 'list':
+            response.render('songs.hbs', { displayChoices: false, songs: songs, isEmpty: songs.length == 0   });
+            break;
+        case 'edit':
+            response.render('songs.hbs', { displayEditForm: true, songs: songs, isEmpty: songs.length == 0   });
+            break;
+        case 'delete':
+            response.render('songs.hbs', { displayDeleteForm: true, songs: songs, isEmpty: songs.length == 0   });
+            break;
+        case 'editInPlaylist':
+            const playlistId = request.cookies.currentPlaylistId;
+            const playlist = await playlistModel.findById(playlistId);
+            const s = await playlistSongModel.findAllSongsInPlaylist(playlistId)
+            response.render('playlists.hbs', {displayEditSongForm: true, songs: s, showPlaylist: true, heading: "Playlist: " + playlist.name, description: playlist.description})
+            break;
+        case 'deleteInPlaylist':
+            const PlaylistId = request.cookies.currentPlaylistId;
+            const S = await playlistSongModel.findAllSongsInPlaylist(PlaylistId)
+            response.render('playlists.hbs', {displayDeleteSongForm: true, songs: S, showPlaylist: true})
+            break;
+        default:
+            response.render('songs.hbs');  // no valid choice made
+    }
+}
+router.post('/songForms', showForm)
+router.get('/song', listSongs)
+router.post('/song', newSong);
+router.post('/song-edit', updateSong)
+router.post('/song-delete', deleteSong);
+router.post('/play', playSong);
+
+/**
+ * READ of CRUD.
+ * First READ is a list.
+ * Calls model to read all songs.
+ * @param {*} request: Express request expecting JSON body. 
+ * @param {*} response: Sends a successful response, or a 500-level response if there is a system error
+ */
+async function readAllSongs(request, response) {
+    try{
+        let songs = await model.findAll();
+
+        // if user is searching up a song
+        const searchName = request.query.searchQuery;
+        if(searchName){
+            searchSong(songs, searchName)
+        }
+    
+    
+    
+        const songPageData = {
+            songs: songs,
+            heading: "All songs",
+            displayChoices: true
+        }
+    
+    
+        response.render('songs.hbs', songPageData)
+    }
+    catch (error) {
+        // error handling.
+        if (error instanceof model.DBConnectionError) {
+            response.status("500");
+            response.render("home.hbs", { alert: true, message: "System error trying to read songs: " + error });
+        } else {
+            response.status("500");
+            response.render("home.hbs", { alert: true, message: "Unexpected error trying to read songs: " + error });
+        }
+    }
+
+}
+
+/**
+ * Plays the selected song and increases the song play counter in the cookies
+ * @param {Object} request 
+ * @param {Object} response 
+ */
+ async function playSong(request, response) {
+    try{
+        let song;
+        if(request.body.playlistSongId){
+            song = await model.findById(request.body.playlistSongId);
+        }
+        else if(request.body.playSongId){
+            song = await model.findById(request.body.playSongId);
+        }
+
+        let songs = await model.findAll();
+
+        let found = false;
+        if(song.name){
+            // for every cookie in the cookies object
+            for (const [key, value] of Object.entries(request.cookies)) {
+                // if the cookie for this song exists
+                if(key == song.name){
+                    // increase its value
+                    let newValue = parseInt(value);
+                    newValue += 1;
+                    response.cookie(key, newValue);
+                    found = true;
+                    break;
+                }
+            }
+            // if does not exist then create it
+            if(!found){
+                response.cookie(song.name, 1);
+            }
+        }
+
+
+
+
+        // if we have to go back to a song played in a specific playlist
+        if(request.body.playlistSongId){
+            const playlistId = request.cookies.currentPlaylistId;
+            const playlist = await playlistModel.findById(playlistId)
+            const playlistSongs = await playlistSongModel.findAllSongsInPlaylist(playlistId)
+            const songPageData = {
+                songs: playlistSongs,
+                showPlaylist: true,
+                heading: playlist.name,
+                description: playlist.description,
+                displayChoices: true,
+                playSong: song
+            }
+            response.render('playlists.hbs', songPageData)
+        }
+        else{
+
+            const isPremium = sessionManager.currentUser.isPremium == 1 ? true : false;
+            const songPageData = {
+                songs: songs,
+                heading: "All songs",
+                displayChoices: true,
+                playSong: song,
+                isPremium: isPremium
+            }
+            response.render('songs.hbs', songPageData)
+        }
+    }
+    catch (error) {
+        // error handling.
+        if (error instanceof model.DatabaseExecutionError) {
+            response.status("500");
+            response.render("home.hbs", { alert: true, message: "System error trying to read songs: " + error });
+        } else {
+            response.status("500");
+            response.render("home.hbs", { alert: true, message: "Unexpected error trying to read songs: " + error });
+        }
+    }
+
+}
+
+
+/**
+ * Searchs the looked up song
+ * @param {Array} songs 
+ * @param {string} searchName
+ * @returns {Object} the searched song 
+ */
+function searchSong(songs, searchName){
+        // loop through songs
+        songs.forEach((song) =>{
+            // if we find the song we need
+            if(song.name == searchName){
+                return song;
+            }
+        })
+
+
+}
+/**
+ * Finds an song based on id
+* @param {Object} request
+* @param {Object} response
+* @returns {Object} An song object
+*/
+async function newSong(request, response){
+    const name = request.body.name;
+    const artist = request.body.artist;
+
+    try{
+        const song = await model.create(name, artist);
+        const songs = await model.findAll();
+        const listPageData = {
+            heading: `Song ${song.name} by ${song.artist} was created successfully! `,
+            songs: songs,
+            displayChoices: true
+        }
+
+        response.render('songs.hbs', listPageData )
+
+        /**
+         * Logic was found using tutorial from https://www.youtube.com/watch?v=hyJiNTFtQic&amp;t=1262s
+         */
+        // Getting the uploaded file
+        let audioFile;
+        let imgFile;
+        let audioPath;
+        let imgPath;
+
+        if(request.files){
+            // Get audio file
+            audioFile = request.files.audioFile;
+            audioFile.name = song.name;
+            audioPath = __dirname.replace("controllers", "public") + '/audio/' + audioFile.name + ".mp3";
+    
+            audioFile.mv(audioPath, function (err){
+                if(err){
+                    response.render('error.hbs', {message: err.message})
+                }
+            })
+
+            // // Get img file
+            // imgFile = request.files.imgFile;
+            // imgFile.name = song.name;
+            // imgPath = __dirname.replace("controllers", "public") + '/images/song-covers/' + imgFile.name + ".jpg";
+    
+            // imgFile.mv(imgPath, function (err){
+            //     if(err){
+            //         response.render('error.hbs', {message: err.message})
+            //     }
+            // })
+
+        }
+        else{
+            //return response.render('error.hbs', {message: 'No file was uploaded.'})
+        }
+
+
+
+        return song;
+    }
+    catch(error){
+        if(error instanceof model.InvalidInputError){
+            response.render('error.hbs', {message: error.message})
+            response.statusCode = 400;
+        }
+        else if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: error.message})
+        }
+        else{
+            response.render('error.hbs', {message: error.message})
+            throw error;
+        }
+    }
+
+
+}
+
+/**
+ * Finds an song based on id
+* @param {Object} request
+* @param {Object} response
+* @returns {Array} An array of song objects
+*/
+async function listSongs(request, response){
+    // check for valid session
+    const authenticatedSession = sessionManager.authenticateUser(request);
+    if((!authenticatedSession || authenticatedSession == null) &amp;&amp; !sessionManager.DEBUG){
+        response.render('login.hbs',{username: request.cookies.username, hideLogout: true});
+        return;
+    }
+
+
+    let isPremium = false;
+    if(sessionManager.currentUser.isPremium == '1'){
+        isPremium = true;
+
+    }
+
+
+
+    try {
+        const songs = await model.findAll();
+
+        // if user is searching up a song
+        const searchName = request.query.searchQuery;
+        if(searchName){
+            // get from database and display as sole song in table
+            let song;
+
+            // loop through songs
+            songs.forEach((s) =>{
+                // if we find the song we need
+                if(s.name.toLowerCase() == searchName.toLowerCase()){
+                    song = s;
+                }
+            })
+
+
+            if(song){
+                const songPageData = {
+                    songs: [song],
+                    displayChoices: true,
+                    isEmpty: songs.length &lt;= 0
+                }
+                response.render('songs.hbs', songPageData )
+                return;
+            }
+            else{
+                const songPageData = {
+                    songs: songs,
+                    heading: "Could not find song " + searchName,
+                    displayChoices: true,
+                    isEmpty: songs.length &lt;= 0
+                }
+                response.render('songs.hbs', songPageData )
+                return;       
+            }
+
+        }
+
+        const listPageData = {
+            heading: 'Browse Songs',
+            songs: songs,
+            isEmpty: songs.length &lt;= 0,
+            displayChoices: true
+        }
+        response.render('songs.hbs', listPageData)
+        return songs;
+    } 
+    catch (error) {
+        // This error appears from time to time for no reason so we just try again
+        if(error.message == "Cannot read property 'execute' of undefined"){
+            listSongs(request, response);
+        }
+
+        if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: error.message})
+        }
+        else{
+            response.render('error.hbs', {message: error.message})
+            throw error;
+        }
+}
+
+
+}
+
+
+/**
+ * Finds an song based on id
+* @param {Object} request
+* @param {Object} response
+* @returns {boolean} Whether the song was edited successfully
+*/
+async function updateSong(request, response){
+    const name = request.body.currentName;
+    const newName = request.body.newName;
+    const newArtist = request.body.newArtist;
+
+    try {
+        const success = await model.update(name, newName, newArtist);
+        if(success){
+            const songs = await model.findAll();
+            const listPageData = {
+                heading: `Song ${name} was updated successfully with new name: ${newName} and new artist: ${newArtist}. `,
+                songs: songs,
+                displayChoices: true
+            }
+    
+            response.render('songs.hbs', listPageData )
+        }
+        else{
+            const songs = await model.findAll();
+            const listPageData = {
+                heading: `No song exists with this name`,
+                songs: songs,
+                displayChoices: true
+            }
+    
+            response.render('songs.hbs', listPageData )
+        }
+        return success;
+
+    } 
+    catch (error) {
+        if(error instanceof model.InvalidInputError){
+            response.statusCode = 400;
+            const songs = await model.findAll();
+            const listPageData = {
+                heading: `Please try again with valid input`,
+                songs: songs,
+                displayChoices: true
+            }
+    
+            response.render('songs.hbs', listPageData )
+        }
+        else if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: error.message})
+        }
+        else{
+            console.error(error.message);
+            throw error;
+        }
+
+    }
+
+}
+
+/**
+ * Finds an song based on id
+* @param {Object} request
+* @param {Object} response
+* @returns {boolean} Whether the song was deleted successfully
+*/
+async function deleteSong(request, response){
+    const id = request.body.id;
+
+
+    try {
+        let songs = await model.findAll();
+
+        if(!id){
+            const listPageData = {
+                heading: `Song could not be deleted`,
+                songs: songs,
+                isEmpty: songs.length &lt;= 0,
+                displayChoices: true
+            }
+            response.status(400)
+            response.render('songs.hbs', listPageData )
+            return;
+        }
+        
+        const song = await model.findById(id);
+
+        if(!song){
+            const listPageData = {
+                heading: `Song does not exist`,
+                songs: songs,
+                isEmpty: songs.length &lt;= 0,
+                displayChoices: true
+            }
+            response.render('songs.hbs', listPageData);
+            return;
+        }
+
+        const success = await model.remove(id);
+
+        songs = await model.findAll();
+        const listPageData = {
+            heading: `Song was removed successfully!`,
+            songs: songs,
+            isEmpty: songs.length &lt;= 0,
+            displayChoices: true
+        }
+
+        let path = __dirname.replace("controllers", "public") + "/audio/" + song.name + ".mp3";
+
+        fs.unlink(path, function (err){
+            if(err){
+                console.error(err);
+            }
+            else{
+                console.log("File removed: ",path);
+            }
+        })
+
+        response.render('songs.hbs', listPageData )
+        return success;
+    } 
+    
+    catch (error) {
+        if(error instanceof model.DatabaseExecutionError){
+            response.statusCode = 500;
+            response.render('error.hbs', {message: "Sorry there was a problem with the server. Try refreshing the page"})
+        }
+        else{
+            response.render('error.hbs', {message: error.message})
+            throw error;
+        }
+    }
+
+}
+
+
+module.exports = {
+    router,
+    routeRoot,
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addToPlaylist">addToPlaylist</a></li><li><a href="global.html#addToPlaylistForm">addToPlaylistForm</a></li><li><a href="global.html#deletePlaylist">deletePlaylist</a></li><li><a href="global.html#deleteSong">deleteSong</a></li><li><a href="global.html#error">error</a></li><li><a href="global.html#getTopSongs">getTopSongs</a></li><li><a href="global.html#listPlaylist">listPlaylist</a></li><li><a href="global.html#listSongs">listSongs</a></li><li><a href="global.html#loginUser">loginUser</a></li><li><a href="global.html#logoutUser">logoutUser</a></li><li><a href="global.html#newPlaylist">newPlaylist</a></li><li><a href="global.html#newSong">newSong</a></li><li><a href="global.html#playSong">playSong</a></li><li><a href="global.html#readAllSongs">readAllSongs</a></li><li><a href="global.html#registerUser">registerUser</a></li><li><a href="global.html#removeSongFromPlaylist">removeSongFromPlaylist</a></li><li><a href="global.html#renderAboutUs">renderAboutUs</a></li><li><a href="global.html#searchSong">searchSong</a></li><li><a href="global.html#showForm">showForm</a></li><li><a href="global.html#showPlaylist">showPlaylist</a></li><li><a href="global.html#showProfilePage">showProfilePage</a></li><li><a href="global.html#signupPage">signupPage</a></li><li><a href="global.html#updatePlaylist">updatePlaylist</a></li><li><a href="global.html#updateSong">updateSong</a></li><li><a href="global.html#updateUser">updateUser</a></li><li><a href="global.html#welcomePage">welcomePage</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri May 20 2022 16:16:29 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
