@@ -32,5 +32,8 @@
     "uuid": "^8.3.2",
     "validator": "^13.7.0"
   },
-  "description": ""
+  "description": "",
+  "jest": {
+    "testTimeout": 15000
+  }
 }

@@ -70,7 +70,7 @@ async function create(username, password, premium = false){
 
     try{
         let isPremium;
-        if(premium == true){
+        if(premium == 'true'){
             isPremium = 1;
         }
         else{
