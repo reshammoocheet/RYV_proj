@@ -357,7 +357,18 @@ async function deletePlaylist(request, response){
             response.render('playlists.hbs', listPageData )
             return;
         }
-        
+        const playlist = await model.findById(id);
+        if(!playlist){
+            const listPageData = {
+                heading: `Playlist does not exist`,
+                playlists: playlists,
+                displayChoices: true,
+                isEmpty: playlists.length < 1
+            }
+    
+            response.render('playlists.hbs', listPageData )
+            return success;
+        }
         const success = await model.remove(id);
 
         if(!success){

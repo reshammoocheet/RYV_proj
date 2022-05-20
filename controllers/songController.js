@@ -438,7 +438,20 @@ async function deleteSong(request, response){
         }
         
         const song = await model.findById(id);
+
+        if(!song){
+            const listPageData = {
+                heading: `Song does not exist`,
+                songs: songs,
+                isEmpty: songs.length <= 0,
+                displayChoices: true
+            }
+            response.render('songs.hbs', listPageData);
+            return;
+        }
+
         const success = await model.remove(id);
+
 
         const listPageData = {
             heading: `Song was removed successfully!`,
